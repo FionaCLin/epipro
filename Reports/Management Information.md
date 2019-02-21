@@ -10,7 +10,7 @@ Members of the team will be allocated one or more of the following roles, which 
 *	Development Tester – ensures ongoing unit and dev testing, develops test scripts and raises bugs
 
 The team roles will be designated as follows:
-*	Ines Sarmiento– Project Manager, Product Owner, Developer
+*	Ines Sarmiento – Project Manager, Product Owner, Developer
 *	Fiona Lin – Scrum Master, Developer, Development Tester
 *	Shenghan Gao – Developer, Development Tester
 *	Yuexuan Liu – Developer, Development Tester
