@@ -25,7 +25,7 @@ curl -x -V POST http://https://epiproapp.appspot.com/api/v1/deseasereport -H "Co
 ```
 
 Several questions before we can design the api.
-1 .Scrapper -from news how????? Some articles may just about disease not outbreak
+1. Scrapper -from news how????? Some articles may just about disease not outbreak
 2. What is a scrapper? Read through the articles and find the keywords? How it know whether is related to outbreak?
 3. Api - only one? Or can have subset, can be invoked in different input situation?
 4. If use python, we don’t need to write swagger
