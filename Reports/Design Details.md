@@ -16,12 +16,12 @@ We brainstorming about the query parameters for the API and according to the spe
 
 ```
 bash
-curl -x -V GET http://https://epiproapp.appspot.com/api/v1/deseasereport
+curl -x -V GET http://https://epiproapp.appspot.com/api/v1/desease/report
 ```
 
 ```
 bash
-curl -x -V POST http://https://epiproapp.appspot.com/api/v1/deseasereport -H "Content-Type: application/json" -d '{"start_date":"2015-10-01T08:45:10", "end_date":“2015-11-01T19:37:12”}'
+curl -x -V POST http://https://epiproapp.appspot.com/api/v1/desease/report -H "Content-Type: application/json" -d '{"start_date":"2015-10-01T08:45:10", "end_date":“2015-11-01T19:37:12”}'
 ```
 
 Several questions before we can design the api.
@@ -38,7 +38,7 @@ Several questions before we can design the api.
 
 Because our team member are using different operating system (Linux, Window or Unix) and our developement enviroment would be vary, additionally our team members are more proficient in python. Therefore, implementation Language will be utilised python3 with a pre configurated virtual environment. The API module will be built in Python3 and the application will be utilised the flask framework.
 
-[[//]: #(Frontend to be design)
+* Frontend to be decided
 
 Our EpiPro Application will be hosted under this domain name [https://epiproapp.appspot.com/] and deployed and run in standard environment of google cloud app engine, because its microservices allow a large application to be decomposed into independent constituent parts. This enhance the cohesion of each part. To serve a single user or API request, our proposed microservices-based application can call many internal and external microservices or data source to compose its response.
 
