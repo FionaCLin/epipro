@@ -27,7 +27,7 @@ from flask_restplus import reqparse
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app
 # called `app` in `main.py`.
 app = Flask(__name__)
-blueprint = Blueprint('api', __name__, url_prefix='/api')
+blueprint = Blueprint('api', __name__, url_prefix='/api/v1')
 api = Api(blueprint,
           doc='/doc/',
           version='1.0',
