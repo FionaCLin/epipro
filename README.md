@@ -9,7 +9,7 @@ fiona.lin@student.unsw.edu.au
 shenghan.gao@student.unsw.edu.au
 * Yuexuan Liu z5093599
 z5093599@student.unsw.edu.au
-## Team	API	Documentation	URL	(TBA)
+## Team	API	Documentation	URL	[https://epiproapp.appspot.com/api/doc/]
 
 
 
