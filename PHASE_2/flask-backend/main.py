@@ -3,7 +3,7 @@ import flask
 app = flas.Flask("__main__")
 
 
-@app.rout("/")
+@app.route("/")
 def my_index():
     return flask.render_template("index.html", token="Hello Flask+React")
 
