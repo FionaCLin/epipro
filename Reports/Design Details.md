@@ -1,4 +1,21 @@
 # Design Detail
+
+## Scraper
+[//]: # (I used to use request or ulib.request to extract content of a url but I saw there is a scrapy file readly)
+Our Scraper going to extract news with its title,url,content, published data,region,key word (any other things?) from out data source and store them to our database every month. The srapying process consist of two steps
+### Steps 1:
+Find news with its title and url basing on region which can be selected in WHO main website and searched key word.
+```
+#search
+searchBox = browser.find_element_by_xpath("//div[@class='keyword']/input[@type='text']")
+searchBox.send_keys(keyWord)
+```
+### Steps 2：
+Once relevant result is found, we can get source from each of these url and use regular expression or request to get other patameter. To ensure efficiency we may use Thread pool to do this steps.
+###
+As our data source is dynamic website and we plan to search key word, we decide to use selenium + scrapy/request frame work to build our scraper where selenium will be used to simulate usage of browser and srapy/request will be used to extract data. 
+Example about Python+Selenium+Scrapy[https://towardsdatascience.com/web-scraping-a-simple-way-to-start-scrapy-and-selenium-part-i-10367164c6c0]
+
 ## 2.1. Initial	documentation D1
 
 ## Approach
