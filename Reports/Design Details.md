@@ -89,6 +89,18 @@ Our EpiPro Online Doc[https://epiproapp.appspot.com/api/doc/]
 ### Developement
 #### Flask Back-end Server
 Because our team member are using different operating system (Linux, Window or Unix) and our developement enviroment would be vary, additionally our team members are more proficient in python. Therefore, implementation language will be utilised python3 with a pre configurated virtual environment. The API module will be built in Python3 and the application will be utilised the flask framework as well as the flask-restplus framework. Because it comes with the swagger. The swagger documentation for our EpiPro REST API will be updated and consistent within our fast development and deployment
+
+###Export swagger from flask
+```
+Export as Swagger specifications
+You can export the Swagger specififcations corresponding to your API.
+
+from flask import json
+
+from myapp import api
+
+print(json.dumps(api.__schema__))
+```
 #### React Front-end (Ines)
 
 
