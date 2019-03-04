@@ -40,6 +40,9 @@ api = Api(blueprint,
 
 app.register_blueprint(blueprint)
 
+
+#############################################################################################
+#   MODEL   #
 #####  REPSONSE for /api/reports/locations/<:id> #####
 #     {
 #       geoname_id: number,
@@ -53,8 +56,12 @@ location = api.model('location_info', {
     'location': fields.String,
     'url': fields.String
 })
+##### PAYLOAD for /api/reports/key-terms
+#   mandatory query category
+category = api.model('key-term-category', { 
+    'category': fields.String(enum=['general', 'specific']),
+})
 #####  RESPONSE for /api/reports/key_terms
-#      WITH query 'general' or 'specific'
 #      {id, type and name}
 key_term = api.model('key_term', {
     'keyTerm_id': fields.Integer,
@@ -89,17 +96,37 @@ disease_report_model = api.model('disease-report',{
     'reports': fields.List(fields.Nested(report))
 })
 
+filter_fields = api.model('filter',{ 
+    'start-date': fields.DateTime, 
+    'end-date': fields.DateTime, 
+    'key_terms': fields.String,
+    # geoname_id 
+    'location': fields.Integer
+   })
+#####################################################################################################
+
 # default index page render to REST api doc
 @app.route('/')
 def index():
     return redirect(url_for('api.doc'))
 
-#####################################################################################################
-
 # # locations
-# ````
-# DONE
-# ____
+# GET /api/reports/locations 
+# -- Index locations 
+#   Response an array of locations
+@api.route('/api/reports/locations')
+class locations(Resource):
+
+    @api.marshal_with(location, as_list=True)
+    @api.response(200, 'Data fetched successfully')
+    # TO DO: specify the reason
+    @api.response(400, 'Bad request')
+    @api.response(404, 'No data found')
+    @api.doc(description="Get all the disease related locations")
+    # @api.expect([location], validate=True)
+    def get(self):
+        return
+
 # GET /api/reports/locations/:geonameID 
 # -- get a single location by id
 #     Response a single location object:
@@ -109,63 +136,44 @@ def index():
 #       location: string,
 #       url: string,  --geoname_url
 #     }
-@api.route('/api/reports/locations')
-class locations(Resource):
-
-    @api.response(200, 'Data fetched successfully')
-    # TO DO: specify the reason
-    @api.response(400, 'Bad request')
-    @api.response(404, 'No data found')
-    @api.doc(description="Get all the disease related locations")
-    @api.expect([location], validate=True)
-    def get(self):
-        return
-
-# ````
-# DONE
-# ____
-# GET /api/reports/locations 
-# -- Index locations 
-#   Response an array of locations
 @api.route('/api/reports/locations/<int:geoname_id>')
 class locations_id(Resource):
 
+    @api.marshal_with(location)
     @api.response(200, 'Specific location info fetched successfully')
     # TO DO: specify the reason
     @api.response(400, 'Bad request')
     @api.response(404, 'No data found')
     @api.doc(description="Get the location info with given geoname id")
-    @api.expect(location, validate=True)
+    # @api.expect(location, validate=True)
     def get(self):
         return
 
 
-# ````
-# DONE
-# ____
+
 # # key_terms
 # GET /api/reports/key-terms 
 # -- Index all current key_terms with given query
 #    Query: [GENERAL]|[SPECIFIC]
 #    Response an array of key_terms, each key_term contains id, type and name
 
-@api.route('/api/reports/key-terms')
+@api.route('/api/reports/key-terms/<string:category>')
 class key_terms(Resource):
 
+    @api.marshal_with(key_term, as_list=True)
     @api.response(200, 'Key term list fetched successfully')
     # TO DO: specify the reason
     @api.response(400, 'Bad request')
     @api.response(404, 'No data found')
-    @api.param('category','Optional Query, should be [general] or [specific]')
+    # @api.param('category','Optional Query, should be [general] or [specific]')
+    @api.doc(params={'category':'Can ONLY be [general] or [specific]'})
     @api.doc(description="Get all the key terms if no additional query,\
                 otherwise, get all keys from [general] or [specific] catagory")
-    @api.expect([key_term], validate=True)
+    # @api.expect([key_term], validate=True)
     def get(self):
         return
 
-# ````
-# DONE
-# ____
+
 # # disease reports
 # GET /api/reports 
 # -- Fetch disease reports
@@ -175,10 +183,12 @@ class key_terms(Resource):
 #    reference: https://developer.atlassian.com/server/confluence/pagination-in-the-rest-api/
 #       -start::integer  : start from the n-th report
 #       -limit::integer  : limit to the number of responseed reports
+# TO DO: add sort function
 
 @api.route('/api/reports')
 class disease_report(Resource):
 
+    @api.marshal_with(disease_report_model, as_list=True)
     @api.response(200, 'Specific location info fetched successfully')
     # TO DO: specify the reason
     @api.response(400, 'Bad request')
@@ -186,27 +196,41 @@ class disease_report(Resource):
     # TO DO：start and limit should be filled at the same time
     @api.param('start','Optional Query, start from the n-th report')
     @api.param('limit','Optional Query, limit to the number of responseed reports')
-    @api.doc(description="Get all the key terms if no additional query,\
-                otherwise, get all keys from [general] or [specific] catagory")
-    @api.expect([disease_report_model], validate=True)
+    @api.doc(description="Get all disease reports")
+    # @api.expect([disease_report_model], validate=True)
     def get(self):
         return
-#######################################################################################################
-
 
 
 # GET /api/reports/filter 
 # -- Fetch disease reports by start date, end date, location, key_terms
 #    Response an array of disease reports
-#    Payload(application/json): 
+#    Query type
 #    { 
 #       start-date: string, 
 #       end-date: string, 
-#       key_terms: strings, 
+#       key_terms: list<string>, 
 #       location: geoname_id 
 #    }
-# ```
+#   TO DO: HOW TO DEAL WITH EMPTY FIELD?
+@api.route('/api/reports/filter')
+class disease_report_with_filter(Resource):
 
+    @api.expect(filter_fields, validate=True)
+    @api.marshal_with(disease_report_model, as_list=True)
+    @api.response(200, 'Specific location info fetched successfully')
+    # TO DO: specify the reason
+    @api.response(400, 'Bad request')
+    @api.response(404, 'No data found')
+    # TO DO：start and limit should be filled at the same time
+    @api.param('start','Optional Query, start from the n-th report')
+    @api.param('limit','Optional Query, limit to the number of responseed reports')
+    @api.doc(description="Get all reports according to the filter")
+    # @api.expect([disease_report_model], validate=True)
+    def post(self):
+        return
+
+#######################################################################################################
 
 
 
