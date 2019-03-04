@@ -80,26 +80,13 @@ report = api.model('report', {
     'reported_events': fields.List(fields.Nested(reported_event))
 })
 
-disease_report = api.model('disease-report',{
+disease_report_model = api.model('disease-report',{
     'url': fields.String,
     # TO DO: more look on the date format
     'date_of_publiction': fields.DateTime,
     'headline': fields.String,
     'main_text': fields.String,
     'reports': fields.List(fields.Nested(report))
-        # # 'disease': fields.String,
-        # # TO DO: figure out field with a range
-        # 'syndrome': fields.String,
-        # 'reported_events': [{
-        #     # TO DO : figure out the range
-        #     'type': fields.String,
-        #     # TO DO: choose the right format
-        #     'date': fields.DateTime,
-        #     'location': location,
-            # 'number-affected':fields.Integer
-        # }]
-    # )
-    # 'context': fields.String
 })
 
 # default index page render to REST api doc
@@ -107,23 +94,6 @@ disease_report = api.model('disease-report',{
 def index():
     return redirect(url_for('api.doc'))
 
-# dummy routes definition to play with
-@api.route('/reports', endpoint='')
-@api.doc()
-class Index(Resource):
-    def get(self, id):
-        return url_for('/api')
-
-
-@api.route('/reports/<id>', endpoint='reports')
-@api.doc(params={'id': 'An ID'})
-class Reports(Resource):
-    def get(self, id):
-        return {}
-
-    @api.doc(responses={403: 'Not Authorized'})
-    def post(self, id):
-        api.abort(403)
 #####################################################################################################
 
 # # locations
@@ -193,7 +163,9 @@ class key_terms(Resource):
     def get(self):
         return
 
-
+# ````
+# DONE
+# ____
 # # disease reports
 # GET /api/reports 
 # -- Fetch disease reports
@@ -203,6 +175,7 @@ class key_terms(Resource):
 #    reference: https://developer.atlassian.com/server/confluence/pagination-in-the-rest-api/
 #       -start::integer  : start from the n-th report
 #       -limit::integer  : limit to the number of responseed reports
+
 @api.route('/api/reports')
 class disease_report(Resource):
 
@@ -215,7 +188,7 @@ class disease_report(Resource):
     @api.param('limit','Optional Query, limit to the number of responseed reports')
     @api.doc(description="Get all the key terms if no additional query,\
                 otherwise, get all keys from [general] or [specific] catagory")
-    @api.expect([disease_report], validate=True)
+    @api.expect([disease_report_model], validate=True)
     def get(self):
         return
 #######################################################################################################
