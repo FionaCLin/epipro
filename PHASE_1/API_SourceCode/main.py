@@ -16,7 +16,7 @@ from lib import *
 from flask import Flask, Blueprint
 # not sure if we need this in localhost
 # from flask_cors import CORS
-from flask import Flask, url_for, redirect
+from flask import Flask, url_for, redirect, render_template
 from flask_restplus import Resource, Api
 from flask import request
 from flask_restplus import fields
@@ -47,7 +47,8 @@ parser = reqparse.RequestParser()
 # default index page render to REST api doc
 @app.route('/')
 def index():
-    return redirect(url_for('api.doc'))
+     return render_template("index.html", token="APIs v1")
+    # return redirect(url_for('api.doc'))
 
 # dummy routes definition to play with
 @api.route('/reports', endpoint='')
