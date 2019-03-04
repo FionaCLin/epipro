@@ -225,7 +225,7 @@ class disease_report_with_filter(Resource):
     @api.param('limit','Optional Query, limit to the number of responseed reports')
     @api.doc(description="Get all reports according to the filter")
     # @api.expect([disease_report_model], validate=True)
-    def post(self):
+    def get(self):
         return
 
 #######################################################################################################
