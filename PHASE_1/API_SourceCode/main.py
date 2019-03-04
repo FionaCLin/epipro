@@ -56,11 +56,7 @@ location = api.model('location_info', {
     'location': fields.String,
     'url': fields.String
 })
-##### PAYLOAD for /api/reports/key-terms
-#   mandatory query category
-category = api.model('key-term-category', { 
-    'category': fields.String(enum=['general', 'specific']),
-})
+
 #####  RESPONSE for /api/reports/key_terms
 #      {id, type and name}
 key_term = api.model('key_term', {
