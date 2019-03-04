@@ -1,44 +1,22 @@
 # Design Detail
-
-## Scraper
-[//]: # (I used to use request or ulib.request to extract content of a url but I saw there is a scrapy file readly)
-Our Scraper going to extract news with its title,url,content, published data,region,key word (any other things?) from out data source and store them to our database every month. The srapying process consist of two steps
-### Steps 1 (Urlspider.py):
-Find news with its title and url basing on region which can be selected in WHO main website and searched key word.
-```
-#search
-searchBox = browser.find_element_by_xpath("//div[@class='keyword']/input[@type='text']")
-searchBox.send_keys(keyWord)
-```
-### Steps 2 (ContentSpider.py)：
-Once relevant result is found, we can get source from each of these url and use regular expression or request to get other patameter. To ensure efficiency we may use Thread pool to do this steps.
-###
-As our data source is dynamic website and we plan to search key word, we decide to use selenium + scrapy/request frame work to build our scraper where selenium will be used to simulate usage of browser and srapy/request will be used to extract data. 
-Example about Python+Selenium+Scrapy[https://towardsdatascience.com/web-scraping-a-simple-way-to-start-scrapy-and-selenium-part-i-10367164c6c0]
-
 ## 2.1. Initial	documentation D1
-
 ## Approach
 [//]: # (Describe	how	you	intend	to	develop	the	API	module and	provide	the	ability to	run	it	in	Web	service	mode)
-Our API module is going to be designed in swagger editor and developed in our designate platform and frameworks.
+Before API module design, we study some of those concepts in our problem domain. Once those domain model and relationship have sort out. API modules are going to be designed based on our problem domain and then build and display the API documentation in swagger editor, finally it will be developed in our designate platform and frameworks.
 
-A web server will be built and created all the required handler for each API module. Each API module will run in REST web service mode and handle the corresponding REST request. Our web server will host and run on the Google cloud platform, using a low cost App Engine Standard Environment. Therefore, the EpiPro Application is able to serve REST request 24/7.
-More detail about Google App Engine[https://cloud.google.com/appengine/docs/].
-
+A web server will be built and created all the required handlers for each API module. Each API module will run in REST web service mode and handle the corresponding REST request. Our web server will host and run on the Google cloud platform, using a low cost App Engine Standard Environment. The EpiPro Application is able to serve REST API request 24/7. [More detail about Google App Engine](https://cloud.google.com/appengine/docs/).
 
 ## API Design Module
-
 [//]: # (Discuss	your	current	thinking	about	how	parameters can	be	passed	to	your module	and	how	results	are	collected.	Show	an	example	of	a	possible interaction .e.g.- sample	HTTP	calls	with	URL	and	parameters)
-
-### To be updated on Saturday
-We brainstorming about the query parameters for the API and according to the specification requirements. The user has to provide the 3 main information:
+### APIs Design
+After brainstorming about the query parameters and study the usage of the disease report for the API and according to the specification requirements. We have concluded the REST API list below. The user is able to fetch and filter disease reports based on these three  information mainly:
 - period of interest
 - key_terms
 - location
-
+The user is also able to retrieve the three main information details using our proposed APIs below.
 ```
 # locations
-GET /api/reports/locations/:geonameID 
+GET /api/reports/locations/:geonameID
 -- get a single location by id
     Response a single location object:
     {
@@ -47,41 +25,63 @@ GET /api/reports/locations/:geonameID
       location: string,
       url: string,  --geoname_url
     }
-GET /api/reports/locations 
--- Index locations 
+GET /api/reports/locations
+-- Index locations
   Response an array of locations
 
 # key_terms
-GET /api/reports/key-terms 
--- Index all current key_terms 
+GET /api/reports/key-terms
+-- Index all current key_terms
    Response an array of key_terms, each key_term contains id, type and name
    Query:
-   type::string 
+   type::string
    example: "general" or "specific"
 
 # disease reports
-GET /api/reports 
+GET /api/reports
 -- Fetch disease reports
    Responses the recent 100 reports by default
-   Query(optional):  
-   base::integer 
-   -- start from the n-th report 
-   limit::integer 
+   Query(optional):
+   base::integer
+   -- start from the n-th report
+   limit::integer
    -- limit to the number of responseed reports
-GET /api/reports/filter 
+GET /api/reports/filter
 -- Fetch disease reports by start date, end date, location, key_terms
    Response an array of disease reports
-   Payload(application/json): 
-   { 
-      start-date: string, 
-      end-date: string, 
-      key_terms: strings, 
-      location: geoname_id 
+   Payload(application/json):
+   {
+      start-date: string,
+      end-date: string,
+      key_terms: strings,
+      location: geoname_id
    }
 ```
 
-Our EpiPro Online Doc[https://epiproapp.appspot.com/api/doc/]
+[More Details on EpiPro Online Doc](https://epiproapp.appspot.com/api/v1/doc/)
 
+### Collect Disease Reports
+[//]: # (I used to use request or ulib.request to extract content of a url but I saw there is a scrapy file readly)
+The news and articles are collected by our pre-defined Scraper from the provided url of WHO and extracted their title, url, content, published data, region, key word etc. Then all those information will process and pack as the designated disease report format and store them to our database every month.
+
+As our data source is dynamic website as well as search key word, we decide to use selenium + scrapy/request frame work to build our scraper where selenium will be used to simulate usage of browser and srapy/request will be used to extract data.
+
+[//]: # (Example about Python+Selenium+Scrapy[https://towardsdatascience.com/web-scraping-a-simple-way-to-start-scrapy-and-selenium-part-i-10367164c6c0]----give some reason why u want to do this)
+
+The disease reports collection process consists of steps below:
+### Steps 1 collect articles:
+Find news with its title and url basing on region which can be selected in WHO main website and searched key word.
+```
+#search
+searchBox = browser.find_element_by_xpath("//div[@class='keyword']/input[@type='text']")
+searchBox.send_keys(keyWord)
+```
+### Steps 2 extract details and cleaning data:
+
+### Steps 3 sort data in disease report format:
+
+### Steps 4 sore in mongodb：
+Once relevant result is found, we can get source from each of these url and use regular expression or request to get other patameter. To ensure efficiency we may use Thread pool to do this steps.
 
 ## Developement and Deployment Environment
 [//]: # (Present	and	justify	implementation	language,	development	and	deployment environment .e.g.	Linux,	Windows	and	specific	libraries	that	you	plan	to	use.)
@@ -112,7 +112,6 @@ What's more, its cloud platform has comprehensive documentation of hosting a fla
 #### Data Storage
 WHO is selected as our data source. As our app is more inclined to use by academics research and medical professionals. The disease report data are proposed to update and cache on the monthly basis. For retriving and storing external data soure, mongo db is selected for our project because it is widely used and get a lot of continuing supports from the mongo db community.  Additionally, some of our team members have previous experiences in it.
 #### Testing and CICD
-
-
-[//]: # (leave your preferrable framework, library here if you have any: Scapper-- fetch data, )
-
+We are going to develop our testing for APIs with pytest, the flask built-in test framework. Also unit tests are required for each function within our web server.
+We also plan to develop integration test for ensuring all related web services work together before it deployed to production enviroment.
+Ideally, we aim to set up the travis CI testing within google cloud app engine, so as to streamline our development and deployment process.
