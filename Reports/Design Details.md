@@ -83,6 +83,8 @@ What's more, its cloud platform has comprehensive documentation of hosting a fla
 #### Data Storage
 WHO is selected as our data source. As our app is more inclined to use by academics research and medical professionals. The disease report data are proposed to update and cache on the monthly basis. For retriving and storing external data soure, mongo db is selected for our project because it is widely used and get a lot of continuing supports from the mongo db community.  Additionally, some of our team members have previous experiences in it.
 #### Testing and CICD
+![CI Testing Diagram](continuous-delivery-with-travis-ci-1architecture.png "CI Testing") CI Testing Diagram sources from [https://cloud.google.com/solutions/continuous-delivery-with-travis-ci]
+
 
 
 [//]: # (leave your preferrable framework, library here if you have any: Scapper-- fetch data, )
