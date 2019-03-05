@@ -153,7 +153,7 @@ class locations_id(Resource):
 #    Query: [GENERAL]|[SPECIFIC]
 #    Response an array of key_terms, each key_term contains id, type and name
 
-@api.route('/api/reports/key-terms/<string:category>')
+@api.route('/api/reports/key-terms/<any(general, specific):category>')
 class key_terms(Resource):
 
     @api.marshal_with(key_term, as_list=True)
@@ -166,7 +166,7 @@ class key_terms(Resource):
     @api.doc(description="Get all the key terms if no additional query,\
                 otherwise, get all keys from [general] or [specific] catagory")
     # @api.expect([key_term], validate=True)
-    def get(self):
+    def get(self, category):
         return
 
 
