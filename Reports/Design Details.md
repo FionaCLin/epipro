@@ -108,12 +108,15 @@ For the front-end, our team decided to choose React over AngularJS. AngularJS is
 
 ### Deployment
 #### Host Environment
-Our EpiPro Application will be hosted under this domain name [https://epiproapp.appspot.com/] and deployed and run in standard environment of google cloud app engine, because its microservices allow a large application to be decomposed into independent constituent parts. This enhance the cohesion of each part. To serve a single user or API request, our proposed microservices-based application can call many internal and external microservices or data source to compose its response.
+Our EpiPro Application will be hosted under this domain name -- https://epiproapp.appspot.com/, and deployed and run in standard environment of google cloud app engine, because its microservices allow a large application to be decomposed into independent constituent parts. This enhance the cohesion of each part. To serve a single user or API request, our proposed microservices-based application can call many internal and external microservices or data source to compose its response.
 
 What's more, its cloud platform has comprehensive documentation of hosting a flask python app under development and deployment. Moreover, it provides us with sufficient account quota to build and deploy our app for 12 months.
 #### Data Storage
-WHO is selected as our data source. As our app is more inclined to use by academics research and medical professionals. The disease report data are proposed to update and cache on the monthly basis. For retriving and storing external data soure, mongo db is selected for our project because it is widely used and get a lot of continuing supports from the mongo db community.  Additionally, some of our team members have previous experiences in it.
+WHO is selected as our data source. As our app is more inclined to use by academics research and medical professionals. The disease report data are proposed to update and cache on the monthly basis. For retriving and storing external data soure, mongo db is selected for our project because it is widely used and get a lot of continuing supports from the mongo db community. Additionally, some of our team members have previous experiences in it.
 #### Testing and CICD
-We are going to develop our testing for APIs with pytest, the flask built-in test framework. Also unit tests are required for each function within our web server.
-We also plan to develop integration test for ensuring all related web services work together before it deployed to production enviroment.
-Ideally, we aim to set up the travis CI testing within google cloud app engine, so as to streamline our development and deployment process.
+Testing is vital to create system component. To ensure every build of the project working properly, unit tests are developed and run against to each build. Our unit testing for APIs are required for each function within our web server and developed with pytest. Pytest is the flask built-in test framework. 
+
+Since Travis integrates with GitHub, runs tests in isolation, when running on Google Cloud Platform without much maintaince on our own infrastructure.
+[More Detail on Travis CI testing within Google Cloud App Engine](https://cloud.google.com/solutions/continuous-delivery-with-travis-ci). Hence, our integration tests are developed and used by a CI/CD service on Google Cloud Platform (GCP) to deploy your app as part of the build process.
+
+We are going to apply the practice of continuous integration (CI) and continuous delivery (CD), which involves using tools like Travis CI, to ensure that all new code is automatically and consistently tested for errors, so as to streamline our development and deployment process as well as ensure developed components working in production environment and all related web services work together before it deployed to production enviroment. Additionally, continuous delivery (CD) goes one step further by ensuring you can deploy every build into a production-like environment and then pass integration tests in that environment. 
