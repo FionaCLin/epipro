@@ -76,7 +76,9 @@ Find news with its title and url basing on region which can be selected in WHO m
 searchBox = browser.find_element_by_xpath("//div[@class='keyword']/input[@type='text']")
 searchBox.send_keys(keyWord)
 ```
+Once relevant result is found, we can use another spider to get source from each of these url. To ensure efficiency we may use Thread pool to do this steps.
 ### Steps 2 extract details and cleaning data:
+After raw soure file is gotten, we need to extarct required data from these HTML files. In order to do we need to analyse the struct of raw HTML file and extract deatail by using xpath method.
 
 ### Steps 3 sort data in disease report format:
 
@@ -101,8 +103,8 @@ from myapp import api
 
 print(json.dumps(api.__schema__))
 ```
-#### React Front-end (Ines)
-
+#### React Front-end
+For the front-end, our team decided to choose React over AngularJS. AngularJS is a complex MVC framework whereas AngularJS is a library where it is primarily the ‘view’ portion of the MVC structure. This means that AngularJS gives us more design freedom, but also requires the developer to design the structure of the application. React also has the benefit of having the virtual DOM over AngularJS’ regular DOM, allowing us to better manage a large database. Additionally, the members involved in the front-end development are overall more familiar with React. This helps remove the learning curve of adjusting to AngularJS, to speed up development.
 
 ### Deployment
 #### Host Environment
