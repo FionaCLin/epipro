@@ -103,8 +103,8 @@ from myapp import api
 
 print(json.dumps(api.__schema__))
 ```
-#### React Front-end (Ines)
-
+#### React Front-end
+For the front-end, our team decided to choose React over AngularJS. AngularJS is a complex MVC framework whereas AngularJS is a library where it is primarily the ‘view’ portion of the MVC structure. This means that AngularJS gives us more design freedom, but also requires the developer to design the structure of the application. React also has the benefit of having the virtual DOM over AngularJS’ regular DOM, allowing us to better manage a large database. Additionally, the members involved in the front-end development are overall more familiar with React. This helps remove the learning curve of adjusting to AngularJS, to speed up development.
 
 ### Deployment
 #### Host Environment
