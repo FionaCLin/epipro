@@ -77,12 +77,13 @@ searchBox = browser.find_element_by_xpath("//div[@class='keyword']/input[@type='
 searchBox.send_keys(keyWord)
 ```
 Once relevant result is found, we can use another spider to get source from each of these url. To ensure efficiency we may use Thread pool to do this steps.
+
 ### Steps 2 extract details and cleaning data:
 After raw soure file is gotten, we need to extarct required data from these HTML files. In order to do we need to analyse the struct of raw HTML file and extract deatail by using xpath method.
 
 ### Steps 3 sort data in disease report format:
 
-### Steps 4 sore in mongodb：
+### Steps 4 store in mongodb：
 Once relevant result is found, we can get source from each of these url and use regular expression or request to get other patameter. To ensure efficiency we may use Thread pool to do this steps.
 
 ## Developement and Deployment Environment
@@ -92,7 +93,7 @@ Once relevant result is found, we can get source from each of these url and use 
 #### Flask Back-end Server
 Because our team member are using different operating system (Linux, Window or Unix) and our developement enviroment would be vary, additionally our team members are more proficient in python. Therefore, implementation language will be utilised python3 with a pre configurated virtual environment. The API module will be built in Python3 and the application will be utilised the flask framework as well as the flask-restplus framework. Because it comes with the swagger. The swagger documentation for our EpiPro REST API will be updated and consistent within our fast development and deployment
 
-###Export swagger from flask
+* Export swagger from flask
 ```
 Export as Swagger specifications
 You can export the Swagger specififcations corresponding to your API.
@@ -115,6 +116,8 @@ What's more, its cloud platform has comprehensive documentation of hosting a fla
 WHO is selected as our data source. As our app is more inclined to use by academics research and medical professionals. The disease report data are proposed to update and cache on the monthly basis. For retriving and storing external data soure, mongo db is selected for our project because it is widely used and get a lot of continuing supports from the mongo db community. Additionally, some of our team members have previous experiences in it.
 #### Testing and CICD
 Testing is vital to create system component. To ensure every build of the project working properly, unit tests are developed and run against to each build. Our unit testing for APIs are required for each function within our web server and developed with pytest. Pytest is the flask built-in test framework. 
+![CI Testing Diagram](continuous-delivery-with-travis-ci-1architecture.png "CI Testing") CI Testing Diagram sources from [https://cloud.google.com/solutions/continuous-delivery-with-travis-ci]
+
 
 Since Travis integrates with GitHub, runs tests in isolation, when running on Google Cloud Platform without much maintaince on our own infrastructure.
 [More Detail on Travis CI testing within Google Cloud App Engine](https://cloud.google.com/solutions/continuous-delivery-with-travis-ci). Hence, our integration tests are developed and used by a CI/CD service on Google Cloud Platform (GCP) to deploy your app as part of the build process.

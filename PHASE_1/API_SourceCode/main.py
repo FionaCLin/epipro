@@ -155,7 +155,7 @@ class locations_id(Resource):
 #    Query: [GENERAL]|[SPECIFIC]
 #    Response an array of key_terms, each key_term contains id, type and name
 
-@api.route('/api/reports/key-terms/<string:category>')
+@api.route('/api/reports/key-terms/<any(general, specific):category>')
 class key_terms(Resource):
 
     @api.marshal_with(key_term, as_list=True)
@@ -168,7 +168,7 @@ class key_terms(Resource):
     @api.doc(description="Get all the key terms if no additional query,\
                 otherwise, get all keys from [general] or [specific] catagory")
     # @api.expect([key_term], validate=True)
-    def get(self):
+    def get(self, category):
         return
 
 
@@ -183,8 +183,8 @@ class key_terms(Resource):
 #       -limit::integer  : limit to the number of responseed reports
 # TO DO: add sort function
 
-@api.route('/api/reports')
-class disease_report(Resource):
+@api.route('/api/reports/all')
+class disease_reports(Resource):
 
     @api.marshal_with(disease_report_model, as_list=True)
     @api.response(200, 'Specific location info fetched successfully')
@@ -214,17 +214,20 @@ class disease_report(Resource):
 @api.route('/api/reports/filter')
 class disease_report_with_filter(Resource):
 
-    @api.expect(filter_fields, validate=True)
+    # @api.expect(filter_fields, validate=True)
     @api.marshal_with(disease_report_model, as_list=True)
     @api.response(200, 'Specific location info fetched successfully')
     # TO DO: specify the reason
     @api.response(400, 'Bad request')
     @api.response(404, 'No data found')
     # TO DO：start and limit should be filled at the same time
-    @api.param('start','Optional Query, start from the n-th report')
-    @api.param('limit','Optional Query, limit to the number of responseed reports')
+    @api.param('Start','Optional Query, start from the n-th report')
+    @api.param('Limit','Optional Query, limit to the number of responseed reports')
+    @api.param('Start-date','Optional Query, the start date of period of interest')
+    @api.param('End-date','Optional Query, the end date of period of interest')
+    @api.param('Key-terms','Optional Query, the key terms user want to search')
+    @api.param('Location','Optional Query, input a location name (city/country/state etc.)')
     @api.doc(description="Get all reports according to the filter")
-    # @api.expect([disease_report_model], validate=True)
     def get(self):
         return
 
