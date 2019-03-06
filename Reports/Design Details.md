@@ -17,31 +17,19 @@ The user is also able to retrieve the three main information details using our p
 [More Details on EpiPro Online Doc](https://epiproapp.appspot.com/api/v1/doc/)
 
 ### Collect Disease Reports
-[//]: # (I used to use request or ulib.request to extract content of a url but I saw there is a scrapy file readly)
-The news and articles are collected by our pre-defined Scraper from the provided url of WHO and extracted their title, url, content, published data, region, key word etc. Then all those information will process and pack as the designated disease report format and store them to our database every month.
-
 As our data source is dynamic website as well as search key word, we decide to use selenium + scrapy/request frame work to build our scraper where selenium will be used to simulate usage of browser and srapy/request will be used to extract data.
 
-[//]: # (Example about Python+Selenium+Scrapy[https://towardsdatascience.com/web-scraping-a-simple-way-to-start-scrapy-and-selenium-part-i-10367164c6c0]----give some reason why u want to do this)
+The news and articles are collected by our pre-defined Scraper from the provided url of WHO and extracted their title, url, content, published data, region, key word etc. Then all those information will process and pack as the designated disease report format and store them to our database every month.
 
-The disease reports collection process consists of steps below:
-### Steps 1 collect articles:
+The disease reports collection process describe as below:
 Find news with its title and url basing on region which can be selected in WHO main website and searched key word.
-```
-#search
-searchBox = browser.find_element_by_xpath("//div[@class='keyword']/input[@type='text']")
-searchBox.send_keys(keyWord)
-```
-Once relevant result is found, we can use another spider to get source from each of these url. To ensure efficiency we may use Thread pool to do this steps.
+Once relevant result is found, another spider/scapper? is used to get source from each of these url. 
+Since this data source is retrived and updated monthly, the result is going to cached for serving application query.
 
-### Steps 2 extract details and cleaning data:
-After raw soure file is gotten, we need to extarct required data from these HTML files. In order to do we need to analyse the struct of raw HTML file and extract deatail by using xpath method.
+[//]: # (how this achieve the efficiency??? To ensure application efficiency we may use Thread pool to do this steps. )
+After raw data soure html file is retrived, required data is going to be extarcted and clean up from these HTML files. In order to analyse the struct of raw HTML file and extract detail, xpath method is used and sort out the raw data in disease report format. Once relevant disease reports are formed and cached, search query is running against to each of these url also use regular expression or query string in request to get other patameter. 
 
-### Steps 3 sort data in disease report format:
-
-### Steps 4 store in mongodb：
-Once relevant result is found, we can get source from each of these url and use regular expression or request to get other patameter. To ensure efficiency we may use Thread pool to do this steps.
-
+[//]: # (To ensure efficiency we may use Thread pool to do this steps.?)
 ## Developement and Deployment Environment
 [//]: # (Present	and	justify	implementation	language,	development	and	deployment environment .e.g.	Linux,	Windows	and	specific	libraries	that	you	plan	to	use.)
 
