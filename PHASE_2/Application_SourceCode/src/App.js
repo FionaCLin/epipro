@@ -1,19 +1,21 @@
 import React, { Component } from 'react';
-import logo from './logo.gif';
+import logo from './logo.png';
 import './App.css';
 
 class App extends Component {
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <h1>Welcome to EpiPro {window.token}</h1>
-          <img src={logo} className="App-logo" alt="logo" />
-          <div>
-          <br></br>
-          <a href="https://epiproapp.appspot.com/api/v1/doc/">EpiPro API Documentation</a>
-          </div>
-        </header>
+        <div className="bg">
+          <header className="App-header">
+            <img src={logo} className="App-logo" alt="logo" />
+            <p><strong>EpiPro API</strong></p>
+            <p>Predict. Prevent. Protect.</p>
+            <a className="a" href="https://epiproapp.appspot.com/api/v1/doc/">
+              EpiPro API Documentation
+            </a>
+          </header>
+        </div>
       </div>
     );
   }

@@ -4,8 +4,7 @@
 
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
-  height: 15vmin;
-  /* size: 50%; */
+  height: 20vmin;
   pointer-events: none;
   padding: 32px;
   margin: 16px;
@@ -13,14 +12,24 @@
 }
 
 .App-header {
-  background-color: #fefefd;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: #00804d;
+  color: whitesmoke;
+  
+}
+.App-header .a {
+  color: palegreen;
+}
+.bg {
+  background-image: url("bg.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100%;
 }
 
 .App-link {
