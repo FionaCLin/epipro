@@ -47,19 +47,10 @@ Once relevant result is found, we can get source from each of these url and use 
 
 ### Developement
 #### Flask Back-end Server
-Because our team member are using different operating system (Linux, Window or Unix) and our developement enviroment would be vary, additionally our team members are more proficient in python. Therefore, implementation language will be utilised python3 with a pre configurated virtual environment. The API module will be built in Python3 and the application will be utilised the flask framework as well as the flask-restplus framework. Because it comes with the swagger. The swagger documentation for our EpiPro REST API will be updated and consistent within our fast development and deployment
+Because all team members are more proficient in python and python is available across different platforms. Although there are great choices of web stack out there,  Python is selected as our implementation language with a pre configurated virtual environment. Utilising python3 can reduce our learning curve also it smooths the project development as well as let us focus on API design and implementation. Therefore we can ensure the usability, reliability and stability of our proposed system. Additionally, our team members are using different operating system (Linux, Window or Unix) and our developement enviroment would be vary and since all of us have install python3. So python3 caters all members' needs.
 
-* Export swagger from flask
-```
-Export as Swagger specifications
-You can export the Swagger specififcations corresponding to your API.
+As the API module will be built in Python3, the application will be utilised the flask framework as well as the flask-restplus framework. Because flask and flask-restplus come with the swagger documentation generation. The swagger documentation for our EpiPro REST API will be written and updated in our source code, so as to be consistent within our fast development and deployment as well as standardized API design. The swagger documentation is a sophisicated documentation maintaining tool. It can help us generate a hosted, interactive API documentation site additional it can export the API documentation in an json format and facilitate the API lifecyce.
 
-from flask import json
-
-from myapp import api
-
-print(json.dumps(api.__schema__))
-```
 #### React Front-end
 For the front-end, our team decided to choose React over AngularJS. AngularJS is a complex MVC framework whereas AngularJS is a library where it is primarily the ‘view’ portion of the MVC structure. This means that AngularJS gives us more design freedom, but also requires the developer to design the structure of the application. React also has the benefit of having the virtual DOM over AngularJS’ regular DOM, allowing us to better manage a large database. Additionally, the members involved in the front-end development are overall more familiar with React. This helps remove the learning curve of adjusting to AngularJS, to speed up development.
 
@@ -67,10 +58,13 @@ For the front-end, our team decided to choose React over AngularJS. AngularJS is
 #### Host Environment
 Our EpiPro Application will be hosted under this domain name -- https://epiproapp.appspot.com/, and deployed and run in standard environment of google cloud app engine, because its microservices allow a large application to be decomposed into independent constituent parts. This enhance the cohesion of each part. To serve a single user or API request, our proposed microservices-based application can call many internal and external microservices or data source to compose its response.
 
-What's more, its cloud platform has comprehensive documentation of hosting a flask python app under development and deployment. Moreover, it provides us with sufficient account quota to build and deploy our app for 12 months.
+What's more, google cloud platform has comprehensive documentation and tutorial as well as code example of hosting a flask python app under development and deployment. Moreover, it provides us with sufficient free trial account quota to build and deploy our app for 12 months. It meets our EpiPro Application requirement to serve REST API request 24/7.
+
 #### Data Storage
-WHO is selected as our data source. As our app is more inclined to use by academics research and medical professionals. The disease report data are proposed to update and cache on the monthly basis. For retriving and storing external data soure, mongo db is selected for our project because it is widely used and get a lot of continuing supports from the mongo db community. Additionally, some of our team members have previous experiences in it.
+WHO is selected as our data source. As our app is more inclined to use by academics research and medical professionals. The disease report data are proposed to update and cache on the monthly basis. For retriving and storing external data soure, mongo db is selected for our project because it is widely used and get a lot of continuing supports from the mongo db community. Additionally, some of our team members have previous experiences in it on mLab and the ten weeks time constraits for our project. So mongo db is selectd and is able to speed up the project development.
+
 #### Testing and CICD
+
 Testing is vital to create system component. To ensure every build of the project working properly, unit tests are developed and run against to each build. Our unit testing for APIs are required for each function within our web server and developed with pytest. Pytest is the flask built-in test framework. 
 ![CI Testing Diagram](continuous-delivery-with-travis-ci-1architecture.png "CI Testing") CI Testing Diagram sources from [https://cloud.google.com/solutions/continuous-delivery-with-travis-ci]
 
