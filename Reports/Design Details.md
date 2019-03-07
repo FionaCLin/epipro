@@ -23,10 +23,10 @@ The news and articles are collected by our pre-defined Scraper from the provided
 
 The disease reports collection process describe as below:
 Find news with its title and url basing on region which can be selected in WHO main website and searched key word.
-Once relevant result is found, another spider/scapper? is used to get source from each of these url. 
+Once relevant result is found, another scapper is used to get source from each of these url. 
 Since this data source is retrived and updated monthly, the result is going to cached for serving application query.
 
-[//]: # (how this achieve the efficiency??? To ensure application efficiency we may use Thread pool to do this steps. )
+[//]: # ( )
 After raw data soure html file is retrived, required data is going to be extarcted and clean up from these HTML files. In order to analyse the struct of raw HTML file and extract detail, xpath method is used and sort out the raw data in disease report format. Once relevant disease reports are formed and cached, search query is running against to each of these url also use regular expression or query string in request to get other patameter. 
 
 [//]: # (To ensure efficiency we may use Thread pool to do this steps.?)
