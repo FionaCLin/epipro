@@ -17,17 +17,16 @@ The user is also able to retrieve the three main information details using our p
 [More Details on EpiPro Online Doc](https://epiproapp.appspot.com/api/v1/doc/)
 
 ### Collect Disease Reports
-As our data source is dynamic website as well as search key word, we decide to use selenium + scrapy/request frame work to build our scraper where selenium will be used to simulate usage of browser and srapy/request will be used to extract data.
+As our data source is dynamic website which provides search and filter method, we decide to use selenium + scrapy/request frame work to build our scraper where selenium will be used to simulate usage of browser and srapy/request will be used to get data file so that we get useful data in data collection process.
 
-The news and articles are collected by our pre-defined Scraper from the provided url of WHO and extracted their title, url, content, published data, region, key word etc. Then all those information will process and pack as the designated disease report format and store them to our database every month.
+The news and articles are collected by our pre-defined Scraper from the searched and filtered url of WHO website. And then we extract their title, url, content, published data, region from source file. Then all those information will process and pack as the designated disease report format and store them to our database every month.
 
 The disease reports collection process describe as below:
-Find news with its title and url basing on region which can be selected in WHO main website and searched key word.
-Once relevant result is found, another scapper is used to get source from each of these url. 
-Since this data source is retrived and updated monthly, the result is going to cached for serving application query.
+Fliter region, period and data form (HTML) which can be clicked in WHO main website and searched key word to get relevant news with their url and title. This process can be realized by the selector method of scarpy. 
+Once relevant result is found, another scapper is used to get source from each of these url. As their are great amount of articles we may use multithread to do this process.
 
-[//]: # ( )
-After raw data soure html file is retrived, required data is going to be extarcted and clean up from these HTML files. In order to analyse the struct of raw HTML file and extract detail, xpath method is used and sort out the raw data in disease report format. Once relevant disease reports are formed and cached, search query is running against to each of these url also use regular expression or query string in request to get other patameter. 
+[//]: # (Extract and storage )
+After raw data soure html file is retrived, required data is going to be extarcted and clean up from these HTML files. By analyse the struct of raw HTML file, we can use xpath method to find out required data of disease reports. Since this data source is retrived and updated monthly, the result is going to cached for serving application query.  
 
 [//]: # (To ensure efficiency we may use Thread pool to do this steps.?)
 ## Developement and Deployment Environment
