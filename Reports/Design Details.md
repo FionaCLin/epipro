@@ -57,7 +57,7 @@ WHO is selected as our data source. As our app is more inclined to use by academ
 #### Testing and CICD
 
 Testing is vital to create system component. To ensure every build of the project working properly, unit tests are developed and run against to each build. Our unit testing for APIs are required for each function within our web server and developed with pytest. Pytest is the flask built-in test framework. 
-![CI Testing Diagram](continuous-delivery-with-travis-ci-1architecture.png "CI Testing") CI Testing Diagram sources from [https://cloud.google.com/solutions/continuous-delivery-with-travis-ci]
+![CI Testing Diagram](continuous-delivery-with-travis-ci-1architecture.png "CI Testing") CI Testing Diagram sources from [Implementing continuous delivery with Travis CI and App Engine](https://cloud.google.com/solutions/continuous-delivery-with-travis-ci)
 
 
 Since Travis integrates with GitHub, runs tests in isolation, when running on Google Cloud Platform without much maintaince on our own infrastructure.
