@@ -17,24 +17,21 @@ The user is also able to retrieve the three main information details using our p
 [More Details on EpiPro Online Doc](https://epiproapp.appspot.com/api/v1/doc/)
 
 ### Collect Disease Reports
-As our data source is dynamic website which provides search and filter method, we decide to use selenium + scrapy/request frame work to build our scraper where selenium will be used to simulate usage of browser and srapy/request will be used to get data file so that we get useful data in data collection process.
+As our data source WHO is dynamic website also provides search and filter functionalities on the website, selenium and scrapy frameworks are used to build and define our web scraper, even though there are lots of great choice for web scraping. But because Scrapy is most suitable for properly rendered XML and HTML pages and it is a Python framework design for web crawling specially. It is most suitable for our python3 developement team and environment too. However, scrapy does not work for all web pages. Those JavaScript frameworks driven pages such as React and Angular, in practice, this means different kinds of timers and interactive elements. Another peculiarity of Scrapy is that it goes through pages by accessing their URLs, However, you will find that some buttons won’t have any URLs linked to them when you inspect the element or get the source code (through xpath or css). Therefore, selenium will be used to simulate usage of browser to retrive data from those JavaScript frameworks driven web pages and srapy/request will be used to get useful required data in data file during collection process.
 
 The news and articles are collected by our pre-defined Scraper from the searched and filtered url of WHO website. And then we extract their title, url, content, published data, region from source file. Then all those information will process and pack as the designated disease report format and store them to our database every month.
 
 The disease reports collection process describe as below:
 Fliter region, period and data form (HTML) which can be clicked in WHO main website and searched key word to get relevant news with their url and title. This process can be realized by the selector method of scarpy. 
-Once relevant result is found, another scapper is used to get source from each of these url. As their are great amount of articles we may use multithread to do this process.
 
-[//]: # (Extract and storage )
-After raw data soure html file is retrived, required data is going to be extarcted and clean up from these HTML files. By analyse the struct of raw HTML file, we can use xpath method to find out required data of disease reports. Since this data source is retrived and updated monthly, the result is going to cached for serving application query.  
+Once relevant result is found, another scapper is used to get source from each of these url. As there are great amount of articles and new, this process should shedule monthly and run concurrently with other process.
 
-[//]: # (To ensure efficiency we may use Thread pool to do this steps.?)
+After raw data soure html files are retrived and required data is extarcted and cleaned up. With the structure of raw HTML file, xpath method can be utilised to find out required information for composing disease reports. Since the disease reports are retrived and updated monthly, the resulted disease reports are going to cached in the database for serving application query.  
+
 ## Developement and Deployment Environment
-[//]: # (Present	and	justify	implementation	language,	development	and	deployment environment .e.g.	Linux,	Windows	and	specific	libraries	that	you	plan	to	use.)
-
 ### Developement
 #### Flask Back-end Server
-Because all team members are more proficient in python and python is available across different platforms. Although there are great choices of web stack out there,  Python is selected as our implementation language with a pre configurated virtual environment. Utilising python3 can reduce our learning curve also it smooths the project development as well as let us focus on API design and implementation. Therefore we can ensure the usability, reliability and stability of our proposed system. Additionally, our team members are using different operating system (Linux, Window or Unix) and our developement enviroment would be vary and since all of us have install python3. So python3 caters all members' needs.
+Because all team members are more proficient in python and python is available across different platforms. Although there are great choices of web stack out there, Python is selected as our implementation language with a pre configurated virtual environment. Utilising python3 can reduce our learning curve also it smooths the project development as well as let us focus on API design and implementation. Therefore we can ensure the usability, reliability and stability of our proposed system. Additionally, our team members are using different operating system (Linux, Window or Unix) and our developement enviroment would be vary and since all of us have install python3. So python3 caters all members' needs.
 
 As the API module will be built in Python3, the application will be utilised the flask framework as well as the flask-restplus framework. Because flask and flask-restplus come with the swagger documentation generation. The swagger documentation for our EpiPro REST API will be written and updated in our source code, so as to be consistent within our fast development and deployment as well as standardized API design. The swagger documentation is a sophisicated documentation maintaining tool. It can help us generate a hosted, interactive API documentation site additional it can export the API documentation in an json format and facilitate the API lifecyce.
 
