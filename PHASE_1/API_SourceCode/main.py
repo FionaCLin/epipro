@@ -34,7 +34,7 @@ import enum
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app
 # called `app` in `main.py`.
 app = Flask(__name__)
-blueprint = Blueprint('api', __name__, url_prefix='/v1')
+blueprint = Blueprint('api', __name__, url_prefix='/api/v1')
 app.config['RESTPLUS_MASK_SWAGGER'] = False
 api = Api(blueprint,
           doc='/doc/',
