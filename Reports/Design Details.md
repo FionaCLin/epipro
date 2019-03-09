@@ -17,7 +17,7 @@ After brainstorming about the query parameters, studying the usage of the diseas
 The user is also able to retrieve the three main information details using our proposed APIs below.
 More details available [here](https://epiproapp.appspot.com/api/v1/doc/) on the EpiPro Online Doc.
 
-## Here are our 5 main api:    
+### Here are our 5 main api:    
 
 #### GET /api/reports/all  
 This api will return all the disease reports we have in the database.  
