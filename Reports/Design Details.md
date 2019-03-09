@@ -1,6 +1,6 @@
 # Design Detail
-## 2.1. Initial	documentation D1
 ## Approach
+[//]: # (## 2.1. Initial	documentation D1)
 [//]: # (Describe how	you	intend	to	develop	the	API	module and	provide	the	ability to	run	it	in	Web	service	mode)
 Before producing our API module design, we studied some of the relevant concepts in our problem domain. During this process, we will establish the domain model and sort out the relationships. Our resulting API modules will be designed based on our problem domain. We will build and display the API documentation within the Swagger editor, which will finally be developed in our designated platform and frameworks.
 
