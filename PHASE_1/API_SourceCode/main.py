@@ -18,7 +18,8 @@
 
 from flask import Flask, Blueprint
 # not sure if we need this in localhost
-from flask import Flask, url_for, redirect
+# from flask_cors import CORS
+from flask import Flask, url_for, redirect, render_template
 from flask_restplus import Resource, Api
 from flask import request
 from flask_restplus import fields
@@ -97,11 +98,11 @@ disease_report_model = api.model('disease-report',{
     'reports': fields.List(fields.Nested(report))
 })
 
-filter_fields = api.model('filter',{ 
-    'start-date': fields.DateTime, 
-    'end-date': fields.DateTime, 
+filter_fields = api.model('filter',{
+    'start-date': fields.DateTime,
+    'end-date': fields.DateTime,
     'key_terms': fields.String,
-    # geoname_id 
+    # geoname_id
     'location': fields.Integer
    })
 
@@ -110,11 +111,12 @@ filter_fields = api.model('filter',{
 # default index page render to REST api doc
 @app.route('/')
 def index():
-    return redirect(url_for('api.doc'))
+     return render_template("index.html", token="APIs v1")
+    # return redirect(url_for('api.doc'))
 
 # # locations
-# GET /api/reports/locations 
-# -- Index locations 
+# GET /api/reports/locations
+# -- Index locations
 #   Response an array of locations
 @api.route('/api/reports/locations')
 class locations(Resource):
@@ -129,7 +131,7 @@ class locations(Resource):
     def get(self):
         return
 
-# GET /api/reports/locations/:geonameID 
+# GET /api/reports/locations/:geonameID
 # -- get a single location by id
 #     Response a single location object:
 #     {
@@ -153,7 +155,7 @@ class locations_id(Resource):
 
 
 # # key_terms
-# GET /api/reports/key-terms 
+# GET /api/reports/key-terms
 # -- Index all current key_terms with given query
 #    Query: [GENERAL]|[SPECIFIC]
 #    Response an array of key_terms, each key_term contains id, type and name
@@ -177,10 +179,10 @@ class key_terms(Resource):
 
 
 # # disease reports
-# GET /api/reports 
+# GET /api/reports
 # -- Fetch disease reports
 #    Responses the recent 100 reports by default
-#    Query(optional):  
+#    Query(optional):
 #    pagination -- this refers to the design from atlassian
 #    reference: https://developer.atlassian.com/server/confluence/pagination-in-the-rest-api/
 #       -start::integer  : start from the n-th report
@@ -204,15 +206,15 @@ class disease_reports(Resource):
         return
 
 
-# GET /api/reports/filter 
+# GET /api/reports/filter
 # -- Fetch disease reports by start date, end date, location, key_terms
 #    Response an array of disease reports
 #    Query type
-#    { 
-#       start-date: string, 
-#       end-date: string, 
-#       key_terms: list<string>, 
-#       location: geoname_id 
+#    {
+#       start-date: string,
+#       end-date: string,
+#       key_terms: list<string>,
+#       location: geoname_id
 #    }
 #   TO DO: HOW TO DEAL WITH EMPTY FIELD?
 @api.route('/api/reports/filter')
