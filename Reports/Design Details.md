@@ -16,56 +16,8 @@ After brainstorming about the query parameters, studying the usage of the diseas
 The user is also able to retrieve the three main information details using our proposed APIs below.
 More details available [here](https://epiproapp.appspot.com/api/v1/doc/) on the EpiPro Online Doc.
 
-<<<<<<< HEAD
 ### Collect Disease Reports
 As our data source WHO is a dynamic website which also provides search and filter functionalities, we chose Selenium and Scrapy frameworks to build and define our web scraper, even though there are lots of other great choice for web scraping. However, we didn't consider the other options over Scrapy, since it is most suitable for properly rendering XML and HTML pages and it is a Python framework designed for web crawling specifically. It is most suitable for our Python3 developement team and development environment, as well. However, Scrapy does not work for all web pages. We also need to consider JavaScript frameworks driven pages such as React and Angular, which means, in practice, that there will be different kinds of timers and interactive elements involved. Another peculiarity of Scrapy is that it goes through pages by accessing their URLs. However, there are some buttons on the webpages which won’t have any URLs linked to them when you inspect the element or get the source code (through xpath or css). Therefore, Selenium will be used to simulate browser usage to retrive data from those JavaScript frameworks driven web pages, and requesting with Scrapy will be used to get the required data in a data file format during collection process.
-=======
-All these three parameters are optional, so we will evaluate which parameters are passed to our api and then start to fetch the data that user asks for.
-
-```
-# locations
-GET /api/reports/locations/<:geonameID> 
--- get a single location by id
-    Response a single location object:
-    {
-      geoname_id: number,
-      county: string,
-      location: string,
-      url: string,  --geoname_url
-    }
-GET /api/reports/locations 
--- Index locations 
-  Response an array of locations object(as defined above)
-
-# key_terms
-GET /api/reports/key-terms/<category> 
--- Index all current key_terms 
-   Response an array of key_terms, each key_term contains id, type and name
-   Path query(required):
-        category::string -enmu["general" or "specific"]
-
-# disease reports
-GET /api/reports/all  
--- Fetch disease reports
-   Responses the recent 100 reports by default
-   Url query(optional):  
-       start::integer 
-       -- start from the n-th report 
-       limit::integer 
-       -- limit to the number of responseed reports
-GET /api/reports/filter 
--- Fetch disease reports by start date, end date, location, key_terms
-   Response an array of disease reports
-   Url query(optional): 
-        start-date:: DateTime, 
-        end-date:: DateTime, 
-        key_terms:: strings(eg:"Anthrax,Zika"), 
-        location:: geoname_id 
-```
-
-Our EpiPro Online Doc[https://epiproapp.appspot.com/api/doc/] 
-Swagger UI can be used to simulate the api interactions.
->>>>>>> ff5059342ccbaba7d0f02e03bb253070b21efc72
 
 The news and articles will be collected by our pre-defined Scraper from the searched and filtered url of the WHO website. We will then extract their title, url, content, published data, and region from the url's source file. Then, all the information will be processed and packed in the designated disease report format, and will be stored in our database. This process will recur will be autonomously performed monthly.
 
