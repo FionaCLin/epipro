@@ -19,14 +19,14 @@ More details available [here](https://epiproapp.appspot.com/api/v1/doc/) on the 
 
 ## Here are our 5 main api:    
 
-# GET /api/reports/all  
+### GET /api/reports/all  
 This api will return all the disease reports we have in the database.  
 This api has two optional query parameters, start and limit.  
 Start indicates the pagination start from 'start'-th report.  
 Limit gives the number of reports that will be return.  
 The response will be in form of array of disease report objects.  
 
-# GET /api/reports/filter  
+### GET /api/reports/filter  
 This api will return all the disease reports after being filtered.  
 This api has 4 optional query parameters: start-date, end-date, key_terms, location.  
 Start-date: From which day we start to looking for  
@@ -36,18 +36,18 @@ location: a geonameID referring to a location that we are looking for in the rep
 The response will be in form of a disease report object.  
 The response will be in form of array of disease report objects.  
 
-# GET /api/reports/key-terms/<category>  
+### GET /api/reports/key-terms/`<category>`  
 This api has only one path query parameter /<<category/>>, which can only be "general" or "specific".  
 When category is "general", the response will return all general key terms given by project spec.  
 When category is "specific", the response will return all specific key terms given by project spec.  
 All the responses will be in an array of key-term object.(for detail definition please check in the above link)  
 
-# GET /api/reports/locations  
+### GET /api/reports/locations  
 This api will return all the locations mentioned in our disease reports.  
 There is no input query parameter for this api.  
 The response will be an array of location objects.(for detail definition please check in the above link)  
 
-# GET /api/reports/locations/<geonameID>  
+### GET /api/reports/locations/`<geonameID>`  
 This api only has one path query parameter /<<geonameID/>>.  
 Given a geonameID, this api will return the detail information corresponding to this geographical ID.   
 The response will be in form of a location object.  
