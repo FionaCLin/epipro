@@ -10,48 +10,17 @@ All the required handlers will be created for each of our API modules. Each API 
 [//]: # (Discuss	your	current	thinking	about	how	parameters can	be	passed	to	your module	and	how	results	are	collected.	Show	an	example	of	a	possible interaction .e.g.- sample	HTTP	calls	with	URL	and	parameters)
 ### APIs Design
 After brainstorming about the query parameters, studying the usage of the disease report for the API and refering to the specification requirements, we have concluded upon the REST API list below. The user is able to fetch and filter disease reports based on these three information queries:
-- period of interest
-- key_terms
-- location
 
-The user is also able to retrieve the three main information details using our proposed APIs below.
-More details available [here](https://epiproapp.appspot.com/api/v1/doc/) on the EpiPro Online Doc.
+#### Period of Interest
+This refers to what specific time period the user is interested in for the disease report retrieval. We have two main APIs involved in this process. The first one helps retrieve all disease reports from the database, where the parameters are related to pagination e.g. start, limit. The second one helps filter by specific period in time, which can be passed to this module using the parameters indicating the beginning and/or end of this period e.g. start-date and end-date. Other optional parameters a filter by given keyterms or location.
 
-### Here are our 5 main api:    
+#### Keyterms
+The main API involving keyterms involves the category parameter, which helps group the keyterms given by the project specs. This parameter can only be given two values - 'general' or 'specific'. The API responds by returning general or specific keyterms, as outlined in the project spec.
 
-#### GET /api/reports/all  
-This api will return all the disease reports we have in the database.  
-This api has two optional query parameters, start and limit.  
-Start indicates the pagination start from 'start'-th report.  
-Limit gives the number of reports that will be return.  
-The response will be in form of array of disease report objects.  
+#### Location
+Location helps the user restrict the disease reports to a designated geographical location. Two main APIs are involved with this. The first one will return all locations mentioned in disease reports, with no additional input query parameter required. The second one accepts a parameter of the geonameID, and will respond with detailed information corresponding to the given geogrphical ID.
 
-#### GET /api/reports/filter  
-This api will return all the disease reports after being filtered.  
-This api has 4 optional query parameters: start-date, end-date, key_terms, location.  
-Start-date: From which day we start to looking for  
-End-date: By which day we look for  
-key-terms: a string containing single or multiple key terms that we search for in the reports  
-location: a geonameID referring to a location that we are looking for in the report  
-The response will be in form of a disease report object.  
-The response will be in form of array of disease report objects.  
-
-#### GET /api/reports/key-terms/`<category>`  
-This api has only one path query parameter `<category>`, which can only be "general" or "specific".  
-When category is "general", the response will return all general key terms given by project spec.  
-When category is "specific", the response will return all specific key terms given by project spec.  
-All the responses will be in an array of key-term object.(for detail definition please check in the above link)  
-
-#### GET /api/reports/locations  
-This api will return all the locations mentioned in our disease reports.  
-There is no input query parameter for this api.  
-The response will be an array of location objects.(for detail definition please check in the above link)  
-
-#### GET /api/reports/locations/`<geonameID>`  
-This api only has one path query parameter `<geonameID>`.  
-Given a geonameID, this api will return the detail information corresponding to this geographical ID.   
-The response will be in form of a location object.  
-
+More details on the APIs structure available [here](https://epiproapp.appspot.com/api/v1/doc/) on the EpiPro Online Doc.
 
 ### Collect Disease Reports
 As our data source WHO is a dynamic website which also provides search and filter functionalities, we chose Selenium and Scrapy frameworks to build and define our web scraper, even though there are lots of other great choice for web scraping. However, we didn't consider the other options over Scrapy, since it is most suitable for properly rendering XML and HTML pages and it is a Python framework designed for web crawling specifically. It is most suitable for our Python3 developement team and development environment, as well. However, Scrapy does not work for all web pages. We also need to consider JavaScript frameworks driven pages such as React and Angular, which means, in practice, that there will be different kinds of timers and interactive elements involved. Another peculiarity of Scrapy is that it goes through pages by accessing their URLs. However, there are some buttons on the webpages which won’t have any URLs linked to them when you inspect the element or get the source code (through xpath or css). Therefore, Selenium will be used to simulate browser usage to retrive data from those JavaScript frameworks driven web pages, and requesting with Scrapy will be used to get the required data in a data file format during collection process.
