@@ -1,4 +1,5 @@
-# Management Information (D1, D4)
+# Management Information
+[//]: # (D1, D4)
 
 ## Member	Responsibilities
 
@@ -16,7 +17,7 @@ During the implementation stage of the API and the main application, the members
 
 *	Ines Sarmiento – front-end development
 
-Based on the end user background and charactoriastic, develops user interface for our application and achieve our user experience goals. Futhermore, develope tests for relevant system components.
+Based on the end user background and characteriastic, develops user interface for our application and achieve our user experience goals. Futhermore, develope tests for relevant system components.
 
 *	Shenghan Gao – back-end development
 
