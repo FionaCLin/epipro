@@ -36,9 +36,11 @@ We brainstorming about the query parameters for the API and according to the spe
 - key_terms
 - location
 
+All these three parameters are optional, so we will evaluate which parameters are passed to our api and then start to fetch the data that user asks for.
+
 ```
 # locations
-GET /api/reports/locations/:geonameID 
+GET /api/reports/locations/<:geonameID> 
 -- get a single location by id
     Response a single location object:
     {
@@ -49,38 +51,36 @@ GET /api/reports/locations/:geonameID
     }
 GET /api/reports/locations 
 -- Index locations 
-  Response an array of locations
+  Response an array of locations object(as defined above)
 
 # key_terms
-GET /api/reports/key-terms 
+GET /api/reports/key-terms/<category> 
 -- Index all current key_terms 
    Response an array of key_terms, each key_term contains id, type and name
-   Query:
-   type::string 
-   example: "general" or "specific"
+   Path query(required):
+        category::string -enmu["general" or "specific"]
 
 # disease reports
-GET /api/reports 
+GET /api/reports/all  
 -- Fetch disease reports
    Responses the recent 100 reports by default
-   Query(optional):  
-   base::integer 
-   -- start from the n-th report 
-   limit::integer 
-   -- limit to the number of responseed reports
+   Url query(optional):  
+       start::integer 
+       -- start from the n-th report 
+       limit::integer 
+       -- limit to the number of responseed reports
 GET /api/reports/filter 
 -- Fetch disease reports by start date, end date, location, key_terms
    Response an array of disease reports
-   Payload(application/json): 
-   { 
-      start-date: string, 
-      end-date: string, 
-      key_terms: strings, 
-      location: geoname_id 
-   }
+   Url query(optional): 
+        start-date:: DateTime, 
+        end-date:: DateTime, 
+        key_terms:: strings(eg:"Anthrax,Zika"), 
+        location:: geoname_id 
 ```
 
-Our EpiPro Online Doc[https://epiproapp.appspot.com/api/doc/]
+Our EpiPro Online Doc[https://epiproapp.appspot.com/api/doc/] 
+Swagger UI can be used to simulate the api interactions.
 
 
 ## Developement and Deployment Environment
