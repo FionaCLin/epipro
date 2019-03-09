@@ -4,7 +4,7 @@
 [//]: # (Describe how	you	intend	to	develop	the	API	module and	provide	the	ability to	run	it	in	Web	service	mode)
 Before producing our API module design, we studied some of the relevant concepts in our problem domain. During this process, we will establish the domain model and sort out the relationships. Our resulting API modules will be designed based on our problem domain. We will build and display the API documentation within the Swagger editor, which will finally be developed in our designated platform and frameworks.
 
-All the required handlers will be created for each of our API modules. Each API module will run in REST web service mode and will handle the corresponding REST request. Our web server will host and run on the Google cloud platform, using a low cost App Engine Standard Environment. The EpiPro Application will then be able to serve REST API requests 24/7. More details on the Google App Engine is available [here](https://cloud.google.com/appengine/docs/).
+All the required handlers will be created for each of our API modules. Each API module will run in REST web service mode and will handle the corresponding REST request. Our web server will be built and host on the Google cloud platform, using a low cost App Engine Standard Environment. The EpiPro Application will then be able to serve REST API requests 24/7. More details on the Google App Engine is available [here](https://cloud.google.com/appengine/docs/).
 
 ## API Design Module
 [//]: # (Discuss	your	current	thinking	about	how	parameters can	be	passed	to	your module	and	how	results	are	collected.	Show	an	example	of	a	possible interaction .e.g.- sample	HTTP	calls	with	URL	and	parameters)
