@@ -13,6 +13,7 @@ After brainstorming about the query parameters, studying the usage of the diseas
 - period of interest
 - key_terms
 - location
+
 The user is also able to retrieve the three main information details using our proposed APIs below.
 More details available [here](https://epiproapp.appspot.com/api/v1/doc/) on the EpiPro Online Doc.
 
