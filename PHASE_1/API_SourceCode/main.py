@@ -28,16 +28,21 @@ from flask_restplus import reqparse
 
 import enum
 
+
+
+
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app
 # called `app` in `main.py`.
 app = Flask(__name__)
 blueprint = Blueprint('api', __name__, url_prefix='/api/v1')
+app.config['RESTPLUS_MASK_SWAGGER'] = False
 api = Api(blueprint,
           doc='/doc/',
           version='1.0',
           default="EpiPro",  # Default namespace
           title="EpiPro REST API Documentation",  # Documentation Title
-          description="This is a EpiPro App REST API.\r\n SENG3011 workshop project")  # Documentation Description
+          description="This is a EpiPro App REST API.\r\n SENG3011 workshop project"
+            )  # Documentation Description
 
 app.register_blueprint(blueprint)
 
@@ -100,6 +105,7 @@ filter_fields = api.model('filter',{
     # geoname_id
     'location': fields.Integer
    })
+
 #####################################################################################################
 
 # default index page render to REST api doc
@@ -148,7 +154,6 @@ class locations_id(Resource):
         return
 
 
-
 # # key_terms
 # GET /api/reports/key-terms
 # -- Index all current key_terms with given query
@@ -161,6 +166,7 @@ class key_terms(Resource):
     @api.marshal_with(key_term, as_list=True)
     @api.response(200, 'Key term list fetched successfully')
     # TO DO: specify the reason
+    # restrict the category, return the right status code
     @api.response(400, 'Bad request')
     @api.response(404, 'No data found')
     # @api.param('category','Optional Query, should be [general] or [specific]')
@@ -220,9 +226,6 @@ class disease_report_with_filter(Resource):
     # TO DO: specify the reason
     @api.response(400, 'Bad request')
     @api.response(404, 'No data found')
-    # TO DO：start and limit should be filled at the same time
-    @api.param('Start','Optional Query, start from the n-th report')
-    @api.param('Limit','Optional Query, limit to the number of responseed reports')
     @api.param('Start-date','Optional Query, the start date of period of interest')
     @api.param('End-date','Optional Query, the end date of period of interest')
     @api.param('Key-terms','Optional Query, the key terms user want to search')
