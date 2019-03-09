@@ -1,0 +1,312 @@
+{
+    "swagger": "2.0",
+    "basePath": "/v1",
+    "paths": {
+        "/api/reports/all": {
+            "get": {
+                "responses": {
+                    "404": {
+                        "description": "No data found"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/disease-report"
+                            }
+                        }
+                    }
+                },
+                "description": "Get all disease reports",
+                "operationId": "get_disease_reports",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "description": "Optional Query, limit to the number of responseed reports",
+                        "name": "limit",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "description": "Optional Query, start from the n-th report",
+                        "name": "start",
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "EpiPro"
+                ]
+            }
+        },
+        "/api/reports/filter": {
+            "get": {
+                "responses": {
+                    "404": {
+                        "description": "No data found"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/disease-report"
+                            }
+                        }
+                    }
+                },
+                "description": "Get all reports according to the filter",
+                "operationId": "get_disease_report_with_filter",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "description": "Optional Query, input a location name (city/country/state etc.)",
+                        "name": "Location",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "description": "Optional Query, the key terms user want to search",
+                        "name": "Key-terms",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "description": "Optional Query, the end date of period of interest",
+                        "name": "End-date",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "description": "Optional Query, the start date of period of interest",
+                        "name": "Start-date",
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "EpiPro"
+                ]
+            }
+        },
+        "/api/reports/key-terms/{category}": {
+            "get": {
+                "responses": {
+                    "404": {
+                        "description": "No data found"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/key_term"
+                            }
+                        }
+                    }
+                },
+                "description": "Get all the key terms if no additional query,                otherwise, get all keys from [general] or [specific] catagory",
+                "operationId": "get_key_terms",
+                "parameters": [
+                    {
+                        "name": "category",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "Can ONLY be [general] or [specific]"
+                    }
+                ],
+                "tags": [
+                    "EpiPro"
+                ]
+            }
+        },
+        "/api/reports/locations": {
+            "get": {
+                "responses": {
+                    "404": {
+                        "description": "No data found"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/location_info"
+                            }
+                        }
+                    }
+                },
+                "description": "Get all the disease related locations",
+                "operationId": "get_locations",
+                "tags": [
+                    "EpiPro"
+                ]
+            }
+        },
+        "/api/reports/locations/{geoname_id}": {
+            "parameters": [
+                {
+                    "name": "geoname_id",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "404": {
+                        "description": "No data found"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/location_info"
+                        }
+                    }
+                },
+                "description": "Get the location info with given geoname id",
+                "operationId": "get_locations_id",
+                "tags": [
+                    "EpiPro"
+                ]
+            }
+        }
+    },
+    "info": {
+        "title": "EpiPro REST API Documentation",
+        "version": "1.0",
+        "description": "This is a EpiPro App REST API.\r\n SENG3011 workshop project"
+    },
+    "produces": [
+        "application/json"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "tags": [
+        {
+            "name": "EpiPro",
+            "description": "Default namespace"
+        }
+    ],
+    "definitions": {
+        "location_info": {
+            "properties": {
+                "geoname_id": {
+                    "type": "integer"
+                },
+                "country": {
+                    "type": "string"
+                },
+                "location": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "key_term": {
+            "properties": {
+                "keyTerm_id": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "string",
+                    "example": "general",
+                    "enum": [
+                        "general",
+                        "specific"
+                    ]
+                },
+                "name": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "disease-report": {
+            "properties": {
+                "url": {
+                    "type": "string"
+                },
+                "date_of_publiction": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "headline": {
+                    "type": "string"
+                },
+                "main_text": {
+                    "type": "string"
+                },
+                "reports": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/report"
+                    }
+                }
+            },
+            "type": "object"
+        },
+        "report": {
+            "properties": {
+                "disease": {
+                    "type": "string"
+                },
+                "syndrome": {
+                    "type": "string"
+                },
+                "reported_events": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/report-event"
+                    }
+                }
+            },
+            "type": "object"
+        },
+        "report-event": {
+            "properties": {
+                "type": {
+                    "type": "string"
+                },
+                "date": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "location": {
+                    "$ref": "#/definitions/location_info"
+                },
+                "number-affected": {
+                    "type": "integer"
+                }
+            },
+            "type": "object"
+        }
+    },
+    "responses": {
+        "ParseError": {
+            "description": "When a mask can't be parsed"
+        },
+        "MaskError": {
+            "description": "When any error occurs on mask"
+        }
+    }
+}
