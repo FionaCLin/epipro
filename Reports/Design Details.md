@@ -37,7 +37,7 @@ The response will be in form of a disease report object.
 The response will be in form of array of disease report objects.  
 
 #### GET /api/reports/key-terms/`<category>`  
-This api has only one path query parameter /<<category/>>, which can only be "general" or "specific".  
+This api has only one path query parameter `<category>`, which can only be "general" or "specific".  
 When category is "general", the response will return all general key terms given by project spec.  
 When category is "specific", the response will return all specific key terms given by project spec.  
 All the responses will be in an array of key-term object.(for detail definition please check in the above link)  
@@ -48,7 +48,7 @@ There is no input query parameter for this api.
 The response will be an array of location objects.(for detail definition please check in the above link)  
 
 #### GET /api/reports/locations/`<geonameID>`  
-This api only has one path query parameter /<<geonameID/>>.  
+This api only has one path query parameter `<geonameID>`.  
 Given a geonameID, this api will return the detail information corresponding to this geographical ID.   
 The response will be in form of a location object.  
 
