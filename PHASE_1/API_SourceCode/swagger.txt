@@ -1,6 +1,6 @@
 {
     "swagger": "2.0",
-    "basePath": "/v1",
+    "basePath": "/api/v1",
     "paths": {
         "/api/reports/all": {
             "get": {
