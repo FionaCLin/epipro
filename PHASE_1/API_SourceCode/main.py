@@ -18,7 +18,8 @@
 
 from flask import Flask, Blueprint
 # not sure if we need this in localhost
-from flask import Flask, url_for, redirect
+# from flask_cors import CORS
+from flask import Flask, url_for, redirect, render_template
 from flask_restplus import Resource, Api
 from flask import request
 from flask_restplus import fields
@@ -27,16 +28,21 @@ from flask_restplus import reqparse
 
 import enum
 
+
+
+
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app
 # called `app` in `main.py`.
 app = Flask(__name__)
 blueprint = Blueprint('api', __name__, url_prefix='/api/v1')
+app.config['RESTPLUS_MASK_SWAGGER'] = False
 api = Api(blueprint,
           doc='/doc/',
           version='1.0',
           default="EpiPro",  # Default namespace
           title="EpiPro REST API Documentation",  # Documentation Title
-          description="This is a EpiPro App REST API.\r\n SENG3011 workshop project")  # Documentation Description
+          description="This is a EpiPro App REST API.\r\n SENG3011 workshop project"
+            )  # Documentation Description
 
 app.register_blueprint(blueprint)
 
@@ -92,23 +98,25 @@ disease_report_model = api.model('disease-report',{
     'reports': fields.List(fields.Nested(report))
 })
 
-filter_fields = api.model('filter',{ 
-    'start-date': fields.DateTime, 
-    'end-date': fields.DateTime, 
+filter_fields = api.model('filter',{
+    'start-date': fields.DateTime,
+    'end-date': fields.DateTime,
     'key_terms': fields.String,
-    # geoname_id 
+    # geoname_id
     'location': fields.Integer
    })
+
 #####################################################################################################
 
 # default index page render to REST api doc
 @app.route('/')
 def index():
-    return redirect(url_for('api.doc'))
+     return render_template("index.html", token="APIs v1")
+    # return redirect(url_for('api.doc'))
 
 # # locations
-# GET /api/reports/locations 
-# -- Index locations 
+# GET /api/reports/locations
+# -- Index locations
 #   Response an array of locations
 @api.route('/api/reports/locations')
 class locations(Resource):
@@ -123,7 +131,7 @@ class locations(Resource):
     def get(self):
         return
 
-# GET /api/reports/locations/:geonameID 
+# GET /api/reports/locations/:geonameID
 # -- get a single location by id
 #     Response a single location object:
 #     {
@@ -146,9 +154,8 @@ class locations_id(Resource):
         return
 
 
-
 # # key_terms
-# GET /api/reports/key-terms 
+# GET /api/reports/key-terms
 # -- Index all current key_terms with given query
 #    Query: [GENERAL]|[SPECIFIC]
 #    Response an array of key_terms, each key_term contains id, type and name
@@ -159,6 +166,7 @@ class key_terms(Resource):
     @api.marshal_with(key_term, as_list=True)
     @api.response(200, 'Key term list fetched successfully')
     # TO DO: specify the reason
+    # restrict the category, return the right status code
     @api.response(400, 'Bad request')
     @api.response(404, 'No data found')
     # @api.param('category','Optional Query, should be [general] or [specific]')
@@ -171,10 +179,10 @@ class key_terms(Resource):
 
 
 # # disease reports
-# GET /api/reports 
+# GET /api/reports
 # -- Fetch disease reports
 #    Responses the recent 100 reports by default
-#    Query(optional):  
+#    Query(optional):
 #    pagination -- this refers to the design from atlassian
 #    reference: https://developer.atlassian.com/server/confluence/pagination-in-the-rest-api/
 #       -start::integer  : start from the n-th report
@@ -198,15 +206,15 @@ class disease_reports(Resource):
         return
 
 
-# GET /api/reports/filter 
+# GET /api/reports/filter
 # -- Fetch disease reports by start date, end date, location, key_terms
 #    Response an array of disease reports
 #    Query type
-#    { 
-#       start-date: string, 
-#       end-date: string, 
-#       key_terms: list<string>, 
-#       location: geoname_id 
+#    {
+#       start-date: string,
+#       end-date: string,
+#       key_terms: list<string>,
+#       location: geoname_id
 #    }
 #   TO DO: HOW TO DEAL WITH EMPTY FIELD?
 @api.route('/api/reports/filter')
@@ -218,9 +226,6 @@ class disease_report_with_filter(Resource):
     # TO DO: specify the reason
     @api.response(400, 'Bad request')
     @api.response(404, 'No data found')
-    # TO DO：start and limit should be filled at the same time
-    @api.param('Start','Optional Query, start from the n-th report')
-    @api.param('Limit','Optional Query, limit to the number of responseed reports')
     @api.param('Start-date','Optional Query, the start date of period of interest')
     @api.param('End-date','Optional Query, the end date of period of interest')
     @api.param('Key-terms','Optional Query, the key terms user want to search')
