@@ -13,15 +13,17 @@ before_install:
 # Decrypt the credentials we added to the repo using the key we added with the Travis command line tool
 - openssl aes-256-cbc -K $encrypted_c6f649e554dd_key -iv $encrypted_c6f649e554dd_iv -in PHASE_1/TestScripts/credentials.tar.gz.enc -out credentials.tar.gz -d
 - tar -xzf credentials.tar.gz
-# Here we use the decrypted service account credentials to authenticate the command line tool
+# install flask and pytest for Virtual container testing
 - mkdir -p lib
 - pip install -r PHASE_1/API_SourceCode/requirements.txt -t lib/
 - pip install -r PHASE_1/API_SourceCode/requirements.txt 
 - pip install pytest
 
 script:
-# unit testing
+# unit testing 
+# TODO refact the tests to the test script folder
 - python3 PHASE_1/API_SourceCode/main_test.py
+
 # deploy staging branch 
 deploy:
   provider: gae
@@ -31,17 +33,3 @@ deploy:
   config: PHASE_1/API_SourceCode/app.yaml
   default: true  # default project app version
   on: production-api-v1
-#   no_promote: true
-
-
-# after_deploy:
-#   - VERSION=`gcloud app versions list|tail -n 1|cut -d ' ' -f3`
-#   - echo $VERSION
-#   - python3 PHASE_1/TestScripts/e2e_test.py $VERSION\-dot\-epiproapp.appspot.com
-# after_script:
-#  script:
-#   # after deploy e2e testing
-#   - VERSION=`gcloud app versions list|tail -n 1|cut -d ' ' -f3`
-#   - python3 PHASE_1/TestScripts/e2e_test.py $VERSION\-dot\-epiproapp.appspot.com
-#   - gcloud app deploy --promote --version=$VERSION
-# # deploy the production branch
