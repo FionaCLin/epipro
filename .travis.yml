@@ -31,7 +31,8 @@ deploy:
   config: PHASE_1/API_SourceCode/app.yaml
   default: true  # default project app version
   on: production-api-v1
-
+  no_promote: true
+  
 # after_script:
 after_deploy:
 # after deploy e2e testing
