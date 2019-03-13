@@ -62,3 +62,7 @@ Since Travis integrates with GitHub and runs tests in isolation, it can run on t
 [More Detail on Travis CI testing within Google Cloud App Engine](https://cloud.google.com/solutions/continuous-delivery-with-travis-ci). Hence, our integration tests will be developed and used by a CI/CD service on Google Cloud Platform (GCP) to deploy your app as part of the build process.
 
 We will apply the practice of continuous integration (CI) and continuous delivery (CD), which involves using tools like Travis CI, to ensure that all new code is automatically and consistently tested for errors. This allows us to streamline our development and deployment process, as well as ensure developed components work within the production environment and all related web services work together before it is deployed to the production enviroment. Continuous delivery (CD) goes one step further by ensuring we can deploy every build into a production-like environment and then pass integration tests in that environment.
+
+[//]: # (2.2. API	design	and	testing details	D2 )
+[//]: # ( • Describe	final architecture	of	your	API,	justify	the	choice	of	implementation,	challenges	addressed	and	shortcomings.)
+[//]: # (• Provide	the	URL	of	your	API	specification.)
