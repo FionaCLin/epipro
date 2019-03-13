@@ -13,7 +13,7 @@
 # limitations under the License.
 
 ##### DON'T KNOW WHAT THIS FOR #####
-# from lib import *
+from lib import *
 # [START gae_python37_app]
 
 from flask import Flask, Blueprint
