@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-###### DON'T KNOW WHAT THIS FOR #####
+##### DON'T KNOW WHAT THIS FOR #####
 # from lib import *
 # [START gae_python37_app]
 
