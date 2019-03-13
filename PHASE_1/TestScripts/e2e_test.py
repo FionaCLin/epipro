@@ -17,7 +17,7 @@ HOST='https://epiproapp.appspot.com'
 response = request.urlopen("{}/api/v1/swagger.json".format(HOST))
 json_res = json.loads(response.read().decode('utf-8'))
 assert(json_res['swagger'] == "2.0")
-assert(json_res['basePath'] == "/api/v1")
+assert(json_res['basePath'] == "/api/")
 # [END e2e]
 
 
