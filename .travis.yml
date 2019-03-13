@@ -31,6 +31,10 @@ before_install:
 - pip install -r PHASE_1/API_SourceCode/requirements.txt 
 - pip install pytest
 
+script:
+# unit testing
+- python3 PHASE_1/API_SourceCode/main_test.py
+
 deploy:
   provider: gae
   skip_cleanup: true # Skip cleanup so api_key.py and vendored dependencies are still there
