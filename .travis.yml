@@ -27,7 +27,6 @@ before_install:
 - mkdir -p lib
 # Here we use the decrypted service account credentials to authenticate the command line tool
 - gcloud auth activate-service-account --key-file client-secret.json
-
 - pip install -r PHASE_1/API_SourceCode/requirements.txt -t lib/
 
 deploy:
@@ -38,5 +37,8 @@ deploy:
   config: PHASE_1/API_SourceCode/app.yaml
   default: true  # default project app version
   on: production-api-v1
+
 script:
+- python3 PHASE_1/TestScripts/e2e_test.py
+after_script:
 - python3 PHASE_1/TestScripts/e2e_test.py
