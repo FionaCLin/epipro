@@ -12,18 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-##### DON'T KNOW WHAT THIS FOR #####
-from flask import Flask, Blueprint
-# not sure if we need this in localhost
-# from flask_cors import CORS
-from flask import Flask, url_for, redirect, render_template
-from flask_restplus import Resource, Api
-from flask import request
-from flask_restplus import fields
-from flask_restplus import inputs
-from flask_restplus import reqparse
 import main
-
 
 
 def test_index():
