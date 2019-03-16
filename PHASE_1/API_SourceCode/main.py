@@ -18,7 +18,6 @@
 
 from flask import Flask, Blueprint
 # not sure if we need this in localhost
-# from flask_cors import CORS
 from flask import Flask, url_for, redirect, render_template
 from flask_restplus import Resource, Api
 from flask import request
@@ -26,6 +25,8 @@ from flask_restplus import fields
 from flask_restplus import inputs
 from flask_restplus import reqparse
 
+import pymongo
+from pymongo import MongoClient
 import enum
 
 
@@ -46,6 +47,8 @@ api = Api(blueprint,
 
 app.register_blueprint(blueprint)
 
+client = MongoClient('mongodb://user001:admin12345@ds027483.mlab.com:27483/epipro_disease_report', 27017)
+db = client['epipro_disease_report']
 
 #############################################################################################
 #   MODEL   #
@@ -64,10 +67,11 @@ location = api.model('location_info', {
 })
 
 #####  RESPONSE for /api/reports/key_terms
-#      {id, type and name}
+#      {id, type, category and name}
 key_term = api.model('key_term', {
     'keyTerm_id': fields.Integer,
     'type': fields.String(enum=['general', 'specific']),
+    'category': fields.String,
     'name': fields.String
 })
 
@@ -112,7 +116,6 @@ filter_fields = api.model('filter',{
 @app.route('/')
 def index():
      return render_template("index.html", token="APIs v1")
-    # return redirect(url_for('api.doc'))
 
 # # locations
 # GET /api/reports/locations
@@ -154,28 +157,58 @@ class locations_id(Resource):
         return
 
 
+######################
+##      CLOSED      ##
+######################
 # # key_terms
 # GET /api/reports/key-terms
 # -- Index all current key_terms with given query
 #    Query: [GENERAL]|[SPECIFIC]
+#    Category: sub-types under sepcific key terms
 #    Response an array of key_terms, each key_term contains id, type and name
 
-@api.route('/api/reports/key-terms/<any(general, specific):category>')
+@api.route('/api/reports/key-terms/<string:term_type>')
 class key_terms(Resource):
 
-    @api.marshal_with(key_term, as_list=True)
-    @api.response(200, 'Key term list fetched successfully')
-    # TO DO: specify the reason
-    # restrict the category, return the right status code
-    @api.response(400, 'Bad request')
+    @api.response(200, 'Key term list fetched successfully', key_term)
+    @api.response(400, 'Bad request, check the parameters')
     @api.response(404, 'No data found')
-    # @api.param('category','Optional Query, should be [general] or [specific]')
-    @api.doc(params={'category':'Can ONLY be [general] or [specific]'})
+    @api.param('category','Optional, find out A agent keywords')
+    @api.doc(params={'term_type':'Can ONLY be [general] or [specific]'})
     @api.doc(description="Get all the key terms if no additional query,\
-                otherwise, get all keys from [general] or [specific] catagory")
+                otherwise, get all keys from [general] or [specific] type")
     # @api.expect([key_term], validate=True)
-    def get(self, category):
-        return
+    def get(self, term_type):
+        term_type = term_type.lower()
+        if term_type not in ['general', 'specific']:
+            return { 'message' : 'make sure that term-type can only be general or specific' }, 400
+        collection = db['Key_Terms']
+
+        result = []
+        my_query = { 'type' : term_type }
+        query = request.args.get('category')
+        
+        if query is not None:
+            if term_type == "specific":
+                query = query.lower()
+                my_query = { 'type' : term_type, 'category': query }
+            else:
+                return { 'message': 'category is under specific type, please enter again' }, 400
+
+        cursor = collection.find(my_query)
+        for entry in cursor:
+            e = {}
+            e['type'] = entry['type']
+            e['category'] = entry['category']
+            e['name'] = entry['name']
+            result.append(e)
+        if not result:
+            return { 'message': 'Sorry, there is no data matched' }, 404
+
+        return result, 200
+        
+
+        
 
 
 # # disease reports
