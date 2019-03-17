@@ -29,7 +29,7 @@ import config
 import pymongo
 from pymongo import MongoClient
 import enum
-
+import json
 
 
 
@@ -118,7 +118,7 @@ filter_fields = api.model('filter',{
 # default index page render to REST api doc
 @app.route('/')
 def index():
-     return render_template("index.html", token="APIs v1")
+    return render_template("index.html", token=api.base_url+'doc')
 
 # # locations
 # GET /api/reports/locations
