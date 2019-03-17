@@ -21,3 +21,4 @@ PROJECT_ID = 'your-project-id'
 MONGO_URI = \
     'mongodb://user:password@host:27017/database'
 MONGO_PORT=0000
+MONGO_DB=''
