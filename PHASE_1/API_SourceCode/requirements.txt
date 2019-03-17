@@ -1,2 +1,5 @@
 Flask==1.0.2
 flask_restplus==0.12.1
+gunicorn==19.9.0
+Flask-PyMongo>=2.0.0
+PyMongo==3.7.2
