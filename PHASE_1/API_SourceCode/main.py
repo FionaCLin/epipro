@@ -12,9 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-##### DON'T KNOW WHAT THIS FOR #####
+#### DON'T KNOW WHAT THIS FOR #####
 # from lib import *
 # [START gae_python37_app]
+
 
 from flask import Flask, Blueprint
 # not sure if we need this in localhost
@@ -24,7 +25,7 @@ from flask import request
 from flask_restplus import fields
 from flask_restplus import inputs
 from flask_restplus import reqparse
-
+import config
 import pymongo
 from pymongo import MongoClient
 import enum
@@ -47,8 +48,10 @@ api = Api(blueprint,
 
 app.register_blueprint(blueprint)
 
-client = MongoClient('mongodb://user001:admin12345@ds027483.mlab.com:27483/epipro_disease_report', 27017)
-db = client['epipro_disease_report']
+client = MongoClient(config.MONGO_URI,config.MONGO_PORT)
+db = client[config.MONGO_DB]
+
+parser = reqparse.RequestParser()
 
 #############################################################################################
 #   MODEL   #
@@ -121,7 +124,7 @@ def index():
 # GET /api/reports/locations
 # -- Index locations
 #   Response an array of locations
-@api.route('/api/reports/locations')
+@api.route('/reports/locations')
 class locations(Resource):
 
     @api.marshal_with(location, as_list=True)
@@ -143,7 +146,7 @@ class locations(Resource):
 #       location: string,
 #       url: string,  --geoname_url
 #     }
-@api.route('/api/reports/locations/<int:geoname_id>')
+@api.route('/reports/locations/<int:geoname_id>')
 class locations_id(Resource):
 
     @api.marshal_with(location)
@@ -166,8 +169,7 @@ class locations_id(Resource):
 #    Query: [GENERAL]|[SPECIFIC]
 #    Category: sub-types under sepcific key terms
 #    Response an array of key_terms, each key_term contains id, type and name
-
-@api.route('/api/reports/key-terms/<string:term_type>')
+@api.route('/reports/key-terms/<string:term_type>')
 class key_terms(Resource):
 
     @api.response(200, 'Key term list fetched successfully', key_term)
@@ -187,7 +189,7 @@ class key_terms(Resource):
         result = []
         my_query = { 'type' : term_type }
         query = request.args.get('category')
-        
+
         if query is not None:
             if term_type == "specific":
                 query = query.lower()
@@ -204,11 +206,10 @@ class key_terms(Resource):
             result.append(e)
         if not result:
             return { 'message': 'Sorry, there is no data matched' }, 404
-
         return result, 200
-        
 
-        
+
+
 
 
 # # disease reports
@@ -222,7 +223,7 @@ class key_terms(Resource):
 #       -limit::integer  : limit to the number of responseed reports
 # TO DO: add sort function
 
-@api.route('/api/reports/all')
+@api.route('/reports/all')
 class disease_reports(Resource):
 
     @api.marshal_with(disease_report_model, as_list=True)
@@ -250,7 +251,7 @@ class disease_reports(Resource):
 #       location: geoname_id
 #    }
 #   TO DO: HOW TO DEAL WITH EMPTY FIELD?
-@api.route('/api/reports/filter')
+@api.route('/reports/filter')
 class disease_report_with_filter(Resource):
 
     # @api.expect(filter_fields, validate=True)
