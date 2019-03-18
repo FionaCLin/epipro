@@ -29,7 +29,7 @@ import config
 import pymongo
 from pymongo import MongoClient
 import enum
-
+import re
 
 
 
@@ -193,13 +193,16 @@ class key_terms(Resource):
         collection = db['Key_Terms']
 
         result = []
-        my_query = { 'type' : term_type }
+        my_query = { 'type' : re.compile(term_type, re.IGNORECASE) }
         query = request.args.get('category')
 
         if query is not None:
             if term_type == "specific":
                 query = query.lower()
-                my_query = { 'type' : term_type, 'category': query }
+                my_query = { 
+                    'type' : re.compile(term_type, re.IGNORECASE), 
+                    'category': re.compile(query, re.IGNORECASE) 
+                }
             else:
                 return { 'message': 'category is under specific type, please enter again' }, 400
 
