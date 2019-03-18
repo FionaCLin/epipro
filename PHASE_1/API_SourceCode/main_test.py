@@ -109,7 +109,6 @@ def test_fetch_all_locations():
 def test_fetch_all_reports():
   r = client.get('/api/v1/reports/all')
   reports = json.loads(r.data.decode('utf-8')[:-1])
-  print(reports)
   assert reports == sample_disease_report
   assert r.status_code == 200
 
