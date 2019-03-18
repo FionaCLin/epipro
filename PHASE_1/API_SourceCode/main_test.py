@@ -18,7 +18,7 @@ cwd = os.getcwd()
 
 sample_key_terms = json.load(open(os.path.join(cwd,'../TestScripts/sample_data/key-terms.json'),'r'))
 sample_locations = json.load(open(os.path.join(cwd,'../TestScripts/sample_data/locations.json'),'r'))
-sample_disease_report = json.load(open(os.path.join(cwd,'../TestScripts/sample_data/sample_disease_report.json'),'r'))
+sample_disease_report = open(os.path.join(cwd,'../TestScripts/sample_data/sample_disease_report.json'),'r')
 
 main.app.testing = True
 client = main.app.test_client()
@@ -34,8 +34,8 @@ def test_specific_key_terms():
   assert r.status_code == 200
   terms = json.loads(r.data.decode('utf-8'))
   for e in terms:
-    print(e)
-    # assert e['name'] in sample_key_terms['specific']
+    # print(e)
+    assert e['name'] in sample_key_terms['specific']
     assert e['category'] in ['A Agents', 'none']
     assert e['type'] == 'specific'
 
@@ -43,13 +43,11 @@ def test_specific_w_category_A_agents_key_terms():
   main.app.testing = True
   client = main.app.test_client()
   r = client.get('/api/v1/reports/key-terms/specific?category=A%20Agents')
-  # assert r.status_code == 200
-  print(r.status_code)
+  assert r.status_code == 200
   terms = json.loads(r.data.decode('utf-8'))
-  print(terms)
   for e in terms:
     # print(e)
-    # assert e['name'] in sample_key_terms['specific']
+    assert e['name'] in sample_key_terms['specific']
     assert e['category']  == 'A Agents'
     assert e['type'] == 'specific'
 
@@ -61,13 +59,10 @@ def test_specific_w_category_none_key_terms():
   terms = json.loads(r.data.decode('utf-8'))
   for e in terms:
     # print(e)
-    # assert e['name'] in sample_key_terms['specific']
+    assert e['name'] in sample_key_terms['specific']
     assert e['category']  == 'none'
     assert e['type'] == 'specific'
-# ''''
-# {'type': 'specific', 'category': 'a agent', 'name': 'Hantavirus Rift Valley Fever'}
-# this data has broken the above tests
-# ''''
+
 def test_general_key_terms():
   r = client.get('/api/v1/reports/key-terms/general')
   assert r.status_code == 200
@@ -104,12 +99,18 @@ def test_key_terms():
 def test_fetch_all_locations():
   r = client.get('/api/v1/reports/locations/all')
   locations = json.loads(r.data.decode('utf-8'))
-  for e in locations:
-    print(e)
+  
+  for i in range(len(locations)):
+    for e in locations[i].keys() & sample_locations[i].keys():
+      # print(locations[i][e], sample_locations[i][e])
+      assert locations[i][e] == sample_locations[i][e]
   assert r.status_code == 200
 
 def test_fetch_all_reports():
   r = client.get('/api/v1/reports/all')
+  reports = json.loads(r.data.decode('utf-8')[:-1])
+  print(reports)
+  assert reports == sample_disease_report
   assert r.status_code == 200
 
 # def test_filter_reports():
@@ -122,6 +123,6 @@ def test_fetch_all_reports():
 
 test_index()
 test_key_terms()
-test_locations()
+# test_locations()
 test_fetch_all_locations()
 test_fetch_all_reports()
