@@ -57,16 +57,14 @@ parser = reqparse.RequestParser()
 #   MODEL   #
 #####  REPSONSE for /api/reports/locations/<:id> #####
 #     {
-#       geoname_id: number,
 #       county: string,
-#       location: string,
-#       url: string,  --geoname_url
+#       state: string,
+#       city: string
 #     }
 location = api.model('location_info', {
-    'geoname_id': fields.Integer,
     'country': fields.String,
-    'location': fields.String,
-    'url': fields.String
+    'state': fields.String,
+    'city': fields.String,
 })
 
 #####  RESPONSE for /api/reports/key_terms
@@ -124,18 +122,26 @@ def index():
 # GET /api/reports/locations
 # -- Index locations
 #   Response an array of locations
-@api.route('/reports/locations')
+@api.route('/reports/locations/all')
 class locations(Resource):
 
-    @api.marshal_with(location, as_list=True)
-    @api.response(200, 'Data fetched successfully')
+    @api.response(200, 'Data fetched successfully', location)
     # TO DO: specify the reason
     @api.response(400, 'Bad request')
     @api.response(404, 'No data found')
     @api.doc(description="Get all the disease related locations")
-    # @api.expect([location], validate=True)
     def get(self):
-        return
+        collection = db['test_location']
+        result = []
+
+        for report_location in collection.find():
+            e = {}
+            e['country'] = report_location['country']
+            e['state'] = report_location['state']
+            e['city'] = report_location['city']
+            result.append(e)
+
+        return result, 200
 
 # GET /api/reports/locations/:geonameID
 # -- get a single location by id
