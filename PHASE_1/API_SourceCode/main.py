@@ -153,7 +153,7 @@ class locations(Resource):
 
 
 ######################
-##    in progress   ##
+##      CLOSED      ##
 ######################
 # GET /api/reports/locations/:area
 # -- get a single location by id
@@ -166,17 +166,14 @@ class locations(Resource):
 @api.route('/reports/locations/<string:area>')
 class locations_id(Resource):
 
-    #partially matching???
+    #TO DO: partially matching??? no
     @api.response(200, 'Specific location info fetched successfully',location)
     @api.response(400, 'Bad request')
     @api.response(404, 'No data found')
-    @api.param('area','Optional Query, given a specific country/state/city name, return all relative area info')
     @api.doc(description="Get the location info with a given name")
-    @api.expect(location, validate=True)
     def get(self, area):
         collection = db['test_location']
         search_string = "\'" + area + "\'"
-        print(search_string)
         cursor = collection.find({"$text": {"$search": search_string}}, { "_id": 0 })
         result = []
 
@@ -184,7 +181,7 @@ class locations_id(Resource):
             result.append(entry)
 
         if not result:
-            return { 'message': 'Sorry, there is no data matched' }, 404
+            return { 'message': 'Sorry, there is no data matched, make sure you enter the whole words you want to search' }, 404
 
         return result, 200
 
@@ -244,7 +241,7 @@ class key_terms(Resource):
 
 
 ######################
-##   in progress    ##
+##      CLOSED      ##
 ######################
 # # disease reports
 # GET /api/reports
@@ -270,7 +267,16 @@ class disease_reports(Resource):
     @api.doc(description="Get all disease reports")
     def get(self):
         collection = db['test_report']
-        cursor = collection.find({"$text": {"$search": "AustraLIA"}}, { "_id": 0 })
+        start = request.args.get('start')
+        limit = request.args.get('limit')
+
+        if start is None:
+            start = 0
+        if limit is None:
+            limit = 1
+        start = int(start)
+        limit = int(limit)
+        cursor = collection.find({},{ "_id": 0 }).skip(start).limit(limit)
         result = []
 
         for entry in cursor:
