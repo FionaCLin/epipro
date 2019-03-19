@@ -15,7 +15,8 @@
                     "type": "recovered",
                     "date": "2018-12-01Txx:xx:xx to 2018-12-10Txx:xx:xx",
                     "location": {
-                        "geonames-id": 1566083
+                        "country": "Australia",
+                        "location": "Sydney, New South Wales"
                     },
                     "number-affected": 1
                 },
