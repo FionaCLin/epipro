@@ -78,12 +78,17 @@ key_term = api.model('key_term', {
 
 #####  RESPONSE for /api/reports
 #       This is a DISEASE REPORT json format
+location_detail = api.model('location_detail',{
+    'country': fields.String,
+    'location': fields.String
+})
+
 reported_event = api.model('report-event', {
     # TO DO : figure out the range
     'type': fields.String,
     # TO DO: choose the right format
     'date': fields.DateTime,
-    'location': fields.Nested(location),
+    'location': fields.Nested(location_detail),
     'number-affected':fields.Integer
 })
 
@@ -118,6 +123,9 @@ filter_fields = api.model('filter',{
 def index():
     return render_template("index.html", token=api.base_url+'doc')
 
+######################
+##      CLOSED      ##
+######################
 # # locations
 # GET /api/reports/locations
 # -- Index locations
@@ -143,27 +151,42 @@ class locations(Resource):
 
         return result, 200
 
-# GET /api/reports/locations/:geonameID
+
+######################
+##    in progress   ##
+######################
+# GET /api/reports/locations/:area
 # -- get a single location by id
 #     Response a single location object:
 #     {
-#       geoname_id: number,
 #       county: string,
-#       location: string,
-#       url: string,  --geoname_url
+#       state: string,
+#       city: string
 #     }
-@api.route('/reports/locations/<int:geoname_id>')
+@api.route('/reports/locations/<string:area>')
 class locations_id(Resource):
 
-    @api.marshal_with(location)
-    @api.response(200, 'Specific location info fetched successfully')
-    # TO DO: specify the reason
+    #partially matching???
+    @api.response(200, 'Specific location info fetched successfully',location)
     @api.response(400, 'Bad request')
     @api.response(404, 'No data found')
-    @api.doc(description="Get the location info with given geoname id")
-    # @api.expect(location, validate=True)
-    def get(self):
-        return
+    @api.param('area','Optional Query, given a specific country/state/city name, return all relative area info')
+    @api.doc(description="Get the location info with a given name")
+    @api.expect(location, validate=True)
+    def get(self, area):
+        collection = db['test_location']
+        search_string = "\'" + area + "\'"
+        print(search_string)
+        cursor = collection.find({"$text": {"$search": search_string}}, { "_id": 0 })
+        result = []
+
+        for entry in cursor:
+            result.append(entry)
+
+        if not result:
+            return { 'message': 'Sorry, there is no data matched' }, 404
+
+        return result, 200
 
 
 ######################
@@ -220,7 +243,9 @@ class key_terms(Resource):
 
 
 
-
+######################
+##   in progress    ##
+######################
 # # disease reports
 # GET /api/reports
 # -- Fetch disease reports
@@ -235,8 +260,7 @@ class key_terms(Resource):
 @api.route('/reports/all')
 class disease_reports(Resource):
 
-    @api.marshal_with(disease_report_model, as_list=True)
-    @api.response(200, 'Specific location info fetched successfully')
+    @api.response(200, 'Specific location info fetched successfully', disease_report_model)
     # TO DO: specify the reason
     @api.response(400, 'Bad request')
     @api.response(404, 'No data found')
@@ -244,11 +268,19 @@ class disease_reports(Resource):
     @api.param('start','Optional Query, start from the n-th report')
     @api.param('limit','Optional Query, limit to the number of responseed reports')
     @api.doc(description="Get all disease reports")
-    # @api.expect([disease_report_model], validate=True)
     def get(self):
-        return
+        collection = db['test_report']
+        cursor = collection.find({"$text": {"$search": "AustraLIA"}}, { "_id": 0 })
+        result = []
 
+        for entry in cursor:
+            result.append(entry)
 
+        return result, 200
+
+######################
+##      TO DO       ##
+######################
 # GET /api/reports/filter
 # -- Fetch disease reports by start date, end date, location, key_terms
 #    Response an array of disease reports
