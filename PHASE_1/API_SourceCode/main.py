@@ -30,6 +30,8 @@ import pymongo
 from pymongo import MongoClient
 import enum
 import re
+from datetime import datetime
+
 
 
 
@@ -285,7 +287,7 @@ class disease_reports(Resource):
         return result, 200
 
 ######################
-##      TO DO       ##
+##       TO DO      ##
 ######################
 # GET /api/reports/filter
 # -- Fetch disease reports by start date, end date, location, key_terms
@@ -301,9 +303,7 @@ class disease_reports(Resource):
 @api.route('/reports/filter')
 class disease_report_with_filter(Resource):
 
-    # @api.expect(filter_fields, validate=True)
-    @api.marshal_with(disease_report_model, as_list=True)
-    @api.response(200, 'Specific location info fetched successfully')
+    @api.response(200, 'Specific location info fetched successfully', disease_report_model)
     # TO DO: specify the reason
     @api.response(400, 'Bad request')
     @api.response(404, 'No data found')
@@ -313,7 +313,29 @@ class disease_report_with_filter(Resource):
     @api.param('Location','Optional Query, input a location name (city/country/state etc.)')
     @api.doc(description="Get all reports according to the filter")
     def get(self):
-        return
+        start = request.args.get('Start-date')
+        end = request.args.get('End-date')
+        key_terms = request.args.get('Key-terms')
+        location = request.args.get('Location')
+
+        if start is None:
+            start = '2019-01-01T00:00:00'
+        if end is None:
+            end = datetime.now().isoformat()
+            format_search = re.search('^([^.]*)', end, re.IGNORECASE)
+            if format_search:
+                end = format_search.group(0)
+
+        date_format = re.compile(r'^(\d{4})-(\d\d|xx)-(\d\d|xx)T(\d\d|xx):(\d\d|xx):(\d\d|xx)')
+        #make sure the format is right(both dates)
+        if not date_format.match(start):
+            return { 'message': 'The START date format is wrong, please try again' }, 404
+        if not date_format.match(end):
+            return { 'message': 'The END date format is wrong, please try again' }, 404
+
+        #make sure the order of date
+        #make sure location is more than a whole world
+        return 200
 
 #######################################################################################################
 
