@@ -1,57 +1,57 @@
 [
   {
     "country": "Australia",
-    "state": "New South Waless",
-    "city": "newcastle"
+    "state": "New South Wales",
+    "city": "Central Coast"
   },
   {
     "country": "Australia",
-    "state": "New South Waless",
-    "city": "wagga Wagga"
+    "state": "New South Wales",
+    "city": "Newcastle"
   },
   {
     "country": "Australia",
-    "state": "New South Waless",
+    "state": "New South Wales",
+    "city": "Albury"
+  },
+  {
+    "country": "Australia",
+    "state": "New South Wales",
+    "city": "Wagga Wagga"
+  },
+  {
+    "country": "Australia",
+    "state": "New South Wales",
     "city": "Sydney"
   },
   {
     "country": "Australia",
-    "state": "New South Waless",
-    "city": "albury"
+    "state": "New South Wales",
+    "city": "Maitland"
   },
   {
     "country": "Australia",
-    "state": "New South Waless",
-    "city": "wollongong"
+    "state": "New South Wales",
+    "city": "Wollongong"
   },
   {
     "country": "Australia",
-    "state": "New South Waless",
-    "city": "central Coast"
+    "state": "Victoria",
+    "city": "Geelong"
   },
   {
     "country": "Australia",
-    "state": "New South Waless",
-    "city": "maitland"
+    "state": "Victoria",
+    "city": "Ballarat"
   },
   {
     "country": "Australia",
-    "state": "victoria",
-    "city": "ballarat"
+    "state": "Victoria",
+    "city": "Melbourne"
   },
   {
     "country": "Australia",
-    "state": "victoria",
-    "city": "gendigo"
-  },
-  {
-    "country": "Australia",
-    "state": "victoria",
-    "city": "geelong"
-  },
-  {
-    "country": "Australia",
-    "state": "victoria",
-    "city": "melbourne"
+    "state": "Victoria",
+    "city": "Gendigo"
   }
 ]
