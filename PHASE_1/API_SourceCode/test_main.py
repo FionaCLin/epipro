@@ -1,4 +1,5 @@
-# Copyright 2018 Google Inc. All Rights Reserved.
+#!  /usr/local/bin/python3
+#  Copyright 2018 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,17 +13,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import main
-import json,os
+
+import json,os, sys, main
 cwd = os.getcwd()
 
-sample_key_terms = json.load(open(os.path.join(cwd,'../TestScripts/sample_data/key-terms.json'),'r'))
-sample_locations = json.load(open(os.path.join(cwd,'../TestScripts/sample_data/locations.json'),'r'))
-sample_disease_report = open(os.path.join(cwd,'../TestScripts/sample_data/sample_disease_report.json'),'r')
+print(dir(sys))
+sample_key_terms = json.load(open(os.path.join(cwd,'../TestScripts/sample_output/key-terms.json'),'r'))
+sample_locations = json.load(open(os.path.join(cwd,'../TestScripts/sample_output/locations.json'),'r'))
+sample_disease_report = open(os.path.join(cwd,'../TestScripts/sample_output/sample_disease_report.json'),'r')
 
 main.app.testing = True
 client = main.app.test_client()
     
+print(sys.argv)
 def test_index():
   r = client.get('/')
   assert r.status_code == 200
@@ -102,7 +105,7 @@ def test_fetch_all_locations():
   
   for i in range(len(locations)):
     for e in locations[i].keys() & sample_locations[i].keys():
-      # print(locations[i][e], sample_locations[i][e])
+      print(locations[i][e], sample_locations[i][e])
       assert locations[i][e] == sample_locations[i][e]
   assert r.status_code == 200
 
