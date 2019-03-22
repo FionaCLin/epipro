@@ -16,7 +16,6 @@
 # from lib import *
 # [START gae_python37_app]
 
-
 from flask import Flask, Blueprint
 # not sure if we need this in localhost
 from flask import Flask, url_for, redirect, render_template
@@ -33,25 +32,23 @@ import re
 from datetime import datetime
 import date_tool as DT
 
-
-
-
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app
 # called `app` in `main.py`.
 app = Flask(__name__)
 blueprint = Blueprint('api', __name__, url_prefix='/api/v1')
 app.config['RESTPLUS_MASK_SWAGGER'] = False
-api = Api(blueprint,
-          doc='/doc/',
-          version='1.0',
-          default="EpiPro",  # Default namespace
-          title="EpiPro REST API Documentation",  # Documentation Title
-          description="This is a EpiPro App REST API.\r\n SENG3011 workshop project"
-            )  # Documentation Description
+api = Api(
+    blueprint,
+    doc='/doc/',
+    version='1.0',
+    default="EpiPro",  # Default namespace
+    title="EpiPro REST API Documentation",  # Documentation Title
+    description="This is a EpiPro App REST API.\r\n SENG3011 workshop project"
+)  # Documentation Description
 
 app.register_blueprint(blueprint)
 
-client = MongoClient(config.MONGO_URI,config.MONGO_PORT)
+client = MongoClient(config.MONGO_URI, config.MONGO_PORT)
 db = client[config.MONGO_DB]
 
 parser = reqparse.RequestParser()
@@ -72,59 +69,70 @@ location = api.model('location_info', {
 
 #####  RESPONSE for /api/reports/key_terms
 #      {id, type, category and name}
-key_term = api.model('key_term', {
-    'keyTerm_id': fields.Integer,
-    'type': fields.String(enum=['general', 'specific']),
-    'category': fields.String,
-    'name': fields.String
-})
+key_term = api.model(
+    'key_term', {
+        'keyTerm_id': fields.Integer,
+        'type': fields.String(enum=['general', 'specific']),
+        'category': fields.String,
+        'name': fields.String
+    })
 
 #####  RESPONSE for /api/reports
 #       This is a DISEASE REPORT json format
-location_detail = api.model('location_detail',{
+location_detail = api.model('location_detail', {
     'country': fields.String,
     'location': fields.String
 })
 
-reported_event = api.model('report-event', {
-    # TO DO : figure out the range
-    'type': fields.String,
-    # TO DO: choose the right format
-    'date': fields.DateTime,
-    'location': fields.Nested(location_detail),
-    'number-affected':fields.Integer
-})
+reported_event = api.model(
+    'report-event',
+    {
+        # TO DO : figure out the range
+        'type': fields.String,
+        # TO DO: choose the right format
+        'date': fields.DateTime,
+        'location': fields.Nested(location_detail),
+        'number-affected': fields.Integer
+    })
 
-report = api.model('report', {
-    'disease': fields.String,
-    # TO DO: figure out field with a range
-    'syndrome': fields.String,
-    'reported_events': fields.List(fields.Nested(reported_event))
-})
+report = api.model(
+    'report',
+    {
+        'disease': fields.String,
+        # TO DO: figure out field with a range
+        'syndrome': fields.String,
+        'reported_events': fields.List(fields.Nested(reported_event))
+    })
 
-disease_report_model = api.model('disease-report',{
-    'url': fields.String,
-    # TO DO: more look on the date format
-    'date_of_publiction': fields.DateTime,
-    'headline': fields.String,
-    'main_text': fields.String,
-    'reports': fields.List(fields.Nested(report))
-})
+disease_report_model = api.model(
+    'disease-report',
+    {
+        'url': fields.String,
+        # TO DO: more look on the date format
+        'date_of_publiction': fields.DateTime,
+        'headline': fields.String,
+        'main_text': fields.String,
+        'reports': fields.List(fields.Nested(report))
+    })
 
-filter_fields = api.model('filter',{
-    'start-date': fields.DateTime,
-    'end-date': fields.DateTime,
-    'key_terms': fields.String,
-    # geoname_id
-    'location': fields.Integer
-   })
+filter_fields = api.model(
+    'filter',
+    {
+        'start-date': fields.DateTime,
+        'end-date': fields.DateTime,
+        'key_terms': fields.String,
+        # geoname_id
+        'location': fields.Integer
+    })
 
 #####################################################################################################
+
 
 # default index page render to REST api doc
 @app.route('/')
 def index():
-    return render_template("index.html", token=api.base_url+'doc')
+    return render_template("index.html", token=api.base_url + 'doc')
+
 
 ######################
 ##      CLOSED      ##
@@ -135,7 +143,6 @@ def index():
 #   Response an array of locations
 @api.route('/reports/locations/all')
 class locations(Resource):
-
     @api.response(200, 'Data fetched successfully', location)
     # TO DO: specify the reason
     @api.response(400, 'Bad request')
@@ -170,21 +177,26 @@ class locations(Resource):
 class locations_id(Resource):
 
     #TO DO: partially matching??? no
-    @api.response(200, 'Specific location info fetched successfully',location)
+    @api.response(200, 'Specific location info fetched successfully', location)
     @api.response(400, 'Bad request')
     @api.response(404, 'No data found')
     @api.doc(description="Get the location info with a given name")
     def get(self, area):
         collection = db['test_location']
         search_string = "\'" + area + "\'"
-        cursor = collection.find({"$text": {"$search": search_string}}, { "_id": 0 })
+        cursor = collection.find({"$text": {
+            "$search": search_string
+        }}, {"_id": 0})
         result = []
 
         for entry in cursor:
             result.append(entry)
 
         if not result:
-            return { 'message': 'Sorry, there is no data matched, make sure you enter the whole words you want to search' }, 404
+            return {
+                'message':
+                'Sorry, there is no data matched, make sure you enter the whole words you want to search'
+            }, 404
 
         return result, 200
 
@@ -200,34 +212,39 @@ class locations_id(Resource):
 #    Response an array of key_terms, each key_term contains id, type and name
 @api.route('/reports/key-terms/<string:term_type>')
 class key_terms(Resource):
-
     @api.response(200, 'Key term list fetched successfully', key_term)
     @api.response(400, 'Bad request, check the parameters')
     @api.response(404, 'No data found')
-    @api.param('category','Optional, find out A agent keywords')
-    @api.doc(params={'term_type':'Can ONLY be [general] or [specific]'})
+    @api.param('category', 'Optional, find out A agent keywords')
+    @api.doc(params={'term_type': 'Can ONLY be [general] or [specific]'})
     @api.doc(description="Get all the key terms if no additional query,\
                 otherwise, get all keys from [general] or [specific] type")
     # @api.expect([key_term], validate=True)
     def get(self, term_type):
         term_type = term_type.lower()
         if term_type not in ['general', 'specific']:
-            return { 'message' : 'make sure that term-type can only be general or specific' }, 400
+            return {
+                'message':
+                'make sure that term-type can only be general or specific'
+            }, 400
         collection = db['Key_Terms']
 
         result = []
-        my_query = { 'type' : re.compile(term_type, re.IGNORECASE) }
+        my_query = {'type': re.compile(term_type, re.IGNORECASE)}
         query = request.args.get('category')
 
         if query is not None:
             if term_type == "specific":
                 query = query.lower()
-                my_query = { 
-                    'type' : re.compile(term_type, re.IGNORECASE), 
-                    'category': re.compile(query, re.IGNORECASE) 
+                my_query = {
+                    'type': re.compile(term_type, re.IGNORECASE),
+                    'category': re.compile(query, re.IGNORECASE)
                 }
             else:
-                return { 'message': 'category is under specific type, please enter again' }, 400
+                return {
+                    'message':
+                    'category is under specific type, please enter again'
+                }, 400
 
         cursor = collection.find(my_query)
         for entry in cursor:
@@ -237,10 +254,8 @@ class key_terms(Resource):
             e['name'] = entry['name']
             result.append(e)
         if not result:
-            return { 'message': 'Sorry, there is no data matched' }, 404
+            return {'message': 'Sorry, there is no data matched'}, 404
         return result, 200
-
-
 
 
 ######################
@@ -257,16 +272,18 @@ class key_terms(Resource):
 #       -limit::integer  : limit to the number of responseed reports
 # TO DO: add sort function
 
+
 @api.route('/reports/all')
 class disease_reports(Resource):
-
-    @api.response(200, 'Specific location info fetched successfully', disease_report_model)
+    @api.response(200, 'Specific location info fetched successfully',
+                  disease_report_model)
     # TO DO: specify the reason
     @api.response(400, 'Bad request')
     @api.response(404, 'No data found')
     # TO DO：start and limit should be filled at the same time
-    @api.param('start','Optional Query, start from the n-th report')
-    @api.param('limit','Optional Query, limit to the number of responseed reports')
+    @api.param('start', 'Optional Query, start from the n-th report')
+    @api.param('limit',
+               'Optional Query, limit to the number of responseed reports')
     @api.doc(description="Get all disease reports")
     def get(self):
         collection = db['test_report']
@@ -277,15 +294,19 @@ class disease_reports(Resource):
             start = 0
         if limit is None:
             limit = 1
-        start = int(start)
-        limit = int(limit)
-        cursor = collection.find({},{ "_id": 0 }).skip(start).limit(limit)
-        result = []
+        try:
+            start = int(start)
+            limit = int(limit)
+            cursor = collection.find({}, {"_id": 0}).skip(start).limit(limit)
+            result = []
+        except ValueError:
+            return {'message': 'The start and limit need to be integer'}, 400
 
         for entry in cursor:
             result.append(entry)
 
         return result, 200
+
 
 ######################
 ##       TO DO      ##
@@ -303,15 +324,20 @@ class disease_reports(Resource):
 #   TO DO: HOW TO DEAL WITH EMPTY FIELD?
 @api.route('/reports/filter')
 class disease_report_with_filter(Resource):
-
-    @api.response(200, 'Specific location info fetched successfully', disease_report_model)
+    @api.response(200, 'Specific location info fetched successfully',
+                  disease_report_model)
     # TO DO: specify the reason
     @api.response(400, 'Bad request')
     @api.response(404, 'No data found')
-    @api.param('Start-date','Optional Query, the start date of period of interest')
-    @api.param('End-date','Optional Query, the end date of period of interest')
-    @api.param('Key-terms','Optional Query, the key terms user want to search')
-    @api.param('Location','Optional Query, input a location name (city/country/state etc.)')
+    @api.param('Start-date',
+               'Optional Query, the start date of period of interest')
+    @api.param('End-date',
+               'Optional Query, the end date of period of interest')
+    @api.param('Key-terms',
+               'Optional Query, the key terms user want to search')
+    @api.param(
+        'Location',
+        'Optional Query, input a location name (city/country/state etc.)')
     @api.doc(description="Get all reports according to the filter")
     def get(self):
         start = request.args.get('Start-date')
@@ -327,20 +353,24 @@ class disease_report_with_filter(Resource):
             if format_search:
                 end = format_search.group(0)
 
-        date_format = re.compile(r'^(\d{4})-(\d\d|xx)-(\d\d|xx)T(\d\d|xx):(\d\d|xx):(\d\d|xx)')
+        date_format = re.compile(
+            r'^(\d{4})-(\d\d|xx)-(\d\d|xx)T(\d\d|xx):(\d\d|xx):(\d\d|xx)')
         #make sure the format is right(both dates)
         if not date_format.match(start):
-            return { 'message': 'The START date format is wrong, please try again' }, 404
+            return {
+                'message': 'The START date format is wrong, please try again'
+            }, 404
         if not date_format.match(end):
-            return { 'message': 'The END date format is wrong, please try again' }, 404
+            return {
+                'message': 'The END date format is wrong, please try again'
+            }, 404
 
         #make sure the order of date
         #make sure location is more than a whole world
         return 200
 
+
 #######################################################################################################
-
-
 
 if __name__ == '__main__':
     # This is used when running locally only. When deploying to Google App
