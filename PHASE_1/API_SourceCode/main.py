@@ -181,8 +181,9 @@ class locations_id(Resource):
     @api.response(400, 'Bad request')
     @api.response(404, 'No data found')
     @api.doc(description="Get the location info with an given area name")
-    @api.param('area',
-               'a place you want to find either country or state or city')
+    @api.doc(params={
+        'area': 'a place you want to find either country or state or city'
+    })
     def get(self, area):
         collection = db['test_location']
         search_string = "\'" + area + "\'"
