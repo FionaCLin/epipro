@@ -61,16 +61,19 @@ parser = reqparse.RequestParser()
 #       state: string,
 #       city: string
 #     }
-location = api.model('location_info', {
-	'country': fields.String,
-	'state': fields.String,
-	'city': fields.String,
-})
+location = api.model(
+	'location_info', 
+	{
+		'country': fields.String,
+		'state': fields.String,
+		'city': fields.String,
+	})
 
 #####  RESPONSE for /api/reports/key_terms
 #      {id, type, category and name}
 key_term = api.model(
-	'key_term', {
+	'key_term', 
+	{
 		'keyTerm_id': fields.Integer,
 		'type': fields.String(enum=['general', 'specific']),
 		'category': fields.String,
@@ -79,10 +82,12 @@ key_term = api.model(
 
 #####  RESPONSE for /api/reports
 #       This is a DISEASE REPORT json format
-location_detail = api.model('location_detail', {
-	'country': fields.String,
-	'location': fields.String
-})
+location_detail = api.model(
+	'location_detail', 
+	{
+		'country': fields.String,
+		'location': fields.String
+	})
 
 reported_event = api.model(
 	'report-event',
