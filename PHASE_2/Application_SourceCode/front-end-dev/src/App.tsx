@@ -3,6 +3,12 @@ import logo from './logo.png';
 import './App.css';
 // import * as API from './API'
 
+declare global {
+  interface Window {
+    token: any;
+  }
+}
+
 class App extends Component {
   render() {
     let api_doc_url = window.token
