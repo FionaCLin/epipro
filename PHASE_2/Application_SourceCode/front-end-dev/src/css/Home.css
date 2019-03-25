@@ -1,0 +1,117 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 20vmin;
+  pointer-events: none;
+}
+
+.App-header {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.Main {
+  margin: 50px 150px 50px 150px;
+}
+
+.Filter-element{
+  margin: 10px 0px 10px 0px;
+}
+
+.Filter-button{
+  margin: 15px 0px 10px 0px;
+}
+
+.Filter-panel {
+  padding: 10px 10px 10px 10px;
+  background-color: lightgray;
+  border-radius: 0px 0px 5px 5px;
+}
+
+.Filter-inline-1 {
+  display: inline-block;
+  border-radius: 5px;
+}
+
+.Filter-inline-2 {
+  display: inline-block;
+  border-radius: 5px;
+}
+
+
+.EventReport-division {
+  margin-bottom: 5px;
+}
+
+.EventReport-card {
+  background-color: lightgrey;
+}
+
+
+.ArticleList-division {
+  margin-top: 75px;
+}
+
+.ReportList-division {
+  margin-top: 50px;
+}
+
+.Time-between {
+  margin: 0px 5px 0px 5px;
+  display:inline-block;
+}
+
+.Card-hover {
+  background-color: white;
+}
+
+.Card-hover:hover {
+  background-color: lightgrey;
+}
+
+.Card-title {
+  text-decoration: underline;
+}
+
+.bg {
+  background-image: url("../imgs/bg.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100%;
+}
+
+.link {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+.link:hover {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+.Badge-division {
+  margin: 0px 3px 0px 3px;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

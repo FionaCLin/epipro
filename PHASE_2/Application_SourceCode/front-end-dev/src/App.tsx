@@ -1,32 +1,34 @@
 import React, { Component } from 'react';
-import logo from './logo.png';
-import './App.css';
-// import * as API from './API'
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import Home from './components/Home';
+import Search from './components/Search';
+import Article from './components/Article';
 
-declare global {
-  interface Window {
-    token: any;
+
+export default class App extends Component<IAppProps, IAppState> {
+  constructor(props: IAppProps) {
+    super(props);
   }
-}
-
-class App extends Component {
+  
   render() {
-    let api_doc_url = window.token
     return (
-      <div className="App">
-        <div className="bg">
-          <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
-            <p><strong>EpiPro API</strong></p>
-            <p>Predict. Prevent. Protect.</p>
-            <a className="a" href={api_doc_url}>
-              EpiPro API Documentation
-            </a>
-          </header>
-        </div>
-      </div>
+      <main>
+        <Router>
+          <Switch>
+            <Route exact path="/" component={Home}></Route>
+            <Route path="/search" component={Search} />
+            <Route path="/article" component={Article} />
+          </Switch>
+        </Router>
+      </main>
     );
   }
 }
 
-export default App;
+interface IAppProps {
+
+}
+
+interface IAppState {
+
+}
