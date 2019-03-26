@@ -1,42 +1,161 @@
 [
     {
-        "value": "keyterm1",
-        "label": "keyterm1"
+      "type": "general",
+      "category": "none",
+      "name": "Outbreak"
     },
     {
-        "value": "keyterm2",
-        "label": "keyterm2"
+      "type": "general",
+      "category": "none",
+      "name": "Infection"
     },
     {
-        "value": "keyterm3",
-        "label": "keyterm3"
+      "type": "general",
+      "category": "none",
+      "name": "Fever"
     },
     {
-        "value": "keyterm4",
-        "label": "keyterm4"
+      "type": "general",
+      "category": "none",
+      "name": "Virus"
     },
     {
-        "value": "keyterm5",
-        "label": "keyterm5"
+      "type": "general",
+      "category": "none",
+      "name": "Epidemic"
     },
     {
-        "value": "keyterm6",
-        "label": "keyterm6"
+      "type": "general",
+      "category": "none",
+      "name": "Infectious"
     },
     {
-        "value": "keyterm7",
-        "label": "keyterm7"
+      "type": "general",
+      "category": "none",
+      "name": "Illness"
     },
     {
-        "value": "keyterm8",
-        "label": "keyterm8"
+      "type": "general",
+      "category": "none",
+      "name": "Bacteria"
     },
     {
-        "value": "keyterm9",
-        "label": "keyterm9"
+      "type": "general",
+      "category": "none",
+      "name": "Emerging"
     },
     {
-        "value": "keyterm10",
-        "label": "keyterm10"
-    }
-]
+      "type": "general",
+      "category": "none",
+      "name": "Unknown virus"
+    },
+    {
+      "type": "general",
+      "category": "none",
+      "name": "Myster(ious)y disease"
+    },{
+        "type": "specific",
+        "category": "none",
+        "name": "MERS"
+      },
+      {
+        "type": "specific",
+        "category": "none",
+        "name": "Salmonella"
+      },
+      {
+        "type": "specific",
+        "category": "none",
+        "name": "Legionnaire"
+      },
+      {
+        "type": "specific",
+        "category": "none",
+        "name": "Measles"
+      },
+      {
+        "type": "specific",
+        "category": "A Agents",
+        "name": "Anthrax"
+      },
+      {
+        "type": "specific",
+        "category": "A Agents",
+        "name": "Botulism"
+      },
+      {
+        "type": "specific",
+        "category": "A Agents",
+        "name": "Plague"
+      },
+      {
+        "type": "specific",
+        "category": "A Agents",
+        "name": "Smallpox and other related pox viruses"
+      },
+      {
+        "type": "specific",
+        "category": "A Agents",
+        "name": "Tularemia"
+      },
+      {
+        "type": "specific",
+        "category": "A Agents",
+        "name": "Junin Fever"
+      },
+      {
+        "type": "specific",
+        "category": "A Agents",
+        "name": "Machupo Fever"
+      },
+      {
+        "type": "specific",
+        "category": "A Agents",
+        "name": "Guanarito Fever"
+      },
+      {
+        "type": "specific",
+        "category": "A Agents",
+        "name": "Chapare Fever"
+      },
+      {
+        "type": "specific",
+        "category": "A Agents",
+        "name": "Lassa Fever"
+      },
+      {
+        "type": "specific",
+        "category": "A Agents",
+        "name": "Lujo Fever"
+      },
+      {
+        "type": "specific",
+        "category": "A Agents",
+        "name": "Hantavirus"
+      },
+      {
+        "type": "specific",
+        "category": "A Agents",
+        "name": "Rift Valley Fever"
+      },
+      {
+        "type": "specific",
+        "category": "A Agents",
+        "name": "Crimean Congo Hemorrhagic Fever"
+      },
+      {
+        "type": "specific",
+        "category": "A Agents",
+        "name": "Dengue"
+      },
+      {
+        "type": "specific",
+        "category": "A Agents",
+        "name": "Ebola"
+      },
+      {
+        "type": "specific",
+        "category": "A Agents",
+        "name": "Marburg"
+      }
+  ]
