@@ -1,42 +1,59 @@
 [
     {
-        "value": "location1",
-        "label": "location1"
+      "country": "Australia",
+      "state": "New South Wales",
+      "city": "Central Coast"
     },
     {
-        "value": "location2",
-        "label": "location2"
+      "country": "Australia",
+      "state": "New South Wales",
+      "city": "Newcastle"
     },
     {
-        "value": "location3",
-        "label": "location3"
+      "country": "Australia",
+      "state": "New South Wales",
+      "city": "Albury"
     },
     {
-        "value": "location4",
-        "label": "location4"
+      "country": "Australia",
+      "state": "New South Wales",
+      "city": "Wagga Wagga"
     },
     {
-        "value": "location5",
-        "label": "location5"
+      "country": "Australia",
+      "state": "New South Wales",
+      "city": "Sydney"
     },
     {
-        "value": "location6",
-        "label": "location6"
+      "country": "Australia",
+      "state": "New South Wales",
+      "city": "Maitland"
     },
     {
-        "value": "location7",
-        "label": "location7"
+      "country": "Australia",
+      "state": "New South Wales",
+      "city": "Wollongong"
     },
     {
-        "value": "location8",
-        "label": "location8"
+      "country": "Australia",
+      "state": "Victoria",
+      "city": "Geelong"
     },
     {
-        "value": "location9",
-        "label": "location9"
+      "country": "Australia",
+      "state": "Victoria",
+      "city": "Ballarat"
     },
     {
-        "value": "location10",
-        "label": "location10"
+      "country": "Australia",
+      "state": "Victoria",
+      "city": "Melbourne"
+    },
+    {
+      "country": "Australia",
+      "state": "Victoria",
+      "city": "Gendigo"
     }
-]
+  ]
+  
+  
