@@ -81,6 +81,18 @@
   text-decoration: underline;
 }
 
+.Keyterm-flex {
+  display: flex;
+}
+
+.Keyterm-left {
+  width: 150px
+}
+
+.Keyterm-right {
+  width: 100%;
+}
+
 .bg {
   background-image: url("../imgs/bg.jpg");
   background-position: center;

@@ -2,9 +2,10 @@ import React from 'react';
 import '../css/Home.css';
 import { Button, Collapse } from 'react-bootstrap';
 import TitleSearch from './TitleSearch';
-import FilterSearch from './FilterSearch';
 import TimeSearch from './TimeSearch';
 import ArticleList from './ArticleList';
+import LocationSearch from './LocationSearch';
+import KeytermSearch from './KeytermSearch';
 
 export default class Search extends React.Component<ISearchProps, ISearchState> {
   constructor(props: ISearchProps) {
@@ -43,8 +44,8 @@ export default class Search extends React.Component<ISearchProps, ISearchState> 
             </Button>
             <Collapse in={this.state.advancedFilter}>
                 <div id="collapse-filters" className="Filter-panel">
-                    <FilterSearch type="keyterms" updateFilter={this.handleChange}/>
-                    <FilterSearch type="locations" updateFilter={this.handleChange}/>
+                    <KeytermSearch updateKeyterm={this.handleChange}/>
+                    <LocationSearch updateLocation={this.handleChange}/>
                     <TimeSearch updateTime={this.handleChange}/>
                     <div className="Filter-button">
                         <Button>Advanced Search</Button>
@@ -65,8 +66,8 @@ interface ISearchProps {
 interface ISearchState {
     advancedFilter: boolean;
     title: string;
-    keyterms: Array<string>;
-    locations: Array<string>;
+    keyterms: Array<Number>;
+    locations: Array<Number>;
     startDate: string | null;
     endDate: string | null;
 }
