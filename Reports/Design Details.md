@@ -23,8 +23,79 @@ Location helps the user restrict the disease reports to a designated geographica
 More details on the APIs structure available [here](https://epiproapp.appspot.com/api/v1/doc/) on the EpiPro Online Documentation.
 
 ### Collect Disease Reports
-As our data source WHO is a dynamic website which also provides search and filter functionalities, we chose Selenium and Scrapy frameworks to build and define our web scraper, even though there are lots of other great choice for web scraping. However, we didn't consider the other options over Scrapy, since it is most suitable for properly rendering XML and HTML pages and it is a Python framework designed for web crawling specifically. It is most suitable for our Python3 developement team and development environment, as well. However, Scrapy does not work for all web pages. We also need to consider JavaScript frameworks driven pages such as React and Angular, which means, in practice, that there will be different kinds of timers and interactive elements involved. Another peculiarity of Scrapy is that it goes through pages by accessing their URLs. However, there are some buttons on the webpages which won’t have any URLs linked to them when you inspect the element or get the source code (through xpath or css). Therefore, Selenium will be used to simulate browser usage to retrive data from those JavaScript frameworks driven web pages, and requesting with Scrapy will be used to get the required data in a data file format during collection process.
+#### Webscraping with Scrapy and Selenium
+As our data source WHO is a dynamic website which also provides search and filter functionalities, we chose Selenium and Scrapy frameworks to build and define our web scraper, over other alternatives like BeautifulSoup, Pyspider and Portia.
 
+<table>
+    <tbody>
+        <tr align="center">
+            <th></th>
+            <th>Scrapy</th>
+            <th>BeautifulSoup</th>
+            <th>Pyspider</th>
+            <th>Portia</th>
+        </tr>
+        <tr>
+            <th align="center">Pros</th>
+            <td>
+                <ul>
+                    <li>Has the most community support and documentation</li>
+                    <li>Great performance in web scraping</li>
+                    <li>Suitable for broad crawling</li>
+                </ul>
+            </td>
+            <td>
+                <ul>
+                    <li>Easy to use</li>
+                    <li>Good for very simple projects</li>
+                </ul>
+            </td>
+            <td>
+                <ul>
+                    <li>Easy to use UI</li>
+                    <li>Facilitates fast web scraping</li>
+                    <li>Suitable for website-based user interfaces</li>
+                </ul>
+            </td>
+            <td>
+                <ul>
+                    <li>Visual scraping tool without programming</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <th align="center">Cons</th>
+            <td>
+                <ul>
+                    <li>Larger learning curve</li>
+                    <li>Does not handle JavaScript</li>
+                </ul>
+            </td>
+            <td>
+                <ul>
+                    <li>Requires multiprocessing import to improve performance</li>
+                </ul>
+            </td>
+            <td>
+                <ul>
+                    <li>Difficult to deploy</li>
+                </ul>
+            </td>
+            <td>
+                <ul>
+                    <li>More time-consuming than other alternatives</li>
+                    <li>Difficult to control how it navigates websites (can lead to unnecessary page visits)</li>
+                </ul>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+First of all, Scrapy was the recommended webscraping tool for this specific workshop, and therefore should by our baseline for our comparisons. Both BeautifulSoup and Portia are easier to use and has a smaller learning curve than Scrapy. Portia has the added benefit of being a visual scraping tool, which does not require programming knowledge. However, Scrapy performs more efficiently and more web pages can be crawled in a shorter amount of time. PySpider, similarly to Portia, has an easy to use UI, but also facilitates faster scraping. Despite this, it still is more difficult to deploy than Scrapy. Scrapy also has greater documentation and community support than all of BeautifulSoup, Pyspider and Portia. Therefore, these alternatives can be disregarded.
+
+However, Scrapy alone does not work for all web pages. Although it is considered the most suitable for properly rendering XML and HTML pages across a large data set, it does not handle JavaScript well. We also need to consider JavaScript frameworks driven pages such as React and Angular, which means, in practice, that there will be different kinds of timers and interactive elements involved. Another peculiarity of Scrapy is that it goes through pages by accessing their URLs. However, there are some buttons on the webpages which won’t have any URLs linked to them when you inspect the element or get the source code (through xpath or css). Therefore, Selenium will be used as our testing automation framework, on top of our Scrapy web crawling framework. Selenium will help simulate browser usage to retrive data from those JavaScript frameworks driven web pages, and requesting with Scrapy will be used to get the required data in a data file format during collection process.
+
+#### Collection Process
 The news and articles will be collected by our pre-defined Scraper from the searched and filtered url of the WHO website. We will then extract their title, url, content, published data, and region from the url's source file. Then, all the information will be processed and packed in the designated disease report format, and will be stored in our database. This process will recur will be autonomously performed monthly.
 
 The disease reports collection process will proceed as described below:
@@ -35,9 +106,11 @@ The disease reports collection process will proceed as described below:
 ## Developement and Deployment Environment
 ### Developement
 #### Flask Back-end Server
-All our team members are more proficient in Python and Python is available across different platforms. As a result, although there are great choices of web stack out there,  we preferred Python as selected as our implementation language with a pre configurated virtual environment. Utilising Python3 can help reduce our learning curves, will make project development easier, and would allow us to focus on the API design and implementation. Therefore we can ensure the usability, reliability and stability of our proposed system. Additionally, our team members can still have Python3 installed despite using different operating system (Linux, Window or Unix) and varying developement enviroments. So, Python3 caters to all of our members' needs.
+All our team members are more proficient in Python and Python is available across different platforms. As a result, although there are great choices of web stack out there,  we preferred Python as selected as our implementation language with a pre configurated virtual environment. We considered other alternatives like Ruby for Ruby on Rails and Node.js for Express. Ruby, despite having lots of features for web development has too much flexibility, making code to be hard to edit and sometimes working 'magically'. Node.js has great performance and speed for real-time applications, but is less familiar to our team. In terms of ease of use and familiarity, Python3 would make development easier and has easier ways to uphold maintainance and error-handling. Therefore we can ensure the usability, reliability and stability of our proposed system. Additionally, our team members can still have Python3 installed despite using different operating system (Linux, Window or Unix) and varying developement enviroments. So, Python3 caters to all of our members' needs.
 
-As the API module will be built in Python3, the application will be utilise the Flask framework, as well as the Flask-restplus framework. This is because the Flask and Flask-restplus code comes with the Swagger documentation generation. The Swagger documentation for our EpiPro REST API will be written and updated in our source code, so as to be consistent with our fast development and deployment, as well as the standardized API design. The Swagger documentation is a sophisicated documentation maintaining tool. It can help us generate a hosted, interactive API documentation site, and it can export the API documentation in an json format to facilitate the API life cycle.
+As the API module will be built in Python3, we cannot consider using Ruby on Rails or Express any further. However, since we are using Python3, we ultimately chose to use Flask over Django as our backend framework. Django has a lot of features added on to it for more complex web applications, in comparison to Flask which is simpler and more direct to use. However, these additional features also mean an increased learning curve, which our team is trying to avoid. But, Flask by itself is not sufficient enough when supporting the development of REST APIs. This means we should use the Flask-RESTPlus alongisde our Flask framework.
+
+In terms of documentation, we will be using the Swagger documentation generation, which comes with both the Flask and Flask-RESTPlus frameworks. The Swagger documentation for our EpiPro REST API will be written and updated in our source code, so as to be consistent with our fast development and deployment, as well as the standardized API design. The Swagger documentation is a sophisicated documentation maintaining tool. It can help us generate a hosted, interactive API documentation site, and it can export the API documentation in an JSON format to facilitate the API life cycle.
 
 #### React Front-end
 For the front-end, our team decided to choose React over Vue, Ember and AngularJS. Out of our four options, we were least familiar with Vue and Ember, and therefore didn't consider it further. AngularJS is a complex MVC framework whereas React is a library where it is primarily the ‘view’ portion of the MVC structure. This means that React gives us more design freedom, but also requires the developer to design the structure of the application. React also has the benefit of having the virtual DOM over AngularJS’ regular DOM, which helps render the application's UI faster. Additionally, the members involved in the front-end development are overall more familiar with React. This helps remove the learning curve of adjusting to AngularJS, to speed up development.
@@ -51,18 +124,24 @@ Our EpiPro Application will be hosted under this domain name -- https://epiproap
 The Google Cloud platform also has comprehensive documentation and tutorials, as well as code example of hosting a Flask Python app under development and deployment. Moreover, it provides us with a sufficient free trial account quota to build and deploy our app for 12 months. It successfully satifies our EpiPro Application requirement to serve REST API request 24/7.
 
 #### Data Storage
-WHO is selected as our data source since our app is more inclined to use by academics research and medical professionals. The disease report data are proposed to update and cache on the monthly basis. For retriving and storing external data soure, MongoDB was selected for our project since it is widely used and gets a lot of continuing support from the MongoDB community. Additionally, some of our team members have previous experiences in it on mLab, which would be useful due to our ten weeks time constraint for our project. So, MongoDB would allow a smoother project development whilst satisfying our requirements.
+WHO is selected as our data source since our app is more inclined to use by academics research and medical professionals. The disease report data are proposed to update and cache on the monthly basis. For retrieving and storing external data soure, we considered multiple database options, including MySQL, Redis and OrientDB. For our purposes, we required an option that did not have a large learning curve and was familiar to our team, therefore eliminating OrientDB and Redis as viable choices. This left us choosing between MySQL and MongoDB. Both of these options have a strong support by their communities and had supporting resources. MySQL is more suitable for projects that require multi-row transactions and stores data in rows and tables. This would make it suitable for something more like an accounting system, rather than our current project. MongoDB is suitable for projects that require rapid prototyping, has ease of use, stores its data in JSON-like documents and is a solution that can work with unstructured data. By comparison, MongoDB would be a more useful for us due to the JSON-like storage over tabular storage, and its suitability to prototyping.
 
 #### Testing and CICD
-Testing is vital to create our system components. To ensure that every build of the project works properly, unit tests will be developed and run against each build. Unit testing for APIs are required for each function within our web server, and will be developed with Pytest. Pytest is the Flask built-in test framework. 
+Testing is vital to create our system components. To ensure that every build of the project works properly, unit tests will be developed and run against each build. Unit testing for APIs are required for each function within our web server, and will be developed with Pytest over Nose and Unittest. While all of these are viable unit testing solutions in Python, Pytest provides the most compact solution. Unittest, in comparison to Pytest, has more boiler plate code and Nose has less readable error reports than Pytest. Pytest is also more actively supported by its community than these two other alternatives. This allows us to have a greater access to other extensions, on top of Pytest.
 
 ![CI Testing Diagram](continuous-delivery-with-travis-ci-1architecture.png "CI Testing") CI Testing Diagram sources from [Implementing continuous delivery with Travis CI and App Engine](https://cloud.google.com/solutions/continuous-delivery-with-travis-ci)
 
+For integration testing, we looked into both Travis CI and Jenkins as potential tools for continuous integration. Jenkins would be a more preferable chioce if our code was hosted from in house, while Travis CI should be used if the code repository is at GitHub. However, Jenkins requires the developers to host, install and configure it, while Travis is a hosted service. Therefore, we chose Travis CI over Jenkins.
+
 Since Travis integrates with GitHub and runs tests in isolation, it can run on the Google Cloud Platform without much maintaince on our own infrastructure.
-[More Detail on Travis CI testing within Google Cloud App Engine](https://cloud.google.com/solutions/continuous-delivery-with-travis-ci). Hence, our integration tests will be developed and used by a CI/CD service on Google Cloud Platform (GCP) to deploy your app as part of the build process.
+[More Detail on Travis CI testing within Google Cloud App Engine](https://cloud.google.com/solutions/continuous-delivery-with-travis-ci). Hence, our integration tests will be developed on Travis CI and used by a CI/CD service on Google Cloud Platform (GCP) to deploy your app as part of the build process.
 
 We will apply the practice of continuous integration (CI) and continuous delivery (CD), which involves using tools like Travis CI, to ensure that all new code is automatically and consistently tested for errors. This allows us to streamline our development and deployment process, as well as ensure developed components work within the production environment and all related web services work together before it is deployed to the production enviroment. Continuous delivery (CD) goes one step further by ensuring we can deploy every build into a production-like environment and then pass integration tests in that environment.
 
 [//]: # (2.2. API	design	and	testing details	D2 )
 [//]: # ( • Describe	final architecture	of	your	API,	justify	the	choice	of	implementation,	challenges	addressed	and	shortcomings.)
 [//]: # (• Provide	the	URL	of	your	API	specification.)
+## Challenges Addressed and Shortcomings
+[//]: # (Challenges addressed - any problems encountered during API production and resolved)
+[//]: # (Shortcomings - any problems encountered and not resolved/unable to meet requirements for certain parts)
+
