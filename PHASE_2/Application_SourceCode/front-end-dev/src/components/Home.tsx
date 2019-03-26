@@ -23,7 +23,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
                 <img src={logo} className="App-logo" alt="logo" />
                 <p>EpiPro API</p>
                 <p>Predict. Prevent. Protect.</p>
-                <a href="https://epiproapp.appspot.com/api/doc/">EpiPro API Documentation</a>
+                <a href="https://epiproapp.appspot.com/api/v1/doc/">EpiPro API Documentation</a>
                 <Link to='/search'>Search</Link>
             </header>
             </div>

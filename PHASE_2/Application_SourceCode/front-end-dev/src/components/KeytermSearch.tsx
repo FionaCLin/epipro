@@ -3,6 +3,9 @@ import '../css/Home.css';
 import Select from 'react-select';
 import Keyterms from '../dummydata/keyterms.json';
 import { string } from 'prop-types';
+import { BackendAPI } from '../API'
+
+let api = new BackendAPI();
 
 export default class KeytermSearch extends React.Component<IKeytermSearchProps, IKeytermSearchState> {
   constructor(props: IKeytermSearchProps) {
@@ -40,6 +43,33 @@ export default class KeytermSearch extends React.Component<IKeytermSearchProps, 
   }
 
   render() {
+    let key_terms;
+    api.getKeyTerms('general', (error: any, response: any) => {
+        if (error) {
+            if (error.response) {
+                let message = error.response.data.message
+                console.log(message, 'ppp');
+            } else {
+                console.log(error.message, 'ppp');
+            }
+        }
+        key_terms = response;
+        console.log(key_terms, 'general key term in keyterm search tsx')
+    });
+
+    api.getKeyTerms('specific', (error: any, response: any) => {
+        if (error) {
+            if (error.response) {
+                let message = error.response.data.message
+                console.log(message, 'ppp');
+            } else {
+                console.log(error.message, 'ppp');
+            }
+        }
+        key_terms = response;
+        console.log(key_terms, 'specific key term in keyterm search tsx')
+    });
+
     let filterTypes: Array<any> = [
         { label: 'All', value: 0, type: 'all' },
         { label: 'General', value: 1, type: 'general' },
