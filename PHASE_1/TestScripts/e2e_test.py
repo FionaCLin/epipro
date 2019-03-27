@@ -22,7 +22,3 @@ json_res = json.loads(response.read().decode('utf-8'))
 assert(json_res['swagger'] == "2.0")
 assert(json_res['basePath'] == "/api/v1")
 # [END e2e]
-
-subprocess.run(['gcloud','-q', 'app', 'deploy','PHASE_1/API_SourceCode/app.yaml', '--promote'])
-
-# gcloud -q app deploy app.yaml --promot

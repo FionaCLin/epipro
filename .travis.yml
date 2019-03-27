@@ -35,9 +35,17 @@ deploy:
   on: D2-production-v2
   no_promote: true
 
-after_script:
+after_deploy:
 # after deploy e2e testing
 - python3 PHASE_1/TestScripts/e2e_test.py
 # deploy production branch 
-
-
+after_script:
+  script:
+   deploy:
+    provider: gae
+    skip_cleanup: true # Skip cleanup so api_key.py and vendored dependencies are still there
+    keyfile: client-secret.json
+    project: epiproapp
+    config: PHASE_1/API_SourceCode/app.yaml
+    default: true  # default project app version
+    on: D2-production-v2
