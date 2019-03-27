@@ -13,20 +13,6 @@ export default class App extends Component<IAppProps, IAppState> {
   }
 
   render() {
-    let keyword_locations;
-    api.getLocationsByKeyword('Sydney',(error: any, response: any) => {
-      if (error) {
-        if (error.response) {
-          let message = error.response.data.message
-          console.log(message, 'ppp');
-        } else {
-          console.log(error.message, 'ppp');
-        }
-      }
-      keyword_locations = response;
-      console.log(keyword_locations, 'sydney locations in app tsx')
-    });
-
     return (
       <main>
         <Router>

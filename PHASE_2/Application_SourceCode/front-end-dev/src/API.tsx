@@ -53,10 +53,10 @@ export class BackendAPI {
   getAPIdocURL(cb: (err: any, res: any) => any) {
     axios.get(`${this.baseURL}api/v1/doc-url`)
       .then((response: AxiosResponse) => {
-        cb(null, response.data)
+        cb(null, response.data);
       })
       .catch((error: AxiosError) => {
-        cb(error, null)
+        cb(error, null);
       });
   }
 
