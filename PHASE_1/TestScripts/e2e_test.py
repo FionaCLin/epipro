@@ -12,8 +12,9 @@ import urllib.request as request
 import logging
 import json as json
 import sys
+import subprocess
 
-HOST='https://beta-do1t-epiproapp.appspot.com'
+HOST='https://beta-dot-epiproapp.appspot.com'
 
 # [START e2e]
 response = request.urlopen("{}/api/v1/swagger.json".format(HOST))
@@ -21,5 +22,7 @@ json_res = json.loads(response.read().decode('utf-8'))
 assert(json_res['swagger'] == "2.0")
 assert(json_res['basePath'] == "/api/v1")
 # [END e2e]
+
+subprocess.run(['gcloud','-q', 'app', 'deploy'])
 
 
