@@ -140,7 +140,7 @@ def index():
 	return render_template("index.html", token=api.base_url + 'doc')
 
 # default index page render to REST api doc
-@app.route('/doc-url')
+@app.route('/api/v1/doc-url')
 def doc_url():
 	return '{}doc'.format(api.base_url)
 
