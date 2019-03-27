@@ -18,7 +18,7 @@ before_install:
 - pip install -r PHASE_1/API_SourceCode/requirements.txt -t lib/
 - pip install -r PHASE_1/API_SourceCode/requirements.txt 
 - pip install pytest
-
+- openssl aes-256-cbc -K $encrypted_05acc0af6317_key -iv $encrypted_05acc0af6317_iv -in config.py.enc -out PHASE_1/API_SourceCode/config.py -d
 script:
 # unit testing 
 - ./PHASE_1/TestScripts/unit-test.sh
