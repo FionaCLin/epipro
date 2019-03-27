@@ -27,6 +27,9 @@ def test_index():
     assert r.status_code == 200
 
 
+##########################################################################################
+##                                    Test Key Terms                                    ##
+##########################################################################################
 def test_specific_key_terms():
     r = client.get('/api/v1/reports/key-terms/specific')
     assert r.status_code == 200
@@ -93,14 +96,14 @@ def test_key_terms():
     print('test_specific_w_category_A_agents_key_terms')
     test_specific_w_category_A_agents_key_terms()
 
-
+##########################################################################################
+##                                    Test Locations                                    ##
+##########################################################################################
 def test_fetch_all_locations():
     r = client.get('/api/v1/reports/locations/all')
     locations = json.loads(r.data.decode('utf-8'))
-
     for i in range(len(locations) - 1):
         for e in locations[i].keys() & sample_locations[i].keys():
-            # print(locations[i][e], sample_locations[i][e], e)
             assert locations[i][e] == sample_locations[i][e]
     assert r.status_code == 200
 
@@ -130,21 +133,22 @@ def test_locations():
     print('test_loc_invalid_param')
     test_loc_invalid_param()
 
+##########################################################################################
+##                          Test All Reports Fetching                                   ##
+##########################################################################################
 
-# def test_fetch_all_reports():
-#     r = client.get('/api/v1/reports/all')
-#     reports = json.loads(r.data.decode('utf-8'))
-#     assert r.status_code == 200
-#     print(r.status_code)
-#     print(json.dumps(reports[0]))
-#     print(json.dumps(sample_disease_report))
-#     assert json.dumps(reports[0]) == json.dumps(sample_disease_report)
+def test_fetch_all_reports():
+    r = client.get('/api/v1/reports/all')
+    reports = json.loads(r.data.decode('utf-8'))
+    assert r.status_code == 200
+    assert json.dumps(reports[0]) == json.dumps(sample_disease_report)
 
-# def test_fetch_all_report_w_valid_limit():
-#     r = client.get('/api/v1/reports/all?limit=10')
-#     reports = json.loads(r.data.decode('utf-8'))
-#     assert json.dumps(reports[0]) == json.dumps(sample_disease_report)
-#     assert r.status_code == 200
+
+def test_fetch_all_report_w_valid_limit():
+    r = client.get('/api/v1/reports/all?limit=10')
+    reports = json.loads(r.data.decode('utf-8'))
+    assert json.dumps(reports[0]) == json.dumps(sample_disease_report)
+    assert r.status_code == 200
 
 
 def test_fetch_all_report_w_invalid_limit():
@@ -157,7 +161,7 @@ def test_fetch_all_report_w_invalid_limit():
 def test_fetch_all_report_w_valid_start_at1():
     r = client.get('/api/v1/reports/all?limit=10&start=1')
     reports = json.loads(r.data.decode('utf-8'))
-    assert json.dumps(reports()) == json.dumps(sample_disease_report)
+    assert json.dumps(reports[0]) == json.dumps(sample_disease_report)
     assert r.status_code == 200
 
 
@@ -176,12 +180,12 @@ def test_fetch_all_report_w_invalid_start_at2():
 
 
 def test_all_reports():
-    # print('test_fetch_all_reports')
-    # test_fetch_all_reports()
-    # print('test_fetch_all_report_w_valid_limit')
-    # test_fetch_all_report_w_valid_limit()
-    # print('test_fetch_all_report_w_valid_start_at1')
-    # test_fetch_all_report_w_valid_start_at1()
+    print('test_fetch_all_reports')
+    test_fetch_all_reports()
+    print('test_fetch_all_report_w_valid_limit')
+    test_fetch_all_report_w_valid_limit()
+    print('test_fetch_all_report_w_valid_start_at1')
+    test_fetch_all_report_w_valid_start_at1()
     print('test_fetch_all_report_w_valid_start_at2')
     test_fetch_all_report_w_valid_start_at2()
     print('test_fetch_all_report_w_invalid_limit')
@@ -189,6 +193,10 @@ def test_all_reports():
     print('test_fetch_all_report_w_invalid_start_at2')
     test_fetch_all_report_w_invalid_start_at2()
 
+
+##########################################################################################
+##                              Test Filter Reports                                     ##
+##########################################################################################
 
 # def test_filter_reports():
 #   r = client.get('/api/v1/reports/filter')
