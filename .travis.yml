@@ -31,7 +31,7 @@ deploy:
   project: epiproapp
   config: PHASE_1/API_SourceCode/app.yaml
   default: true  # default project app version
-  on: D2-production-v2 #<--update this for final submission
+  on: production #<--update this for final submission
 
 after_deploy:
 # after deploy e2e testing
