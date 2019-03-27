@@ -13,7 +13,7 @@ import logging
 import json as json
 import sys
 
-HOST='https://beta-dot-epiproapp.appspot.com'
+HOST='https://beta-do1t-epiproapp.appspot.com'
 
 # [START e2e]
 response = request.urlopen("{}/api/v1/swagger.json".format(HOST))
