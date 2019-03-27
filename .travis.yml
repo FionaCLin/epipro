@@ -35,6 +35,6 @@ deploy:
   on: D2-production-v2
   no_promote: true
 
-after_deploy:
+after_script:
 # after deploy e2e testing
 - python3 PHASE_1/TestScripts/e2e_test.py
