@@ -40,8 +40,7 @@ after_deploy:
 - python3 PHASE_1/TestScripts/e2e_test.py
 # deploy production branch 
 after_script:
-  script:
-   deploy:
+  deploy:
     provider: gae
     skip_cleanup: true # Skip cleanup so api_key.py and vendored dependencies are still there
     keyfile: client-secret.json
