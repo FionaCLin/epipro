@@ -16,11 +16,11 @@ then
   for i in $@;
   do
     echo "************ test $i ************"
-    python3 ~/Documents/SENG3011_EpiPro/PHASE_1/API_SourceCode/test_$i.py
+    python3 ./PHASE_1/API_SourceCode/test_$i.py
   done
 else
   echo "************ test main ************"
-  python3 ~/Documents/SENG3011_EpiPro/PHASE_1/API_SourceCode/test_main.py
+  python3 ./PHASE_1/API_SourceCode/test_main.py
   echo "************ test date ************"
-  python3 ~/Documents/SENG3011_EpiPro/PHASE_1/API_SourceCode/test_date.py
+  python3 ./PHASE_1/API_SourceCode/test_date.py
 fi
