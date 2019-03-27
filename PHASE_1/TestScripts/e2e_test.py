@@ -11,7 +11,9 @@
 import urllib.request as request
 import logging
 import json as json
-HOST='https://epiproapp.appspot.com'
+import sys
+
+HOST='https://'+sys.argv[1]
 
 # [START e2e]
 response = request.urlopen("{}/api/v1/swagger.json".format(HOST))
