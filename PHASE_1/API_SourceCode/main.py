@@ -13,11 +13,11 @@
 # limitations under the License.
 
 #### DON'T KNOW WHAT THIS FOR #####
-# from lib import *
+from lib import *
 # [START gae_python37_app]
 
 from flask import Flask, Blueprint
-# not sure if we need this in localhost
+from flask_cors import CORS
 from flask import Flask, url_for, redirect, render_template
 from flask_restplus import Resource, Api
 from flask import request
@@ -46,6 +46,7 @@ api = Api(
     description="This is a EpiPro App REST API.\r\n SENG3011 workshop project"
 )  # Documentation Description
 
+CORS(app)
 app.register_blueprint(blueprint)
 
 client = MongoClient(config.MONGO_URI, config.MONGO_PORT)
