@@ -1,8 +1,10 @@
 import React from 'react';
 import '../css/Home.css';
 import Select from 'react-select';
+import CreatableSelect from 'react-select/lib/Creatable';
 import Keyterms from '../dummydata/keyterms.json';
 import { string } from 'prop-types';
+import { makeCreatableSelect } from 'react-select/lib/Creatable';
 
 export default class KeytermSearch extends React.Component<IKeytermSearchProps, IKeytermSearchState> {
   constructor(props: IKeytermSearchProps) {
@@ -44,7 +46,7 @@ export default class KeytermSearch extends React.Component<IKeytermSearchProps, 
         { label: 'All', value: 0, type: 'all' },
         { label: 'General', value: 1, type: 'general' },
         { label: 'Specific', value: 2, type: 'specific' }
-    ]
+    ]   
     return (
         <div className="Filter-element">
             <b>Keyterms</b>
@@ -57,7 +59,7 @@ export default class KeytermSearch extends React.Component<IKeytermSearchProps, 
                     />
                 </div>
                 <div className='Keyterm-right'>
-                    <Select
+                    <CreatableSelect
                         isMulti
                         options={this.state.filterOptions}
                         className="basic-multi-select"
