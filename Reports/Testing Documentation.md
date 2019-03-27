@@ -7,7 +7,46 @@
 During the development, we are going to apply Test-Driven Development(TDD) to ensure the functionalities of each system components. 
 Because there are two major components in this stage（see Unit Testing System Components Diagram）, our functional Unit Testings are composed of API Unit Testing and Scapper Unit Testing.
  ![Unit Testing System Components Diagram](testing-components.png "Unit Testing")
-API Unit tests will test each API end point comprehensively and extensively, that means not only the expected successful test cases, but also the invalid input test cases. We collect the sample output for the test cases in to our sample test data files. And testing the API end point response against to our sample output files. Sample disease report data and the key terms data(key-terms.json) can be found in the folder(./PHASE_1/TestScripts/sample_data). Since those API end point are exposed to the public world and it will receive any kind of requests that will harm the backend server. Therefore, it should ensure the API request won't cause any internal server error.
+API Unit tests in `PHASE_1/API_SourceCode/test_main.py` file will test each API end point comprehensively and extensively, that means not only the expected successful test cases, but also the invalid input test cases. We collect the sample output based on our project specification and the specification repository in GitHub for test expected output in to our sample test data files.  And testing the API end point response against to our expected sample output files. Sample disease report data is located in `PHASE_1/TestScripts/sample_output/sample_disease_report.json` and the key terms data can be found in `PHASE_1/TestScripts/sample_output/key-terms.json`, as well as the locations data is in `PHASE_1/TestScripts/sample_output/locations.json`. Since those API end point are exposed to the public world and it will receive any kind of requests that will harm the backend server. Therefore, it should ensure the API request won't cause any internal server error.
+
+We also test our date helper functions, those tests are in the `PHASE_1/API_SourceCode/test_date.py`. Because the start date and end date has special requirements, so it needs some extra functions to process the dates input. Those functionalities have been tested throughout.
+For simplicity, we leave the pytest script `test_<main/date>.py` in `PHASE_1/API_SourceCode` and the unit-test running script `unit-test.sh` in `PHASE_1/TestScripts`. The pytest script will import `maim.py` to create the test application instance as the test_client to test with.
+To use `unit-test.sh` see below example:
+  * test all
+  ```bash
+  ./unit-test.sh
+  ```
+  The tests will show below output
+  ```
+  ************ test main ************
+## test_invalid_param
+## test_general_key_terms
+## test_specific_key_terms
+## test_specific_w_category_none_key_terms
+## test_specific_w_category_A_agents_key_terms
+## test fetch all locations
+...
+************ test date ************
+....
+ ```
+ * only test main
+  ```bash
+  ./unit-test.sh main
+  ```
+  The test will show below output
+  ```
+  ## test_invalid_param
+  ## test_general_key_terms
+  ## test_specific_key_terms
+  ## test_specific_w_category_none_key_terms
+  ## test_specific_w_category_A_agents_key_terms
+  ## test fetch all locations
+  ## test_get_location_by_area
+  ## test_loc_invalid_param
+  ## test_fetch_all_reports
+  ## test_fetch_all_report_w_valid_limit
+  ## test_fetch_all_report_w_valid_start_at1
+  ```
 
 Scapper Unit Tests will test the functionalities as well as the correctness. Utilising the url of the article as test input and the sample disease report data(sample_disease_report.json) from the project specification as the expected output in testing the developed the web scaping. In this phase of development, scapper correctness and functionalities are more vital to the project scope and definition. Thus, we follow the project requirements and pre-define input in project specification as well as the expect sample output to ensure our web scapper meet the requirements.
 

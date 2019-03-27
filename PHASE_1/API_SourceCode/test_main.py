@@ -85,15 +85,15 @@ def test_invalid_param():
 
 
 def test_key_terms():
-    print('test_invalid_param')
+    print('## test_invalid_param')
     test_invalid_param()
-    print('test_general_key_terms')
+    print('## test_general_key_terms')
     test_general_key_terms()
-    print('test_specific_key_terms')
+    print('## test_specific_key_terms')
     test_specific_key_terms()
-    print('test_specific_w_category_none_key_terms')
+    print('## test_specific_w_category_none_key_terms')
     test_specific_w_category_none_key_terms()
-    print('test_specific_w_category_A_agents_key_terms')
+    print('## test_specific_w_category_A_agents_key_terms')
     test_specific_w_category_A_agents_key_terms()
 
 ##########################################################################################
@@ -102,8 +102,6 @@ def test_key_terms():
 def test_fetch_all_locations():
     r = client.get('/api/v1/reports/locations/all')
     locations = json.loads(r.data.decode('utf-8'))
-    print(locations)
-    print(sample_locations)
     for i in range(len(locations) - 1):
         for e in locations[i].keys() & sample_locations[i].keys():
             assert locations[i][e] == sample_locations[i][e]
@@ -128,11 +126,11 @@ def test_loc_invalid_param():
 
 
 def test_locations():
-    print('test fetch all locations')
+    print('## test fetch all locations')
     test_fetch_all_locations()
-    print('test_get_location_by_area')
+    print('## test_get_location_by_area')
     test_get_location_by_area()
-    print('test_loc_invalid_param')
+    print('## test_loc_invalid_param')
     test_loc_invalid_param()
 
 ##########################################################################################
@@ -182,17 +180,17 @@ def test_fetch_all_report_w_invalid_start_at2():
 
 
 def test_all_reports():
-    print('test_fetch_all_reports')
+    print('## test_fetch_all_reports')
     test_fetch_all_reports()
-    print('test_fetch_all_report_w_valid_limit')
+    print('## test_fetch_all_report_w_valid_limit')
     test_fetch_all_report_w_valid_limit()
-    print('test_fetch_all_report_w_valid_start_at1')
+    print('## test_fetch_all_report_w_valid_start_at1')
     test_fetch_all_report_w_valid_start_at1()
-    print('test_fetch_all_report_w_valid_start_at2')
+    print('## test_fetch_all_report_w_valid_start_at2')
     test_fetch_all_report_w_valid_start_at2()
-    print('test_fetch_all_report_w_invalid_limit')
+    print('## test_fetch_all_report_w_invalid_limit')
     test_fetch_all_report_w_invalid_limit()
-    print('test_fetch_all_report_w_invalid_start_at2')
+    print('## test_fetch_all_report_w_invalid_start_at2')
     test_fetch_all_report_w_invalid_start_at2()
 
 
