@@ -5,13 +5,14 @@ import os
 import sys
 import main
 
-CWD = '/Users/ficlin/Documents/SENG3011_EpiPro/PHASE_1/'
+dir_path = os.path.dirname(os.path.realpath(__file__))
+
 sample_key_terms = json.load(
-    open(os.path.join(CWD, 'TestScripts/sample_output/key-terms.json'), 'r'))
+    open(os.path.join(dir_path, '../TestScripts/sample_output/key-terms.json'), 'r'))
 sample_locations = json.load(
-    open(os.path.join(CWD, 'TestScripts/sample_output/locations.json'), 'r'))
+    open(os.path.join(dir_path, '../TestScripts/sample_output/locations.json'), 'r'))
 sample_disease_report = json.load(
-    open(os.path.join(CWD, 'TestScripts/sample_output/sample_disease_report.json'), 'r'))
+    open(os.path.join(dir_path, '../TestScripts/sample_output/sample_disease_report.json'), 'r'))
 
 main.app.testing = True
 client = main.app.test_client()
