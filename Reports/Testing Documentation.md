@@ -52,7 +52,11 @@ To use `unit-test.sh` see below example:
 #### Scraper tests
 Scraper Unit Tests will test the functionalities as well as the correctness. Utilising the url of the article as test input and the sample disease report data(sample_disease_report.json) from the project specification as the expected output in testing the developed the web scaping. In this phase of development, Scraper correctness and functionalities are more vital to the project scope and definition. Thus, we follow the project requirements and pre-defined input in project specification as well as the expect sample output to ensure our web Scraper meet the requirements.
 #### CICD tests
-  Detail please refer to the section [Testing and CICD of Design Detail](https://github.com/unsw-se3011/SENG3011_EpiPro/blob/master/Reports/Design%20Details.md#testing-and-cicd)
+  CICD has set up within GitHub and Travis, and `.travis.yaml` has developed to watch every push to git repository and only the `production` branch will trigger the build and deploy to the production site in Google Cloud Platform.
+
+  The CICD process consist of test our API with all unit tests in the production virtual environment. After the tests passed, it will deploy the api source code to the production site.
+
+  More detail please refer to the section [Testing and CICD of Design Detail](https://github.com/unsw-se3011/SENG3011_EpiPro/blob/master/Reports/Design%20Details.md#testing-and-cicd)
 ### Test tools
  Unit Testing will be developed and run against each build. Those tests are required for each function of APIs and Scraper within our web server and will be developed with Pytest. Since Pytest is the Flask built-in test framework. It will help us to bring up a test instance of our system and do the tests on different developing system components.
 
