@@ -10,17 +10,17 @@
 # into the test folder for the test script run
 # the work around solution is to make a bash script to trigger 
 # the test in the API_SourceCode
-
+pwd
 if [[ $@ ]];
 then
   for i in $@;
   do
     echo "************ test $i ************"
-    python3 ../API_SourceCode/test_$i.py
+    python3 ~/Documents/SENG3011_EpiPro/PHASE_1/API_SourceCode/test_$i.py
   done
 else
   echo "************ test main ************"
-  python3 ../API_SourceCode/test_main.py
+  python3 ~/Documents/SENG3011_EpiPro/PHASE_1/API_SourceCode/test_main.py
   echo "************ test date ************"
-  python3 ../API_SourceCode/test_date.py
+  python3 ~/Documents/SENG3011_EpiPro/PHASE_1/API_SourceCode/test_date.py
 fi

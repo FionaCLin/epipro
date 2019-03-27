@@ -21,8 +21,7 @@ before_install:
 
 script:
 # unit testing 
-# TODO refact the tests to the test script folder
-- python3 PHASE_1/API_SourceCode/main_test.py
+- ./PHASE_1/TestScripts/unit-test.sh
 
 # deploy staging branch 
 deploy:
@@ -31,5 +30,11 @@ deploy:
   keyfile: client-secret.json
   project: epiproapp
   config: PHASE_1/API_SourceCode/app.yaml
-  default: true  # default project app version
-  on: production-api-v1
+  default: false  # default project app version
+  version: beta
+  on: D2-production-v2
+  no_promote: true
+
+after_deploy:
+# after deploy e2e testing
+- python3 PHASE_1/TestScripts/e2e_test.py
