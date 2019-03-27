@@ -50,6 +50,16 @@ export class BackendAPI {
       });
   }
 
+  getAPIdocURL(cb: (err: any, res: any) => any) {
+    axios.get(`${this.baseURL}api/v1/doc-url`)
+      .then((response: AxiosResponse) => {
+        cb(null, response.data)
+      })
+      .catch((error: AxiosError) => {
+        cb(error, null)
+      });
+  }
+
   getFiltedReports(filter: IFilterOptions, cb:(err: any, res: any) => any) {
     let q :string[] = [];
     if (filter.locations) {
