@@ -30,8 +30,7 @@ PROJECT_ID = 'your-project-id'
 ##################################################################################################################
 
 
-
-if re.match(r'test', sys.argv):
+if re.match(r'.*test.*', sys.argv[0]):
 # update this and save as config.py
     MONGO_URI = \
         'mongodb://user:password@host:27017/database'
