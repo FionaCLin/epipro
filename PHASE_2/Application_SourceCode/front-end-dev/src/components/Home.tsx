@@ -16,14 +16,14 @@ declare global {
 export default class Home extends React.Component<IHomeProps, IHomeState> {
   constructor(props: IHomeProps) {
     super(props);
-    this.state = {
+    this.state={
       api_doc_url: ''
     }
-    console.log(this.state, 'constructor')
+    console.log(this.state,'constructor')
   }
 
   componentDidMount() {
-    let doc_url: string = '';
+    let doc_url:string='';
     api.getAPIdocURL((error: any, response: any) => {
       if (error) {
         if (error.response) {
@@ -36,25 +36,21 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
       }
       doc_url = response;
       console.log(doc_url, 'doc url in app tsx to set state')
-      this.setState({ api_doc_url: doc_url })
+      this.setState({api_doc_url: doc_url})
     });
   }
-
+  
   render() {
-    console.log('I am rendering', this.state)
+    console.log('I am rendering',this.state)
     return (
       <div className="App">
         <div className="bg">
           <header className="App-header">
             <img src={logo} className="App-logo" alt="logo" />
-            <p>
-              <strong>
-                EpiPro API
-              </strong>
-            </p>
+            <p>EpiPro API</p>
             <p>Predict. Prevent. Protect.</p>
-            <a className="a" href={this.state.api_doc_url}>EpiPro API Documentation</a>
-            <Link className="a" to='/search'>Search</Link>
+            <a href={this.state.api_doc_url}>EpiPro API Documentation</a>
+            <Link to='/search'>Search</Link>
           </header>
         </div>
       </div>
