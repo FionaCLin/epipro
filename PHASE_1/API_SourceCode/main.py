@@ -52,7 +52,9 @@ db = client[config.MONGO_DB]
 
 parser = reqparse.RequestParser()
 
-
+LOCATION = 'test_location'
+KEY_TERMS = 'Key-Terms'
+REPORTS = 'test_report'
 #############################################################################################
 #   MODEL   #
 #####  REPSONSE for /api/reports/locations/<:id> #####
@@ -158,7 +160,7 @@ class locations(Resource):
 	@api.response(404, 'No data found')
 	@api.doc(description="Get all the disease related locations that occured in all disease reports we have.")
 	def get(self):
-		collection = db['test_location']
+		collection = db[LOCATION]
 		result = []
 
 		for report_location in collection.find():
@@ -193,7 +195,7 @@ class locations_id(Resource):
 		'area': 'a place you want to find either country or state or city'
 	})
 	def get(self, area):
-		collection = db['test_location']
+		collection = db[LOCATION]
 		search_string = "\'" + area + "\'"
 		cursor = collection.find({"$text": {"$search": search_string}}, {"_id": 0})
 		result = []
@@ -237,7 +239,7 @@ class key_terms(Resource):
 				'message':
 				'make sure that term-type can only be general or specific'
 			}, 400
-		collection = db['Key_Terms']
+		collection = db[KEY_TERMS]
 
 		result = []
 		my_query = {'type': re.compile(term_type, re.IGNORECASE)}
@@ -314,8 +316,8 @@ class disease_report_with_filter(Resource):
 		\n		Format: non-negative integer only.")
 	def get(self):
 
-		collection = db['test_report']
-		location_dictionary = db['test_location']
+		collection = db[REPORTS]
+		location_dictionary = db[LOCATION]
 
 		without_date = []
 		result = []
