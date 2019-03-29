@@ -185,7 +185,7 @@ class locations(Resource):
 #       city: string
 #     }
 @api.route('/reports/locations/<string:area>')
-class locations_id(Resource):
+class locations_with_area(Resource):
 
 	@api.response(200, 'Specific location info fetched successfully', location)
 	@api.response(400, 'Bad request')
@@ -290,7 +290,7 @@ class key_terms(Resource):
 #       -start::integer  : start from the n-th report
 #       -limit::integer  : limit to the number of responseed reports
 @api.route('/reports/filter')
-class disease_report_with_filter(Resource):
+class disease_reports_with_filter(Resource):
 
 	@api.response(200, 'Specific location info fetched successfully', disease_report_model)
 	@api.response(400, 'Bad request')
@@ -405,52 +405,6 @@ class disease_report_with_filter(Resource):
 
 		return result, 200
 
-
-
-######################
-##      CLOSED      ##
-######################
-# # disease reports
-# GET /api/reports
-# -- Fetch disease reports
-#    Responses the recent 100 reports by default
-#    Query(optional):
-#    pagination -- this refers to the design from atlassian
-#    reference: https://developer.atlassian.com/server/confluence/pagination-in-the-rest-api/
-#       -start::integer  : start from the n-th report
-#       -limit::integer  : limit to the number of responseed reports
-# TO DO: add sort function
-
-
-@api.route('/reports/all')
-class disease_reports(Resource):
-
-	@api.response(200, 'Specific location info fetched successfully', disease_report_model)
-	# TO DO: specify the reason
-	@api.response(400, 'Bad request')
-	@api.response(404, 'No data found')
-	# TO DO：start and limit should be filled at the same time
-	@api.param('start','Optional Query, start from the n-th report')
-	@api.param('limit','Optional Query, limit to the number of responseed reports')
-	@api.doc(description="Get all disease reports")
-	def get(self):
-		collection = db['test_report']
-		start = request.args.get('start')
-		limit = request.args.get('limit')
-
-		if start is None:
-			start = 0
-		if limit is None:
-			limit = 100
-		start = int(start)
-		limit = int(limit)
-		cursor = collection.find({},{ "_id": 0 }).skip(start).limit(limit)
-		result = []
-
-		for entry in cursor:
-			result.append(entry)
-
-		return result, 200
 
 
 #######################################################################################################
