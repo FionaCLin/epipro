@@ -10,8 +10,17 @@ class contentSpider(scrapy.Spider):
     name = 'contentSpider'
     allowed_domain = ['who.int']
     #page we need to scrapy
-    url_list = ["https://www.who.int/csr/don/7-march-2019-ebola-drc/en/"]
 
+    url_list = []
+    try:
+        with open('urlSpider.json','rb') as x:
+            u_list = json.load(x)
+        for url in u_list:
+            url_list.append(url['url'])
+    except:
+        print('read error')
+        pass
+    #url_list = ['https://www.who.int/csr/don/26-february-2019-mers-saudi-arabia/en/']
     start_urls = url_list
 
     #Extract data
@@ -19,13 +28,14 @@ class contentSpider(scrapy.Spider):
 
         sel = Selector(response)
         item = ContentItem()
-        types = ['presence', 'death', 'infected', 'hospitalised', 'recovered','deaths']
+        types = ['presence', 'death', 'infected', 'hospitalised', 'recovered','deaths','infection']
         month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
                  , 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October','November', 'December']
         number_bar = {'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9,'a': 1}
-        happen_word = ['confirmed','reported'] # we always can find number-affected in the sentence once these words appear
+        happen_word = ['confirmed','reported','cases','case'] # we always can find number-affected in the sentence once these words appear
         location_word_1 = ['North','South']
-        location_word_2 = ['province']
+        location_word_2 = ['province','district']
+        location_word_3 = ['in']
         #url
         url = response.url
         print(url)
@@ -39,9 +49,17 @@ class contentSpider(scrapy.Spider):
         print('publication:' + time_tans(publication, year))
         #headline
         headline = response.xpath(".//h1[@class = 'headline']/text()").extract()[0]
+        try:
+            test = headline.split(' – ')[1]
+        except:
+            headline = response.xpath(".//h1[@class = 'headline']/text()").extract()[0] + response.xpath(".//h1[@class = 'headline']/text()").extract()[1]
         print(headline)
         #main
         main = response.xpath(".//div[@id = 'primary']//span/text()").extract()[1]
+        #print(response.xpath(".//div[@id = 'primary']//span/i/text()").extract())
+        if len(response.xpath(".//div[@id = 'primary']//span/i/text()").extract()) >0:
+            main = main + ' ' + response.xpath(".//div[@id = 'primary']//span/i/text()").extract()[0] + ' ' \
+                   + response.xpath(".//div[@id = 'primary']//span/text()").extract()[2]
         print(main)
 
         #report
@@ -73,7 +91,7 @@ class contentSpider(scrapy.Spider):
 
             #event
         one_event = {}
-        content = re.split('[.]', main)
+        content = re.split('[.,]', main)
         type_find = []
 
                 #type
@@ -82,7 +100,7 @@ class contentSpider(scrapy.Spider):
         for name in types:
             if name in str(main).lower():
                 type_find.append(name)
-                print(name['name'])
+                print(name)
         one_event['type'] = type_find
                 #date
         num_date = []
@@ -117,6 +135,12 @@ class contentSpider(scrapy.Spider):
                 if word in location_word_2:
                     places = word + ' ' + words[word_counter - 1]
                     citys.append(places)
+                if word in location_word_3 and re.match("^[A-Z].*", words[word_counter + 1]):
+                    places = words[word_counter + 1]
+                    citys.append(places)
+                if word in location_word_3 and words[word_counter + 1] is 'the 'and re.match("^[A-Z].*", words[word_counter + 2]):
+                    places = words[word_counter + 2]
+                    citys.append(places)
                 if re.match(r"\(([0-9])*\)", word) != None:
                     place = words[word_counter - 1]
                     citys.append(place)
@@ -143,11 +167,14 @@ class contentSpider(scrapy.Spider):
         print(citys)
         L = ''
         for x in citys:
-            L = L + x + ','
+            L = L + x + ';'
+
+        L = re.split(";$",L)[0]
+        print('L:' + L)
         location['city'] = L
         one_event['location'] = location
         #aff
-        print('number-affeted:' + affected)
+        print('number-affeted:' + str(affected))
         one_event['number-affected'] = affected
 
         one_report['report_events'].append(one_event)
@@ -158,7 +185,7 @@ class contentSpider(scrapy.Spider):
         item['date_of_publication'] = time_tans(publication, year)
         item['headline'] = headline
         item['main_text'] = main
-        item['reports '] = reports
+        item['reports'] = reports
 
 
 
