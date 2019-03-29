@@ -36,7 +36,7 @@ When no Start-date entered, it will be set to predefined date. The default Start
 Input Format: YYYY-MM-DDTHH:MM:SS   
 * __Key-terms__: The keywords that user wants to search, case insensitive.   
 Input Format: Keyword1,Keyword2,.. 
-* __Location__: A location that user is concerned about,case insensitive. 
+* __Location__: A location that user is concerned about,case insensitive.  
 Input Format: User should enter the complete word, for example: if user enters 'sydn', nothing will return, instead user should enter 'sydney'. 
 * __Start/Limit__: These parameters are for pagination. 
 The default value for Start is 1, and for Limit is 100.  
