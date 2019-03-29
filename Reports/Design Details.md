@@ -26,7 +26,7 @@ More details on the APIs structure available [here](https://epiproapp.appspot.co
 
 # API design details 
 ### API architecture 
-##### GET /reports/filter 
+#### __GET /reports/filter__ 
 This endpoint will return all the reports that satisfy user requirements. 
 When all parameters are empty, the endpoint will return all disease reports existed in the database. 
 All the parameters are optional, here are all 6 query parameters used in the endpoint. 
@@ -41,21 +41,21 @@ Input Format: User should enter the complete word, for example: if user enters '
 The default value for Start is 1, and for Limit is 100. 
 Input Format: non-negative integer only. 
 
-##### GET /reports/key-terms/\<term_type\> 
+#### __GET /reports/key-terms/\<term_type\>__ 
 This endpoint will return all predefined key terms from our database in case user doesn't know what to search. 
 Here is the only path parameter: 
 
 * __term_type__: There are two types of key terms: __[general]__ or __[specific]__, both  case insensitive. 
 [general] is a wilder range keyword, for example: \"outbreak\", while [specific] refers to a limited but detailed range, for example: \"Zika\". 
 
-##### GET /reports/locations/\<area\>
+#### __GET /reports/locations/\<area\>__
 This endpoint will return all the locations information when given an area name. 
 Usage example: When user want to know what cities are in in a certain country, saying Australia. User can enter Australia in \"area\", the endpoint will return all places that inside Austrlia. 
 Here is the only path parameter in this endpoint: 
 
 * __area__: a location name given by the user, case insensitive.  User should enter the complete word, for example: if user enters 'sydn', nothing will return, instead user should enter 'sydney'. 
 
-##### GET /reports/locations/all
+#### __GET /reports/locations/all__
 This endpoint will return all the locations that existed in the database. 
 
 #### Reason for why create these four api
