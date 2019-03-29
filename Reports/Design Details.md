@@ -32,7 +32,8 @@ When all parameters are empty, the endpoint will return all disease reports exis
 All the parameters are optional, here are all 6 query parameters used in the endpoint. 
 * __Start-date/End-date__: The period that user is interested in.  
 No 'xx' accept here, user must enter valid dates. 
-When no Start-date entered, it will be set to predefined date. The default Start-date is 2016-01-01T00:00:00. When End-date is empty, it will be set to current date time. 			Iput Format: YYYY-MM-DDTHH:MM:SS  
+When no Start-date entered, it will be set to predefined date. The default Start-date is 2016-01-01T00:00:00. When End-date is empty, it will be set to current date time. 
+Input Format: YYYY-MM-DDTHH:MM:SS  
 * __Key-terms__: The keywords that user wants to search, case insensitive. 
 Input Format: Keyword1,Keyword2,.. 
 * __Location__: A location that user is concerned about,case insensitive. 
