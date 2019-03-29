@@ -305,14 +305,14 @@ class disease_report_with_filter(Resource):
 		 When all parameters are empty, the endpoint will return all reports existed in the database.\
 		\n All the parameters are optional, please follow the parameter descriptions when you want to pass an input.\
 		\n Start-date/End-date: The period that user is interested in.\
-		 When no Start-date entered, it will be set to predefined date.When End-date is empty, it will be set to current date time.\
+		 When no Start-date entered, it will be set to predefined date. The default Start-date is 2016-01-01T00:00:00. When End-date is empty, it will be set to current date time.\
 		\n		Format: YYYY-MM-DDTHH:MM:SS \
 		\n Key-terms: The keywords that user wants to search, case insensitive.\
 		\n		Format: Keyword1,Keyword2,..\
 		\n Location: A location that user is concerned about,case insensitive.\
 		\n		Format: You need to enter the complete word, for example:\
 		if enter 'sydn' nothing will return, you need to enter sydney.\
-		\n Start/Limit: These are for pagination. \
+		\n Start/Limit: These are for pagination. The default value for Start is 1, and for Limit is 100.\
 		\n		Format: non-negative integer only.")
 	def get(self):
 
@@ -335,17 +335,20 @@ class disease_report_with_filter(Resource):
 			start = 1
 		if limit is None:
 			limit = 100
-		if not isinstance(start, int):
+
+		try: 
+			start = int(start)-1
+		except ValueError:
 			return { 'message': 'START must be non-negative an integer' }, 400
-		if not isinstance(limit, int):
+		try: 
+			limit = int(limit)
+		except ValueError:
 			return { 'message': 'LIMIT must be non-negative an integer' }, 400
-	
-		start = int(start)-1
-		limit = int(limit)
+
 
 		# check date formate && order
 		if start_date is None:
-			start_date = '2019-01-01T00:00:00'
+			start_date = '2016-01-01T00:00:00'
 		if end_date is None:
 			end_date = datetime.now().isoformat()
 			format_search = re.search('^([^.]*)', end_date, re.IGNORECASE)
@@ -399,6 +402,53 @@ class disease_report_with_filter(Resource):
 
 			if start_date_com <= pub_date_com and pub_date_com <= end_date_com:
 				result.append(entry)
+
+		return result, 200
+
+
+
+######################
+##      CLOSED      ##
+######################
+# # disease reports
+# GET /api/reports
+# -- Fetch disease reports
+#    Responses the recent 100 reports by default
+#    Query(optional):
+#    pagination -- this refers to the design from atlassian
+#    reference: https://developer.atlassian.com/server/confluence/pagination-in-the-rest-api/
+#       -start::integer  : start from the n-th report
+#       -limit::integer  : limit to the number of responseed reports
+# TO DO: add sort function
+
+
+@api.route('/reports/all')
+class disease_reports(Resource):
+
+	@api.response(200, 'Specific location info fetched successfully', disease_report_model)
+	# TO DO: specify the reason
+	@api.response(400, 'Bad request')
+	@api.response(404, 'No data found')
+	# TO DO：start and limit should be filled at the same time
+	@api.param('start','Optional Query, start from the n-th report')
+	@api.param('limit','Optional Query, limit to the number of responseed reports')
+	@api.doc(description="Get all disease reports")
+	def get(self):
+		collection = db['test_report']
+		start = request.args.get('start')
+		limit = request.args.get('limit')
+
+		if start is None:
+			start = 0
+		if limit is None:
+			limit = 100
+		start = int(start)
+		limit = int(limit)
+		cursor = collection.find({},{ "_id": 0 }).skip(start).limit(limit)
+		result = []
+
+		for entry in cursor:
+			result.append(entry)
 
 		return result, 200
 
