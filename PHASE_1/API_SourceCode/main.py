@@ -304,7 +304,7 @@ class disease_reports_with_filter(Resource):
 	@api.doc(description="This endpoint will return all the reports that satisfy user requirements. \
 		 When all parameters are empty, the endpoint will return all reports existed in the database.\
 		\n All the parameters are optional, please follow the parameter descriptions when you want to pass an input.\
-		\n Start-date/End-date: The period that user is interested in.\
+		\n Start-date/End-date: The period that user is interested in. No 'xx' accept here, you must enter valid dates.\
 		 When no Start-date entered, it will be set to predefined date. The default Start-date is 2016-01-01T00:00:00. When End-date is empty, it will be set to current date time.\
 		\n		Format: YYYY-MM-DDTHH:MM:SS \
 		\n Key-terms: The keywords that user wants to search, case insensitive.\
