@@ -22,6 +22,72 @@ Location helps the user restrict the disease reports to a designated geographica
 
 More details on the APIs structure available [here](https://epiproapp.appspot.com/api/v1/doc/) on the EpiPro Online Documentation.
 
+
+
+# API design details 
+### API architecture 
+##### GET /reports/filter 
+This endpoint will return all the reports that satisfy user requirements. 
+When all parameters are empty, the endpoint will return all disease reports existed in the database. 
+All the parameters are optional, here are all 6 query parameters used in the endpoint. 
+* __Start-date/End-date__: The period that user is interested in.  
+No 'xx' accept here, user must enter valid dates. 
+When no Start-date entered, it will be set to predefined date. The default Start-date is 2016-01-01T00:00:00. When End-date is empty, it will be set to current date time. 			Iput Format: YYYY-MM-DDTHH:MM:SS  
+* __Key-terms__: The keywords that user wants to search, case insensitive. 
+Input Format: Keyword1,Keyword2,.. 
+* __Location__: A location that user is concerned about,case insensitive. 
+Input Format: User should enter the complete word, for example: if user enters 'sydn', nothing will return, instead user should enter 'sydney'. 
+* __Start/Limit__: These parameters are for pagination. 
+The default value for Start is 1, and for Limit is 100. 
+Input Format: non-negative integer only. 
+
+##### GET /reports/key-terms/\<term_type\> 
+This endpoint will return all predefined key terms from our database in case user doesn't know what to search. 
+Here is the only path parameter: 
+
+* __term_type__: There are two types of key terms: __[general]__ or __[specific]__, both  case insensitive. 
+[general] is a wilder range keyword, for example: \"outbreak\", while [specific] refers to a limited but detailed range, for example: \"Zika\". 
+
+##### GET /reports/locations/\<area\>
+This endpoint will return all the locations information when given an area name. 
+Usage example: When user want to know what cities are in in a certain country, saying Australia. User can enter Australia in \"area\", the endpoint will return all places that inside Austrlia. 
+Here is the only path parameter in this endpoint: 
+
+* __area__: a location name given by the user, case insensitive.  User should enter the complete word, for example: if user enters 'sydn', nothing will return, instead user should enter 'sydney'. 
+
+##### GET /reports/locations/all
+This endpoint will return all the locations that existed in the database. 
+
+#### Reason for why create these four api
+
+### Choice of implementation
+flask
+### Challenges addressed
+how to search
+location
+dte
+### Shortcomings
+date comparison
+
+
+
+===================================== still editting ===========================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ### Collect Disease Reports
 #### Webscraping with Scrapy and Selenium
 As our data source WHO is a dynamic website which also provides search and filter functionalities, we chose Selenium and Scrapy frameworks to build and define our web scraper, over other alternatives like BeautifulSoup, Pyspider and Portia.
