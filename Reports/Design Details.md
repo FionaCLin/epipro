@@ -71,7 +71,7 @@ We think this one is necessary because keywords is a wild range, from disease ty
 __For GET /reports/locations/area__:  
 We provide this endpoint for users to get valid location information in a certain area. The importance of this endpoint is that user can use it to know which cities are under a certian country/state and also which several sub-areas have disease reports stored in the database. Some remote countries may have many small cities without any valid disease reports, the endpoint will save the time by not showing the city name so that user can know there is no report stored in database.  
   
-__For GET /reports/locations/all__:
+__For GET /reports/locations/all__:  
 We consider that user may this endpoint to do a location drop down list. It's convenient to give all locations to user at one time.  
 ### Choice of implementation
 We choose python flask/flask-RESTPlus to implement our api because flask is a mature light framework to set up api and also it has a built-in swagger generator which provides us huge convenience.
@@ -83,13 +83,15 @@ Search involves 3 main range: keyword searching, date searching, inclusive locat
 This is the most difficult and important task in the api. As for normal mongodb search, we usually use index search with find() from MongoDB command, which means, if we adopt this method to do the keyword search, we need to know the exact index of the keyword. For example, when the keyword is \"Acute Flacid Paralysis\", firstly we have to know this keyword is of index \"syndrome\" and then we can search for the reports with find() method. This will add much more effort and time to finish one single search.  
 Starting from version 2.4, MongoDB began with an experimental feature supporting Full-Text Search using Text Indexes. This full text search provides us with a high speed searching, allowing us to search throughout the whole report without knowing which index the input keyword exactly should be in.  
   
-* __Date Search__: The challenge in date search is the date accuracy. Since spec allows some "xx" included in the datetime string, it's hard to tell whether the date is inside the time range given by user.  
+* __Date Search__:  
+The challenge in date search is the date accuracy. Since spec allows some "xx" included in the datetime string, it's hard to tell whether the date is inside the time range given by user.  
 Firstly we have to clarify that the date we search here is __date of publication__ in report.  
 Secondly, Start and end date given by user must be accurate date time(without xx).  
 To solve the problem, we assume that all the "xx" in the date of publication is equal to the start date given by user.  
 For example: when date of publication is 2019-01-13Txx:xx:xx, start date given by user is 2019-01-12T12:32:22. Our api will proceed date of publication to 2019-01-13T12:32:22, and the do the comparison.  
   
-* __Inclusive Location Search__: We provide inclusive location search, which means, when user search a wilder range location, results from all inclusive locations will also the presented. For example, when user search \"Australia\", the results will not only send back reports that contain Australia, but also all reports include "New South Wales"(state) and "Melbourne"(city) etc. locations that are inside Australia.
+* __Inclusive Location Search__:  
+We provide inclusive location search, which means, when user search a wilder range location, results from all inclusive locations will also the presented. For example, when user search \"Australia\", the results will not only send back reports that contain Australia, but also all reports include "New South Wales"(state) and "Melbourne"(city) etc. locations that are inside Australia.
 Our solution is whenever our scrapper extracts location information from WHO website, it will also invoke api from "http://www.geonames.org/" to get complete __Country/State(if applicable)/City__. First, we store country info in index __location[country]__, and put state and city info in __location[location]__, in \"CITY, STATE\"  string format.  At the same time, we also store __Country/State(if applicable)/City__ in json format into our __location__ collection in database.  
 If only "Sydney" occurs in the original website article, when we don't use above method, the __location__ entry inside the disease report should look like this:  
 ```javascript
