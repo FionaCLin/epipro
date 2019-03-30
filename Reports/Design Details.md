@@ -6,6 +6,90 @@ Before producing our API module design, we studied some of the relevant concepts
 
 All the required handlers will be created for each of our API modules. Each API module will run in REST web service mode and will handle the corresponding REST request. Our web server will be built and host on the Google cloud platform, using a low cost App Engine Standard Environment. The EpiPro Application will then be able to serve REST API requests 24/7. More details on the Google App Engine is available [here](https://cloud.google.com/appengine/docs/).
 
+
+## Scrapper Design Module
+### Collect Disease Reports
+#### Webscraping with Scrapy and Selenium
+As our data source WHO is a dynamic website which also provides search and filter functionalities, we chose Selenium and Scrapy frameworks to build and define our web scraper, over other alternatives like BeautifulSoup, Pyspider and Portia.
+
+<table>
+    <tbody>
+        <tr align="center">
+            <th></th>
+            <th>Scrapy</th>
+            <th>BeautifulSoup</th>
+            <th>Pyspider</th>
+            <th>Portia</th>
+        </tr>
+        <tr>
+            <th align="center">Pros</th>
+            <td>
+                <ul>
+                    <li>Has the most community support and documentation</li>
+                    <li>Great performance in web scraping</li>
+                    <li>Suitable for broad crawling</li>
+                </ul>
+            </td>
+            <td>
+                <ul>
+                    <li>Easy to use</li>
+                    <li>Good for very simple projects</li>
+                </ul>
+            </td>
+            <td>
+                <ul>
+                    <li>Easy to use UI</li>
+                    <li>Facilitates fast web scraping</li>
+                    <li>Suitable for website-based user interfaces</li>
+                </ul>
+            </td>
+            <td>
+                <ul>
+                    <li>Visual scraping tool without programming</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <th align="center">Cons</th>
+            <td>
+                <ul>
+                    <li>Larger learning curve</li>
+                    <li>Does not handle JavaScript</li>
+                </ul>
+            </td>
+            <td>
+                <ul>
+                    <li>Requires multiprocessing import to improve performance</li>
+                </ul>
+            </td>
+            <td>
+                <ul>
+                    <li>Difficult to deploy</li>
+                </ul>
+            </td>
+            <td>
+                <ul>
+                    <li>More time-consuming than other alternatives</li>
+                    <li>Difficult to control how it navigates websites (can lead to unnecessary page visits)</li>
+                </ul>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+First of all, Scrapy was the recommended webscraping tool for this specific workshop, and therefore should by our baseline for our comparisons. Both BeautifulSoup and Portia are easier to use and has a smaller learning curve than Scrapy. Portia has the added benefit of being a visual scraping tool, which does not require programming knowledge. However, Scrapy performs more efficiently and more web pages can be crawled in a shorter amount of time. PySpider, similarly to Portia, has an easy to use UI, but also facilitates faster scraping. Despite this, it still is more difficult to deploy than Scrapy. Scrapy also has greater documentation and community support than all of BeautifulSoup, Pyspider and Portia. Therefore, these alternatives can be disregarded.
+
+However, Scrapy alone does not work for all web pages. Although it is considered the most suitable for properly rendering XML and HTML pages across a large data set, it does not handle JavaScript well. We also need to consider JavaScript frameworks driven pages such as React and Angular, which means, in practice, that there will be different kinds of timers and interactive elements involved. Another peculiarity of Scrapy is that it goes through pages by accessing their URLs. However, there are some buttons on the webpages which won’t have any URLs linked to them when you inspect the element or get the source code (through xpath or css). Therefore, Selenium will be used as our testing automation framework, on top of our Scrapy web crawling framework. Selenium will help simulate browser usage to retrive data from those JavaScript frameworks driven web pages, and requesting with Scrapy will be used to get the required data in a data file format during collection process.
+
+#### Collection Process
+The news and articles will be collected by our pre-defined Scraper from the searched and filtered url of the WHO website. We will then extract their title, url, content, published data, and region from the url's source file. Then, all the information will be processed and packed in the designated disease report format, and will be stored in our database. This process will recur will be autonomously performed monthly.
+
+The disease reports collection process will proceed as described below:
+* Filter region, period and data from the located WHO page's HTML code. The relevant WHO page will be located from the WHO main website by using keyword search, url and title. This process can be realized using the selector method in Scrapy. 
+* Once relevant result is found, another Scraper is used to get the source from each url. As there are a great amount of articles and news, this process should shedule monthly and run concurrently with the other process.
+* After raw data soure HTML files are retrived and the required data is extarcted and cleaned up, we compose and structure the disease reports. Using the structure of raw HTML file, xpath method can be utilised to find out required information for composing disease reports. Since the disease reports are retrived and updated monthly, the resulting disease reports will be cached in the database for serving application query.  
+
+
 ## API Design Module
 [//]: # (2. Discuss	your	current	thinking	about	how	parameters can	be	passed	to	your module	and	how	results	are	collected.	Show	an	example	of	a	possible interaction .e.g.- sample	HTTP	calls	with	URL	and	parameters)
 ### APIs Design
@@ -23,8 +107,9 @@ Location helps the user restrict the disease reports to a designated geographica
 More details on the APIs structure available [here](https://epiproapp.appspot.com/api/v1/doc/) on the EpiPro Online Documentation.
 
 
-
-# API design details 
+### EpiPro Online Documentation  
+APIs live demonstration available [here](https://epiproapp.appspot.com/api/v1/doc/)  
+  
 ### API architecture 
 #### __GET /reports/filter__ 
 This endpoint will return all the reports that satisfy user requirements. 
@@ -109,108 +194,10 @@ location: {
 }
 ```  
 At this time, we can use full text search again to search "Australia", and the report will be returned as expected.  
-### Shortcomings
-date comparison
-
-
-
-===================================== still editting ===========================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-### Collect Disease Reports
-#### Webscraping with Scrapy and Selenium
-As our data source WHO is a dynamic website which also provides search and filter functionalities, we chose Selenium and Scrapy frameworks to build and define our web scraper, over other alternatives like BeautifulSoup, Pyspider and Portia.
-
-<table>
-    <tbody>
-        <tr align="center">
-            <th></th>
-            <th>Scrapy</th>
-            <th>BeautifulSoup</th>
-            <th>Pyspider</th>
-            <th>Portia</th>
-        </tr>
-        <tr>
-            <th align="center">Pros</th>
-            <td>
-                <ul>
-                    <li>Has the most community support and documentation</li>
-                    <li>Great performance in web scraping</li>
-                    <li>Suitable for broad crawling</li>
-                </ul>
-            </td>
-            <td>
-                <ul>
-                    <li>Easy to use</li>
-                    <li>Good for very simple projects</li>
-                </ul>
-            </td>
-            <td>
-                <ul>
-                    <li>Easy to use UI</li>
-                    <li>Facilitates fast web scraping</li>
-                    <li>Suitable for website-based user interfaces</li>
-                </ul>
-            </td>
-            <td>
-                <ul>
-                    <li>Visual scraping tool without programming</li>
-                </ul>
-            </td>
-        </tr>
-        <tr>
-            <th align="center">Cons</th>
-            <td>
-                <ul>
-                    <li>Larger learning curve</li>
-                    <li>Does not handle JavaScript</li>
-                </ul>
-            </td>
-            <td>
-                <ul>
-                    <li>Requires multiprocessing import to improve performance</li>
-                </ul>
-            </td>
-            <td>
-                <ul>
-                    <li>Difficult to deploy</li>
-                </ul>
-            </td>
-            <td>
-                <ul>
-                    <li>More time-consuming than other alternatives</li>
-                    <li>Difficult to control how it navigates websites (can lead to unnecessary page visits)</li>
-                </ul>
-            </td>
-        </tr>
-    </tbody>
-</table>
-
-First of all, Scrapy was the recommended webscraping tool for this specific workshop, and therefore should by our baseline for our comparisons. Both BeautifulSoup and Portia are easier to use and has a smaller learning curve than Scrapy. Portia has the added benefit of being a visual scraping tool, which does not require programming knowledge. However, Scrapy performs more efficiently and more web pages can be crawled in a shorter amount of time. PySpider, similarly to Portia, has an easy to use UI, but also facilitates faster scraping. Despite this, it still is more difficult to deploy than Scrapy. Scrapy also has greater documentation and community support than all of BeautifulSoup, Pyspider and Portia. Therefore, these alternatives can be disregarded.
-
-However, Scrapy alone does not work for all web pages. Although it is considered the most suitable for properly rendering XML and HTML pages across a large data set, it does not handle JavaScript well. We also need to consider JavaScript frameworks driven pages such as React and Angular, which means, in practice, that there will be different kinds of timers and interactive elements involved. Another peculiarity of Scrapy is that it goes through pages by accessing their URLs. However, there are some buttons on the webpages which won’t have any URLs linked to them when you inspect the element or get the source code (through xpath or css). Therefore, Selenium will be used as our testing automation framework, on top of our Scrapy web crawling framework. Selenium will help simulate browser usage to retrive data from those JavaScript frameworks driven web pages, and requesting with Scrapy will be used to get the required data in a data file format during collection process.
-
-#### Collection Process
-The news and articles will be collected by our pre-defined Scraper from the searched and filtered url of the WHO website. We will then extract their title, url, content, published data, and region from the url's source file. Then, all the information will be processed and packed in the designated disease report format, and will be stored in our database. This process will recur will be autonomously performed monthly.
-
-The disease reports collection process will proceed as described below:
-* Filter region, period and data from the located WHO page's HTML code. The relevant WHO page will be located from the WHO main website by using keyword search, url and title. This process can be realized using the selector method in Scrapy. 
-* Once relevant result is found, another Scraper is used to get the source from each url. As there are a great amount of articles and news, this process should shedule monthly and run concurrently with the other process.
-* After raw data soure HTML files are retrived and the required data is extarcted and cleaned up, we compose and structure the disease reports. Using the structure of raw HTML file, xpath method can be utilised to find out required information for composing disease reports. Since the disease reports are retrived and updated monthly, the resulting disease reports will be cached in the database for serving application query.  
+  
+### Shortcomings  
+Our shortcoming is that we cannot deal with the situation where user inputs Start-date or End-date with \'xx\'. We force users to enter complete datetime in order to limit cases we have to concern. Although this is a drawback for user input flexiability, it allows us getting complete and valid time range and be able to provide more accurate search results for users, which is a reasonable tradeoff.  
+  
 
 ## Developement and Deployment Environment
 ### Developement
