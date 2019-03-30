@@ -92,7 +92,7 @@ For example: when date of publication is 2019-01-13Txx:xx:xx, start date given b
 * __Inclusive Location Search__: We provide inclusive location search, which means, when user search a wilder range location, results from all inclusive locations will also the presented. For example, when user search \"Australia\", the results will not only send back reports that contain Australia, but also all reports include "New South Wales"(state) and "Melbourne"(city) etc. locations that are inside Australia.
 Our solution is whenever our scrapper extracts location information from WHO website, it will also invoke api from "http://www.geonames.org/" to get complete __Country/State(if applicable)/City__. First, we store country info in index __location[country]__, and put state and city info in __location[location]__, in \"CITY, STATE\"  string format.  At the same time, we also store __Country/State(if applicable)/City__ in json format into our __location__ collection in database.  
 If only "Sydney" occurs in the original website article, when we don't use above method, the __location__ entry inside the disease report should look like this:  
-```json
+```javascript
 location: {
     'country':'',
     'location':'Sydney'
@@ -100,7 +100,7 @@ location: {
 ```  
 If user search "Austalia", this report will not be returned as there is no "Australia" occurring in the report.  
 However, after using our method, the new json should look like this:  
-```json
+```javascript
 location: {
     'country': 'Australia',
     'location': 'Sydney, New South Wales'
