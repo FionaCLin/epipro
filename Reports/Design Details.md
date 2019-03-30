@@ -92,36 +92,25 @@ The disease reports collection process will proceed as described below:
 
 ## API Design Module
 [//]: # (2. Discuss	your	current	thinking	about	how	parameters can	be	passed	to	your module	and	how	results	are	collected.	Show	an	example	of	a	possible interaction .e.g.- sample	HTTP	calls	with	URL	and	parameters)
-### APIs Design
-After brainstorming about the query parameters, studying the usage of the disease report for the API and refering to the specification requirements, we have concluded upon the REST API list below. The user is able to fetch and filter disease reports based on these three information queries:
-
-#### Period of Interest
-This refers to what specific time period the user is interested in for the disease report retrieval. We have two main APIs involved in this process. The first one helps retrieve all disease reports from the database, where the parameters are related to pagination e.g. start, limit. The second one helps filter by specific period in time, which can be passed to this module using the parameters indicating the beginning and/or end of this period e.g. start-date and end-date. Other optional parameters a filter by given keyterms or location.
-
-#### Keyterms
-The main API involving keyterms involves the category parameter, which helps group the keyterms given by the project specification. This parameter can only be given two values - 'general' or 'specific'. The API responds by returning general or specific keyterms, as outlined in the project specification.
-
-#### Location
-Location helps the user restrict the disease reports to a designated geographical location. Two main APIs are involved with this. The first one will return all locations mentioned in disease reports, with no additional input query parameter required. The second one accepts a parameter of the geonameID, and will respond with detailed information corresponding to the given geogrphical ID.
-
-More details on the APIs structure available [here](https://epiproapp.appspot.com/api/v1/doc/) on the EpiPro Online Documentation.
 
 
-### EpiPro Online Documentation  
+### EpiPro API Online Documentation  
 APIs live demonstration available [here](https://epiproapp.appspot.com/api/v1/doc/)  
   
-### API architecture 
+### API architecture  
+After brainstorming about the query parameters, studying the usage of the disease report for the API and refering to the specification requirements, we have concluded upon the REST API list below.  
+  
 #### __GET /reports/filter__ 
 This endpoint will return all the reports that satisfy user requirements. 
 When all parameters are empty, the endpoint will return all disease reports existed in the database. 
 All the parameters are optional, here are all 6 query parameters used in the endpoint. 
-* __Start-date/End-date__: The period that user is interested in.  
+* __Start-date/End-date__: This refers to what specific time period the user is interested in for the disease report retrieval.  
 No 'xx' accept here, user must enter valid dates.  
 When no Start-date entered, it will be set to predefined date. The default Start-date is 2016-01-01T00:00:00. When End-date is empty, it will be set to current date time.  
 Input Format: YYYY-MM-DDTHH:MM:SS   
 * __Key-terms__: The keywords that user wants to search, case insensitive.   
 Input Format: Keyword1,Keyword2,.. 
-* __Location__: A location that user is concerned about,case insensitive.  
+* __Location__: Location helps the user restrict the disease reports to a designated geographical location, case insensitive.  
 Input Format: User should enter the complete word, for example: if user enters 'sydn', nothing will return, instead user should enter 'sydney'. 
 * __Start/Limit__: These parameters are for pagination. 
 The default value for Start is 1, and for Limit is 100.  
@@ -131,7 +120,7 @@ Input Format: non-negative integer only.
 This endpoint will return all predefined key terms from our database in case user doesn't know what to search. 
 Here is the only path parameter: 
 
-* __term_type__: There are two types of key terms: __[general]__ or __[specific]__, both  case insensitive. 
+* __term_type__: This parameter helps group the keyterms given by the project specification and  can only be given two values:  __[general]__ or __[specific]__, both case insensitive. 
 [general] is a wilder range keyword, for example: \"outbreak\", while [specific] refers to a limited but detailed range, for example: \"Zika\". 
 
 #### __GET /reports/locations/\<area\>__
