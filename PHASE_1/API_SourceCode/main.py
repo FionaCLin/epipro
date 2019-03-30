@@ -20,6 +20,7 @@ from flask import Flask, Blueprint
 from flask import Flask, url_for, redirect, render_template
 from flask_restplus import Resource, Api
 from flask import request
+from flask_cors import CORS
 from flask_restplus import fields
 from flask_restplus import inputs
 from flask_restplus import reqparse
@@ -45,6 +46,7 @@ api = Api(
 	description="This is a EpiPro App REST API.\r\n SENG3011 workshop project"
 )  # Documentation Description
 
+CORS(app)
 app.register_blueprint(blueprint)
 
 client = MongoClient(config.MONGO_URI, config.MONGO_PORT)
