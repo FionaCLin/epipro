@@ -132,7 +132,9 @@ Here is the only path parameter in this endpoint:
 
 #### __GET /reports/locations/all__  
 This endpoint will return all the locations that existed in the database. 
-
+  
+__Justification__: We delete endpoint GET /reports/all, since our latest GET /reports/filter will return all disease reports in the database, which has the same function as GET /reports/all.  
+  
 ### Reason for why create these four api
 Here are the reasons why we choose to create these 4 api above.  
   
