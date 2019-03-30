@@ -60,7 +60,18 @@ Here is the only path parameter in this endpoint:
 This endpoint will return all the locations that existed in the database. 
 
 #### Reason for why create these four api
-
+Here are the reasons why we choose to create these 4 api above.  
+__For GET /reports/filter__:  
+This is required in spec, but we add two extra parameters: Start and Limit. Considering our disease reports are in huge amount and each contains lots of information, it's better to provide pagination function so that user can fetch small chunk of reports and have better evaluation on information presentation.  
+  
+__For GET /reports/key-terms/\<term_type\>__:  
+We think this one is necessary because keywords is a wild range, from disease type to syndrome to headline, if we don't provide some typical keywords, users may have no idea where to start their search. We also divide keyword range into __general__ and __specific__, in this way, we can show user how to utilize this endpoint to do different scales of search.  
+  
+__For GET /reports/locations/area__:  
+We provide this endpoint for users to get valid location information in a certain area. The importance of this endpoint is that user can use it to know which cities are under a certian country/state and also which several sub-areas have disease reports stored in the database. Some remote countries may have many small cities without any valid disease reports, the endpoint will save the time by not showing the city name so that user can know there is no report stored in database.  
+  
+__For GET /reports/locations/all__:
+We consider that user may this endpoint to do a location drop down list. It's convenient to give all locations to user at one time.  
 ### Choice of implementation
 flask
 ### Challenges addressed
