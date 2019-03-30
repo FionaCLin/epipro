@@ -3,6 +3,8 @@
 
 [//]: # ( • Describe	the	testing	processes	used	in	the	development	of API,	referring	to	the	data	and	scripts	included	in	Phase_1	folder.	This	should	describe	your testing	environment	and/or tools	used,	and	limitation e.g.	things	that	are	not	tested.	Describe	your testing	process	i.e.	how	your	team	conducts	testing using	the	test	data	e.g.	in	which	order	and	an overview	of	test	cases,	testing	data	and	testing	results.)
 ## Testing Processes in Development of API
+### Configuration
+We configured our setup by using the file located at `PHASE_1/API_SourceCode/config.sample.py`. This file sets up the connection string for the `PHASE_1/API_SourceCode/test_main.py` file, and it helps differentiate the db connection string based on the command line arguments. The bash testing script will point the main.py connect towards the test database, and the flask run command will point the main.pyto use the development database.
 ### Test Processes and Test Environment
 During the development, we will apply Test-Driven Development(TDD) to ensure the functionalities of each system components. 
 Because there are two major components in this stage（see Unit Testing System Components Diagram）, our functional Unit Testings will be composed of API Unit Testing and Scraper Unit Testing.
