@@ -56,7 +56,7 @@ Here is the only path parameter in this endpoint:
 
 * __area__: a location name given by the user, case insensitive.  User should enter the complete word, for example: if user enters 'sydn', nothing will return, instead user should enter 'sydney'. 
 
-#### __GET /reports/locations/all__
+#### __GET /reports/locations/all__  
 This endpoint will return all the locations that existed in the database. 
 
 ### Reason for why create these four api
@@ -90,20 +90,20 @@ To solve the problem, we assume that all the "xx" in the date of publication is 
 For example: when date of publication is 2019-01-13Txx:xx:xx, start date given by user is 2019-01-12T12:32:22. Our api will proceed date of publication to 2019-01-13T12:32:22, and the do the comparison.  
   
 * __Inclusive Location Search__: We provide inclusive location search, which means, when user search a wilder range location, results from all inclusive locations will also the presented. For example, when user search \"Australia\", the results will not only send back reports that contain Australia, but also all reports include "New South Wales"(state) and "Melbourne"(city) etc. locations that are inside Australia.
-Our solution is whenever our scrapper extracts location information from WHO website, it will also invoke api from \"http://www.geonames.org/\" to get complete __Country/State(if applicable)/City__. First, we store country info in index __location[country]__, and put state and city info in __location[location]__, in \"CITY, STATE\"  string format.  At the same time, we also store __Country/State(if applicable)/City__ in json format into our __location__ collection in database.  
+Our solution is whenever our scrapper extracts location information from WHO website, it will also invoke api from "http://www.geonames.org/" to get complete __Country/State(if applicable)/City__. First, we store country info in index __location[country]__, and put state and city info in __location[location]__, in \"CITY, STATE\"  string format.  At the same time, we also store __Country/State(if applicable)/City__ in json format into our __location__ collection in database.  
 If only "Sydney" occurs in the original website article, when we don't use above method, the __location__ entry inside the disease report should look like this:  
 ```json
 location: {
-    country:'',
-    location:'Sydney'
+    'country':'',
+    'location':'Sydney'
 }
 ```  
 If user search "Austalia", this report will not be returned as there is no "Australia" occurring in the report.  
 However, after using our method, the new json should look like this:  
 ```json
 location: {
-    country: 'Australia',
-    location: 'Sydney, New South Wales'
+    'country': 'Australia',
+    'location': 'Sydney, New South Wales'
 }
 ```  
 At this time, we can use full text search again to search "Australia", and the report will be returned as expected.  
