@@ -225,10 +225,6 @@ Since Travis integrates with GitHub and runs tests in isolation, it can run on t
 
 We will apply the practice of continuous integration (CI) and continuous delivery (CD), which involves using tools like Travis CI, to ensure that all new code is automatically and consistently tested for errors. This allows us to streamline our development and deployment process, as well as ensure developed components work within the production environment and all related web services work together before it is deployed to the production enviroment. Continuous delivery (CD) goes one step further by ensuring we can deploy every build into a production-like environment and then pass integration tests in that environment.
 
-[//]: # (2.2. API	design	and	testing details	D2 )
-[//]: # ( • Describe	final architecture	of	your	API,	justify	the	choice	of	implementation,	challenges	addressed	and	shortcomings.)
-[//]: # (• Provide	the	URL	of	your	API	specification.)
-## Challenges Addressed and Shortcomings
-[//]: # (Challenges addressed - any problems encountered during API production and resolved)
-[//]: # (Shortcomings - any problems encountered and not resolved/unable to meet requirements for certain parts)
+## Testing Module
+[//]: # (Challenges addressed - any problems encountered during testing)
 
