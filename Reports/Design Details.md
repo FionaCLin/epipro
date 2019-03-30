@@ -59,8 +59,9 @@ Here is the only path parameter in this endpoint:
 #### __GET /reports/locations/all__
 This endpoint will return all the locations that existed in the database. 
 
-#### Reason for why create these four api
+### Reason for why create these four api
 Here are the reasons why we choose to create these 4 api above.  
+  
 __For GET /reports/filter__:  
 This is required in spec, but we add two extra parameters: Start and Limit. Considering our disease reports are in huge amount and each contains lots of information, it's better to provide pagination function so that user can fetch small chunk of reports and have better evaluation on information presentation.  
   
