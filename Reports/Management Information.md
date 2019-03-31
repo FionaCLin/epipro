@@ -41,3 +41,7 @@ Our agile workflow will involve weekly stand-up meetings where we identify what 
 Version control within our project will be provided be **Github** and **Git**. This will enable members to work individually on our given tasks through branching, whilst an up-to-date version can be merged into between team members.
 
 We will also use **Slack** as our online communication channel of our current progress. Slack allows the creation of conversation channels for specific members, such as the back-end and front-end development groups. Slack can also be setup to connect to Github, where the channels can be notified of multiple Github events, such as pull requests, CI system and so on.
+
+## Gantt Chart for progression of project
+
+![Gantt Chart](Gantt.png "Gantt Chart")
