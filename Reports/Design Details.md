@@ -93,7 +93,8 @@ The disease reports collection process will proceed as described below:
 We used Python scrappy library to develop our scraper. The scraper consist of two spiders - url spider and content spider. The url spider is used to access and cache headline with urls of news from our data source, while the content spider is used to access the content of these urls and extract report data from the main text. The structure of our implementation contains:
 * Items - defined the object field we need to crawl from data source
 * Spider - access and extract data 
-* Pipelines - formalizing the item and storage
+* Pipelines - formalizing the item and storage  
+  
 There are two main reasons we decided to use this structure. Firstly, we can segment the date access and storage processes so that we formalize our report structure easier on the pipeline. Moreover, we can store our data individually which avoid usage of long list
 
 #### Challenge:
