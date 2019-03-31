@@ -302,7 +302,7 @@ class disease_reports_with_filter(Resource):
 		\n		Format: You need to enter the complete word, for example:\
 		if enter 'sydn' nothing will return, you need to enter sydney.\
 		\n Start/Limit: These are for pagination. The default value for Start is 1, and for Limit is 100.\
-		\n		Format: non-negative integer only.")
+		\n		Format: positive integer only.")
 	def get(self):
 
 		collection = db[REPORTS]
@@ -328,12 +328,17 @@ class disease_reports_with_filter(Resource):
 		try: 
 			start = int(start)-1
 		except ValueError:
-			return { 'message': 'START must be non-negative an integer' }, 400
+			return { 'message': 'START must be positive an integer' }, 400
 		try: 
 			limit = int(limit)
 		except ValueError:
-			return { 'message': 'LIMIT must be non-negative an integer' }, 400
+			return { 'message': 'LIMIT must be positive an integer' }, 400
 
+
+		if start < 0:
+			return { 'message': 'START must be positive an integer' }, 400
+		if limit <= 0:
+			return { 'message': 'LIMIT must be positive an integer' }, 400
 
 		# check date formate && order
 		if start_date is None:
