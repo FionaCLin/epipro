@@ -20,6 +20,7 @@ from flask import Flask, Blueprint
 from flask import Flask, url_for, redirect, render_template
 from flask_restplus import Resource, Api
 from flask import request
+from flask_cors import CORS
 from flask_restplus import fields
 from flask_restplus import inputs
 from flask_restplus import reqparse
@@ -45,6 +46,7 @@ api = Api(
 	description="This is a EpiPro App REST API.\r\n SENG3011 workshop project"
 )  # Documentation Description
 
+CORS(app)
 app.register_blueprint(blueprint)
 
 client = MongoClient(config.MONGO_URI, config.MONGO_PORT)
@@ -53,7 +55,7 @@ db = client[config.MONGO_DB]
 parser = reqparse.RequestParser()
 
 LOCATION = 'test_location'
-KEY_TERMS = 'Key-Terms'
+KEY_TERMS = 'key_terms'
 REPORTS = 'test_report'
 #############################################################################################
 #   MODEL   #
@@ -104,9 +106,10 @@ reported_event = api.model(
 report = api.model(
 	'report',
 	{
-		'disease': fields.String,
-		'syndrome': fields.String,
-		'reported_events': fields.List(fields.Nested(reported_event))
+		'disease': fields.List(fields.String),
+		'syndrome': fields.List(fields.String),
+		'reported_events': fields.List(fields.Nested(reported_event)),
+		'comment':fields.String
 	})
 
 disease_report_model = api.model(
@@ -120,15 +123,6 @@ disease_report_model = api.model(
 		'reports': fields.List(fields.Nested(report))
 	})
 
-filter_fields = api.model(
-	'filter',
-	{
-		'start-date': fields.DateTime,
-		'end-date': fields.DateTime,
-		'key_terms': fields.String,
-		# geoname_id
-		'location': fields.Integer
-	})
 
 #####################################################################################################
 
@@ -155,7 +149,6 @@ def doc_url():
 class locations(Resource):
 
 	@api.response(200, 'Data fetched successfully', location)
-	# TO DO: specify the reason
 	@api.response(400, 'Bad request')
 	@api.response(404, 'No data found')
 	@api.doc(description="Get all the disease related locations that occured in all disease reports we have.")
@@ -185,7 +178,7 @@ class locations(Resource):
 #       city: string
 #     }
 @api.route('/reports/locations/<string:area>')
-class locations_id(Resource):
+class locations_with_area(Resource):
 
 	@api.response(200, 'Specific location info fetched successfully', location)
 	@api.response(400, 'Bad request')
@@ -257,14 +250,10 @@ class key_terms(Resource):
 					'message':
 					'category is under specific type, please enter again'
 				}, 400
-
-		cursor = collection.find(my_query)
+		cursor = collection.find(my_query,{ "_id": 0 })
 		for entry in cursor:
-			e = {}
-			e['type'] = entry['type']
-			e['category'] = entry['category']
-			e['name'] = entry['name']
-			result.append(e)
+			result.append(entry)
+
 		if not result:
 			return {'message': 'Sorry, there is no data matched'}, 404
 
@@ -290,7 +279,7 @@ class key_terms(Resource):
 #       -start::integer  : start from the n-th report
 #       -limit::integer  : limit to the number of responseed reports
 @api.route('/reports/filter')
-class disease_report_with_filter(Resource):
+class disease_reports_with_filter(Resource):
 
 	@api.response(200, 'Specific location info fetched successfully', disease_report_model)
 	@api.response(400, 'Bad request')
@@ -304,16 +293,16 @@ class disease_report_with_filter(Resource):
 	@api.doc(description="This endpoint will return all the reports that satisfy user requirements. \
 		 When all parameters are empty, the endpoint will return all reports existed in the database.\
 		\n All the parameters are optional, please follow the parameter descriptions when you want to pass an input.\
-		\n Start-date/End-date: The period that user is interested in.\
-		 When no Start-date entered, it will be set to predefined date.When End-date is empty, it will be set to current date time.\
+		\n Start-date/End-date: The period that user is interested in. No 'xx' accept here, you must enter valid dates.\
+		 When no Start-date entered, it will be set to predefined date. The default Start-date is 2016-01-01T00:00:00. When End-date is empty, it will be set to current date time.\
 		\n		Format: YYYY-MM-DDTHH:MM:SS \
 		\n Key-terms: The keywords that user wants to search, case insensitive.\
 		\n		Format: Keyword1,Keyword2,..\
 		\n Location: A location that user is concerned about,case insensitive.\
 		\n		Format: You need to enter the complete word, for example:\
 		if enter 'sydn' nothing will return, you need to enter sydney.\
-		\n Start/Limit: These are for pagination. \
-		\n		Format: non-negative integer only.")
+		\n Start/Limit: These are for pagination. The default value for Start is 1, and for Limit is 100.\
+		\n		Format: positive integer only.")
 	def get(self):
 
 		collection = db[REPORTS]
@@ -335,17 +324,25 @@ class disease_report_with_filter(Resource):
 			start = 1
 		if limit is None:
 			limit = 100
-		if not isinstance(start, int):
-			return { 'message': 'START must be non-negative an integer' }, 400
-		if not isinstance(limit, int):
-			return { 'message': 'LIMIT must be non-negative an integer' }, 400
-	
-		start = int(start)-1
-		limit = int(limit)
+
+		try: 
+			start = int(start)-1
+		except ValueError:
+			return { 'message': 'START must be positive an integer' }, 400
+		try: 
+			limit = int(limit)
+		except ValueError:
+			return { 'message': 'LIMIT must be positive an integer' }, 400
+
+
+		if start < 0:
+			return { 'message': 'START must be positive an integer' }, 400
+		if limit <= 0:
+			return { 'message': 'LIMIT must be positive an integer' }, 400
 
 		# check date formate && order
 		if start_date is None:
-			start_date = '2019-01-01T00:00:00'
+			start_date = '2016-01-01T00:00:00'
 		if end_date is None:
 			end_date = datetime.now().isoformat()
 			format_search = re.search('^([^.]*)', end_date, re.IGNORECASE)
@@ -401,6 +398,7 @@ class disease_report_with_filter(Resource):
 				result.append(entry)
 
 		return result, 200
+
 
 
 #######################################################################################################

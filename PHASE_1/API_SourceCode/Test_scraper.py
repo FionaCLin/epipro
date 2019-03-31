@@ -1,15 +1,16 @@
 import pymongo
 from pymongo import MongoClient
 import json
-#for testing
+import config
+# for testing
 # usage:
-    # To get report
-    # >scrapy crawl contentSpider
-    #To get url : (Make sure the urlspide.json file is not exist)
-    #>scrapy crawl urlSpider -o urlSpider.json -s FEED_EXPORT_ENCODING=UTF-8
+# To get report
+# >scrapy crawl contentSpider
+# To get url : (Make sure the urlspide.json file is not exist)
+# >scrapy crawl urlSpider -o urlSpider.json -s FEED_EXPORT_ENCODING=UTF-8
 #
 # run test:
-#
+# python scraper_test.py
 
 '''
 1.
@@ -43,22 +44,14 @@ The ongoing cholera outbreak in Somalia started in December '
               '25.4% and for confirmed and probable cases combined is 27%).'
 
 '''
-if __name__ == '__main__':
-    client = MongoClient('mongodb://user001:admin12345@ds027483.mlab.com:27483/epipro_disease_report', 27017)
-    db = client['epipro_disease_report']
-    collection = db['reports']
-    test_list = [
-        'https://www.who.int/csr/don/06-june-2018-ebola-drc/en/',
-        'https://www.who.int/csr/don/29-march-2018-cholera-somalia/en/',
-        'https://www.who.int/csr/don/20-april-2018-lassa-fever-nigeria/en/'
-    ]
+
+
+def test_format(collection):
     counter = 0
     for test in collection.find():
-    #test format
+        # test format
         if counter == 5:
             break
-        #isinstance(s, str)
-        #print(test)
         assert True == isinstance(test['url'], str)
         assert True == isinstance(test['date_of_publication'], str)
         assert True == isinstance(test['headline'], str)
@@ -67,22 +60,29 @@ if __name__ == '__main__':
         assert True == isinstance(test['reports'][0]['disease'], str)
         assert True == isinstance(test['reports'][0]['syndrome'], str)
         assert True == isinstance(test['reports'][0]['reported_events'], list)
-        assert True == isinstance(test['reports'][0]['reported_events'][0]['type'], str)
-        assert True == isinstance(test['reports'][0]['reported_events'][0]['date'], str)
-        assert True == isinstance(test['reports'][0]['reported_events'][0]['location'], dict)
-        assert True == isinstance(test['reports'][0]['reported_events'][0]['location']['country'], str)
-        assert True == isinstance(test['reports'][0]['reported_events'][0]['location']['location'], str)
-        assert True == isinstance(test['reports'][0]['reported_events'][0]['number-affected'], str)
-        #print(test)
+        assert True == isinstance(
+            test['reports'][0]['reported_events'][0]['type'], str)
+        assert True == isinstance(
+            test['reports'][0]['reported_events'][0]['date'], str)
+        assert True == isinstance(
+            test['reports'][0]['reported_events'][0]['location'], dict)
+        assert True == isinstance(
+            test['reports'][0]['reported_events'][0]['location']['country'], str)
+        assert True == isinstance(
+            test['reports'][0]['reported_events'][0]['location']['location'], str)
+        assert True == isinstance(
+            test['reports'][0]['reported_events'][0]['number-affected'], str)
+        # print(test)
 
-        counter  = counter + 1
-    print('pass format')
+        counter = counter + 1
+    print('Passed test scraper generated format')
+
+
+def test_data_extraction(collection):
     counter = 0
     for url in test_list:
-        #print(url)
         test = collection.find({'url': url})
         for x in test:
-            #print(x)
             if counter == 0:
                 assert 'ebola' in x['reports'][0]['disease']
                 assert '2018-05-30Txx:xx:xx' in x['reports'][0]['reported_events'][0]['date']
@@ -97,6 +97,23 @@ if __name__ == '__main__':
                 assert '1849' in x['reports'][0]['reported_events'][0]['number-affected']
         counter = counter + 1
 
-    print('pass')
+    print('Pass test scraper data extraction')
+
+
+if __name__ == '__main__':
+    client = MongoClient(config.MONGO_URI, config.PORT)
+    db = client[config.MONGO_DB]
+    collection = db['reports']
+    test_list = [
+        'https://www.who.int/csr/don/06-june-2018-ebola-drc/en/',
+        'https://www.who.int/csr/don/29-march-2018-cholera-somalia/en/',
+        'https://www.who.int/csr/don/20-april-2018-lassa-fever-nigeria/en/'
+    ]
+
+    print('## test scraper generated format')
+    test_format(collection)
+    print('## test scraper data extraction')
+    test_data_extraction(collection)
+
     #self.collection_2.find({"$text": {"$search": words[0]}})
-    #testing format
+    # testing format

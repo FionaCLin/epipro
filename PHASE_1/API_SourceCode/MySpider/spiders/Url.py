@@ -11,8 +11,8 @@ class urlSpider(scrapy.Spider):
     #page we need to scrapy
     url_list = []
     int_url = 'https://www.who.int/csr/don/archive/year/'
-    # we currently just get 2019 and 2018
-    for i in range(0, 1):
+    # we currently just get 2019 and 2016
+    for i in range(0, 2):
         year = 2019 - i
         url = int_url + str(year) + "/en/"
         url_list.append(url)
@@ -32,6 +32,6 @@ class urlSpider(scrapy.Spider):
 
             item['url'] = url
             item['headline'] = headline
-
-            print()
+            print('item')
+            print(item)
             yield item
