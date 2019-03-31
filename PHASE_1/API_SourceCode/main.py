@@ -106,8 +106,8 @@ reported_event = api.model(
 report = api.model(
 	'report',
 	{
-		'disease': fields.String,
-		'syndrome': fields.String,
+		'disease': fields.List(fields.String),
+		'syndrome': fields.List(fields.String),
 		'reported_events': fields.List(fields.Nested(reported_event)),
 		'comment':fields.String
 	})
