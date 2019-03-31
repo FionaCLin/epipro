@@ -1,0 +1,39 @@
+{
+  "general": [
+    "Outbreak",
+    "Infection",
+    "Fever",
+    "Virus",
+    "Epidemic",
+    "Infectious",
+    "Illness",
+    "Bacteria",
+    "Emerging",
+    "Unknown virus",
+    "Myster(ious)y disease"
+  ],
+  "specific": [
+    "Zika",
+    "MERS",
+    "Salmonella",
+    "Legionnaire",
+    "Measles",
+    "Anthrax",
+    "Botulism",
+    "Plague",
+    "Smallpox and other related pox viruses",
+    "Tularemia",
+    "Junin Fever",
+    "Machupo Fever",
+    "Guanarito Fever",
+    "Chapare Fever",
+    "Lassa Fever",
+    "Lujo Fever",
+    "Hantavirus",
+    "Rift Valley Fever",
+    "Crimean Congo Hemorrhagic Fever",
+    "Dengue",
+    "Ebola",
+    "Marburg"
+  ]
+}
