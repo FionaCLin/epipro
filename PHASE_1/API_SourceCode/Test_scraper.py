@@ -1,6 +1,7 @@
 import pymongo
 from pymongo import MongoClient
 import json
+import config
 #for testing
 # usage:
     # To get report
@@ -44,6 +45,7 @@ The ongoing cholera outbreak in Somalia started in December '
 
 '''
 if __name__ == '__main__':
+    print(config.MONGO_DB)
     client = MongoClient('mongodb://user001:admin12345@ds027483.mlab.com:27483/epipro_disease_report', 27017)
     db = client['epipro_disease_report']
     collection = db['reports']
@@ -58,7 +60,7 @@ if __name__ == '__main__':
         if counter == 5:
             break
         #isinstance(s, str)
-        #print(test)
+        # print(test)
         assert True == isinstance(test['url'], str)
         assert True == isinstance(test['date_of_publication'], str)
         assert True == isinstance(test['headline'], str)
