@@ -4,19 +4,15 @@ import json
 import os
 import sys
 import main
-cwd = os.getcwd()
+
+dir_path = os.path.dirname(os.path.realpath(__file__))
 
 sample_key_terms = json.load(
-    open(
-        os.path.join(cwd, '../TestScripts/sample_output/key-terms.json'), 'r'))
+    open(os.path.join(dir_path, '../TestScripts/sample_output/key-terms.json'), 'r'))
 sample_locations = json.load(
-    open(
-        os.path.join(cwd, '../TestScripts/sample_output/locations.json'), 'r'))
+    open(os.path.join(dir_path, '../TestScripts/sample_output/locations.json'), 'r'))
 sample_disease_report = json.load(
-    open(
-        os.path.join(
-            cwd, '../TestScripts/sample_output/sample_disease_report.json'),
-        'r'))
+    open(os.path.join(dir_path, '../TestScripts/sample_output/sample_disease_report.json'), 'r'))
 
 main.app.testing = True
 client = main.app.test_client()
@@ -99,6 +95,8 @@ def test_key_terms():
 ##########################################################################################
 ##                                    Test Locations                                    ##
 ##########################################################################################
+
+
 def test_fetch_all_locations():
     r = client.get('/api/v1/reports/locations/all')
     locations = json.loads(r.data.decode('utf-8'))
@@ -136,6 +134,7 @@ def test_locations():
 ##########################################################################################
 ##                          Test All Reports Fetching                                   ##
 ##########################################################################################
+
 
 def test_fetch_all_reports():
     r = client.get('/api/v1/reports/all')
@@ -184,14 +183,14 @@ def test_all_reports():
     test_fetch_all_reports()
     print('## test_fetch_all_report_w_valid_limit')
     test_fetch_all_report_w_valid_limit()
-    print('## test_fetch_all_report_w_valid_start_at1')
-    test_fetch_all_report_w_valid_start_at1()
+    # print('## test_fetch_all_report_w_valid_start_at1')
+    # test_fetch_all_report_w_valid_start_at1()
     print('## test_fetch_all_report_w_valid_start_at2')
     test_fetch_all_report_w_valid_start_at2()
-    print('## test_fetch_all_report_w_invalid_limit')
-    test_fetch_all_report_w_invalid_limit()
-    print('## test_fetch_all_report_w_invalid_start_at2')
-    test_fetch_all_report_w_invalid_start_at2()
+    # print('## test_fetch_all_report_w_invalid_limit')
+    # test_fetch_all_report_w_invalid_limit()
+    # print('## test_fetch_all_report_w_invalid_start_at2')
+    # test_fetch_all_report_w_invalid_start_at2()
 
 
 ##########################################################################################

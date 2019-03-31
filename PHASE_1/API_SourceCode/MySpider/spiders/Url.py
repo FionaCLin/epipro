@@ -12,7 +12,7 @@ class urlSpider(scrapy.Spider):
     url_list = []
     int_url = 'https://www.who.int/csr/don/archive/year/'
     # we currently just get 2019 and 2016
-    for i in range(0, 4):
+    for i in range(0, 2):
         year = 2019 - i
         url = int_url + str(year) + "/en/"
         url_list.append(url)
