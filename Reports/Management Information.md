@@ -44,4 +44,4 @@ We will also use **Slack** as our online communication channel of our current pr
 
 ## Gantt Chart for progression of project
 
-![Gantt Chart](Gantt.png "Gantt Chart")
+![Gantt Chart](Gantt.PNG "Gantt Chart")
