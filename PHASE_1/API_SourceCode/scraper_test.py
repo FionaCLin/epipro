@@ -9,7 +9,7 @@ import json
     #>scrapy crawl urlSpider -o urlSpider.json -s FEED_EXPORT_ENCODING=UTF-8
 #
 # run test:
-#
+# python scraper_test.py
 
 '''
 1.
