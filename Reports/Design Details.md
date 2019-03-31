@@ -94,6 +94,7 @@ We used Python scrappy library to develop our scraper. The scraper consist of tw
 * Items - defined the object field we need to crawl from data source
 * Spider - access and extract data 
 * Pipelines - formalizing the item and storage  
+  
 There are two main reasons we decided to use this structure. Firstly, we can segment the date access and storage processes so that we formalize our report structure easier on the pipeline. Moreover, we can store our data individually which avoid usage of long list
 
 #### Challenge:
