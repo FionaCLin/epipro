@@ -106,7 +106,7 @@ We will also test our date helper functions, where these tests will be located i
 For simplicity, we have left the pytest script `test_<main/date>.py` in `PHASE_1/API_SourceCode` and the unit-test running script `unit-test.sh` in `PHASE_1/TestScripts`. The pytest script will import `main.py`, in order to create the test application instance which will be tested with as the test_client.
 
 #### Scraper tests
-Scraper Unit Tests will help test the functionalities as well as the correctness. For this purpose, we have utilised the url of the article as the test input and the sample disease report data (sample_disease_report.json) from the project specification as the expected output, in testing and developing the web scaping. In this phase of development, the Scraper's correctness and functionalities are more vital to the project scope and definition. Thus, we followed the project requirements and pre-defined input in project specifications as well as the expected sample output to ensure our web Scraper met the requirements.
+Scraper Unit Tests located in `PHASE_1/API_SourceCode/Test_scraper.py` will help test the functionalities as well as the correctness. For this purpose, we have utilised a few url of the articles from WHO as the test input and the sample disease reports data is created according to the project specification as the expected output for testing and developing the web scaping. In this phase of development, the Scraper's correctness and functionalities are more vital to the project scope and definition. Thus, we followed the project requirements and pre-defined input from the project specifications as well as the expected sample output to ensure our web Scraper met the requirements.
 
 #### CICD tests
 CICD tests have been set up within GitHub and Travis, and `.travis.yaml` was developed to watch every push to git repository. Only the `production` branch will trigger the build and testing and then deploy to the production site in Google Cloud Platform after passed build testing.
@@ -127,6 +127,13 @@ As a third party database is used for development, we excluded performance tests
 * Scraper performance and efficiency and regression analysis
 
 Since we are still in the development phase and everything has not been functioning properly as of yet, there is not much we can do in terms of testing the performance and efficiency, alongside regression testing. Those testing results will get skew based on the incorrectness of the web scraping and/or other factors. Testing web scraping is also hard to do, since it cannot be fully done automatously and requires the sample data to be created manually, after a preliminary inspection of what is needed to be web scraped.
+
+## Test Driven Development
+Since we are folloing the principle of test driven development(TDD), every test is developed for a specific system component, also all tests have covered the happy path as well as the failed path. Each test ensures our changes do not break other part of components. Hence, the unit testings have been built throughout and they are reliable enough to help us identify the bugs and failure in any system components, so we can locate the problem easily and analysis the root cause as well as it helps us to sort out some business logic and conquer some edge cases.
+
+ There are many different kinds of failures in the test. When we got the test failure, we can trace down the failing step by step. Utilising our problem solving skill to understand the problem there, why it fails and what cause the failing. Then we will take action according to the failure or reason.
+ 
+ For example, if the fetched data did not match out expected output. We will look into the response and check what error is that, for example the database authentication problem. According to the error, we will look into the part related to that error, in this case it should be from the database connection string. Usually the error caused by a small typo and it is easy to resolve the error by correcting the typo. But sometime it is caused by the inconsistent updates. For example, developer A change a collection name in remote database, but forget to change the code where querys that collection. 
 
 
 [//]: # ( • Describe	the	output	of	testing	and	what	actions	you	took to	improve	the	test results. At	D2	your	Phase_1/TestScripts	folder	should	contain:)
