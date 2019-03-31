@@ -55,7 +55,7 @@ db = client[config.MONGO_DB]
 parser = reqparse.RequestParser()
 
 LOCATION = 'test_location'
-KEY_TERMS = 'Key-Terms'
+KEY_TERMS = 'key_terms'
 REPORTS = 'test_report'
 #############################################################################################
 #   MODEL   #
@@ -123,15 +123,6 @@ disease_report_model = api.model(
 		'reports': fields.List(fields.Nested(report))
 	})
 
-filter_fields = api.model(
-	'filter',
-	{
-		'start-date': fields.DateTime,
-		'end-date': fields.DateTime,
-		'key_terms': fields.String,
-		# geoname_id
-		'location': fields.Integer
-	})
 
 #####################################################################################################
 
@@ -259,14 +250,10 @@ class key_terms(Resource):
 					'message':
 					'category is under specific type, please enter again'
 				}, 400
-
-		cursor = collection.find(my_query)
+		cursor = collection.find(my_query,{ "_id": 0 })
 		for entry in cursor:
-			e = {}
-			e['type'] = entry['type']
-			e['category'] = entry['category']
-			e['name'] = entry['name']
-			result.append(e)
+			result.append(entry)
+
 		if not result:
 			return {'message': 'Sorry, there is no data matched'}, 404
 
