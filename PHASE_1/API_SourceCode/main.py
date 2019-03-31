@@ -158,7 +158,6 @@ def doc_url():
 class locations(Resource):
 
 	@api.response(200, 'Data fetched successfully', location)
-	# TO DO: specify the reason
 	@api.response(400, 'Bad request')
 	@api.response(404, 'No data found')
 	@api.doc(description="Get all the disease related locations that occured in all disease reports we have.")
