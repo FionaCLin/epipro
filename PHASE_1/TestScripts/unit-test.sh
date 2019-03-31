@@ -23,4 +23,6 @@ else
   python3 ./PHASE_1/API_SourceCode/test_main.py
   echo "************ test date ************"
   python3 ./PHASE_1/API_SourceCode/test_date.py
+  echo "*********** test scraper ***********"
+  python3  PHASE_1/API_SourceCode/Test_scraper.py
 fi
