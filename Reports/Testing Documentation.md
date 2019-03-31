@@ -10,17 +10,13 @@ Because there are two major dependent components in this stage（see Unit Testin
  
  ![Unit Testing System Components Diagram](testing-components.png "Unit Testing")
 
-#### API tests
-API Unit tests in `PHASE_1/API_SourceCode/test_main.py` file will test each API endpoint comprehensively and extensively. That means not only the expected successful test cases will be tested, but also the invalid input test cases. We will collect the sample output based on the project specifications and the specification repository in GitHub for the test's expected output into our sample test data files.  Additionally, the testing of our API endpoint response will be compared against our expected sample output files. Sample disease report data will be located in `PHASE_1/TestScripts/sample_output/sample_disease_report.json` and the key terms data can be found in `PHASE_1/TestScripts/sample_output/key-terms.json`, as well as the locations data in `PHASE_1/TestScripts/sample_output/locations.json`. Since those API endpoints are exposed to the public and it will receive any kinds of requests that may harm the backend server, this should ensure that the API requests won't accidentally cause any internal server error.
+To trigger each or all tests using the bash script `unit-test.sh` inside the `  ./PHASE_1/TestScripts/` folder, please refer to the below example:
 
-We will also test our date helper functions, where these tests will be located in `PHASE_1/API_SourceCode/test_date.py`. Because the start date and end date has special requirements, it would require some extra functions to process these date inputs. Those functionalities have been tested throughout.
-For simplicity, we have left the pytest script `test_<main/date>.py` in `PHASE_1/API_SourceCode` and the unit-test running script `unit-test.sh` in `PHASE_1/TestScripts`. The pytest script will import `main.py`, in order to create the test application instance which will be tested with as the test_client.
-To use `unit-test.sh`, please refer to the below example:
   * test all
   ```bash
   ./PHASE_1/TestScripts/unit-test.sh
   ```
-  The tests will show below output. This contains all the test cases we have made so far.
+  The unit tests will test all the test cases in below output. This contains all the test cases we have been making so far and it will be updated for lastest development.
   ```
 ~/Documents/SENG3011_EpiPro
 ************ test main ************
@@ -58,6 +54,11 @@ Passed test_check_date
 ## test_check_is_before
 Passed test_check_is_before
 test_check_swap_date
+*********** test scraper ***********
+## test scraper generated format
+Passed test scraper generated format
+## test scraper data extraction
+Pass test scraper data extraction
 Passed test_check_swap_date
  ```
  * only test on main.py
@@ -97,6 +98,12 @@ Passed test_fetch_all_report_w_invalid_limit
 ## test_fetch_all_report_w_invalid_start_at2
 Passed test_fetch_all_report_w_invalid_start_at2
   ```
+
+#### API tests
+API Unit tests in `PHASE_1/API_SourceCode/test_main.py` file will test each API endpoint comprehensively and extensively. That means not only the expected successful test cases will be tested, but also the invalid input test cases. We will collect the sample output based on the project specifications and the specification repository in GitHub for the test's expected output into our sample test data files.  Additionally, the testing of our API endpoint response will be compared against our expected sample output files. Sample disease report data will be located in `PHASE_1/TestScripts/sample_output/sample_disease_report.json` and the key terms data can be found in `PHASE_1/TestScripts/sample_output/key-terms.json`, as well as the locations data in `PHASE_1/TestScripts/sample_output/locations.json`. Since those API endpoints are exposed to the public and it will receive any kinds of requests that may harm the backend server, this should ensure that the API requests won't accidentally cause any internal server error.
+
+We will also test our date helper functions, where these tests will be located in `PHASE_1/API_SourceCode/test_date.py`. Because the start date and end date has special requirements, it would require some extra functions to process these date inputs. Those functionalities have been tested throughout.
+For simplicity, we have left the pytest script `test_<main/date>.py` in `PHASE_1/API_SourceCode` and the unit-test running script `unit-test.sh` in `PHASE_1/TestScripts`. The pytest script will import `main.py`, in order to create the test application instance which will be tested with as the test_client.
 
 #### Scraper tests
 Scraper Unit Tests will help test the functionalities as well as the correctness. For this purpose, we have utilised the url of the article as the test input and the sample disease report data (sample_disease_report.json) from the project specification as the expected output, in testing and developing the web scaping. In this phase of development, the Scraper's correctness and functionalities are more vital to the project scope and definition. Thus, we followed the project requirements and pre-defined input in project specifications as well as the expected sample output to ensure our web Scraper met the requirements.

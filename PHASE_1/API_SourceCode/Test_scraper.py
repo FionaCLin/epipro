@@ -52,8 +52,6 @@ def test_format(collection):
         # test format
         if counter == 5:
             break
-        #isinstance(s, str)
-        # print(test)
         assert True == isinstance(test['url'], str)
         assert True == isinstance(test['date_of_publication'], str)
         assert True == isinstance(test['headline'], str)
@@ -83,10 +81,8 @@ def test_format(collection):
 def test_data_extraction(collection):
     counter = 0
     for url in test_list:
-        # print(url)
         test = collection.find({'url': url})
         for x in test:
-            # print(x)
             if counter == 0:
                 assert 'ebola' in x['reports'][0]['disease']
                 assert '2018-05-30Txx:xx:xx' in x['reports'][0]['reported_events'][0]['date']
