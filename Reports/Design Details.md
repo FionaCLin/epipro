@@ -8,8 +8,8 @@ All the required handlers will be created for each of our API modules. Each API 
 
 
 ## Scrapper Design Module
-### Collect Disease Reports
-#### Webscraping with Scrapy and Selenium
+
+### Webscraping with Scrapy and Selenium
 As our data source WHO is a dynamic website which also provides search and filter functionalities, we chose Selenium and Scrapy frameworks to build and define our web scraper, over other alternatives like BeautifulSoup, Pyspider and Portia.
 
 <table>
@@ -81,7 +81,7 @@ First of all, Scrapy was the recommended webscraping tool for this specific work
 
 However, Scrapy alone does not work for all web pages. Although it is considered the most suitable for properly rendering XML and HTML pages across a large data set, it does not handle JavaScript well. We also need to consider JavaScript frameworks driven pages such as React and Angular, which means, in practice, that there will be different kinds of timers and interactive elements involved. Another peculiarity of Scrapy is that it goes through pages by accessing their URLs. However, there are some buttons on the webpages which won’t have any URLs linked to them when you inspect the element or get the source code (through xpath or css). Therefore, Selenium will be used as our testing automation framework, on top of our Scrapy web crawling framework. Selenium will help simulate browser usage to retrive data from those JavaScript frameworks driven web pages, and requesting with Scrapy will be used to get the required data in a data file format during collection process.
 
-#### Collection Process
+### Collection Process
 The news and articles will be collected by our pre-defined Scraper from the searched and filtered url of the WHO website. We will then extract their title, url, content, published data, and region from the url's source file. Then, all the information will be processed and packed in the designated disease report format, and will be stored in our database. This process will recur will be autonomously performed monthly.
 
 The disease reports collection process will proceed as described below:
@@ -89,7 +89,7 @@ The disease reports collection process will proceed as described below:
 * Once relevant result is found, another Scraper is used to get the source from each url. As there are a great amount of articles and news, this process should shedule monthly and run concurrently with the other process.
 * After raw data soure HTML files are retrived and the required data is extarcted and cleaned up, we compose and structure the disease reports. Using the structure of raw HTML file, xpath method can be utilised to find out required information for composing disease reports. Since the disease reports are retrived and updated monthly, the resulting disease reports will be cached in the database for serving application query.  
 
-#### Implementation method  
+### Implementation method  
 We used Python scrappy library to develop our scraper. The scraper consist of two spiders - url spider and content spider. The url spider is used to access and cache headline with urls of news from our data source, while the content spider is used to access the content of these urls and extract report data from the main text. The structure of our implementation contains:
 * Items - defined the object field we need to crawl from data source
 * Spider - access and extract data 
@@ -97,7 +97,7 @@ We used Python scrappy library to develop our scraper. The scraper consist of tw
   
 There are two main reasons we decided to use this structure. Firstly, we can segment the date access and storage processes so that we formalize our report structure easier on the pipeline. Moreover, we can store our data individually which avoid usage of long list
 
-#### Challenge addressed
+### Challenge addressed
 The key challenge of our scraper is extract required data from the main text. Located the data basing on appearance of some special word. For example, it is likely to get the affected number on the sentence with verb 'reported', 'confirmed'. For those unsolved cases we manually extract on the pipelines process. We also implemented some functions to recognize and compare time in the main text
 
 
