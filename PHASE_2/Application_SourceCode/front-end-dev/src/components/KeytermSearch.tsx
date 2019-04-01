@@ -22,13 +22,11 @@ export default class KeytermSearch extends React.Component<IKeytermSearchProps, 
 
     componentWillMount() {
         api.getKeyTerms('general', (error: any, response: any) => {
-            if (error) {
-                if (error.response) {
-                    let message = error.response.data.message
-                    console.log(message, 'ppp');
-                } else {
-                    console.log(error.message, 'ppp');
-                }
+            if (error && error.response) {
+                let message = error.response.data.message
+                console.log('error message', message);
+            } else if (error) {
+                console.log('error message', error.message);
             }
             let keyterms: Array<any> = response.map((keyterm: any, index: number) => ({
                 label: keyterm.name,
@@ -41,7 +39,6 @@ export default class KeytermSearch extends React.Component<IKeytermSearchProps, 
                 filterOptions: keyterms,
                 keyterms
             })
-            console.log(keyterms, 'general key term in keyterm search tsx')
         });
     }
 
@@ -53,16 +50,14 @@ export default class KeytermSearch extends React.Component<IKeytermSearchProps, 
     }
 
     private changeType(event: any, filterTypes: Array<any>) {
-        console.log('f u the type', event)
         api.getKeyTerms(event.type, (error: any, response: any) => {
-            if (error) {
-                if (error.response) {
-                    let message = error.response.data.message
-                    console.log(message, 'ppp');
-                } else {
-                    console.log(error.message, 'ppp');
-                }
+            if (error && error.response) {
+                let message = error.response.data.message
+                console.log('error message', message);
+            } else if (error) {
+                console.log('error message', error.message);
             }
+
             let keyterms: Array<any> = response.map((keyterm: any, index: number) => ({
                 label: keyterm.name,
                 value: index,
@@ -76,7 +71,6 @@ export default class KeytermSearch extends React.Component<IKeytermSearchProps, 
             })
             console.log(keyterms, `${event.type} key term in keyterm search tsx`)
         });
-        this.setState({ filterType: event.value });
     }
 
     render() {
@@ -113,7 +107,6 @@ export default class KeytermSearch extends React.Component<IKeytermSearchProps, 
 }
 
 interface IKeytermSearchProps {
-    keyterms: Array<Object>;
     updateKeyterm: (event: object) => void;
 }
 

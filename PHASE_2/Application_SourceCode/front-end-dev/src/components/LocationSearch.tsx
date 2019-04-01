@@ -12,25 +12,22 @@ export default class LocationSearch extends React.Component<ILocationSearchProps
 
     this.state = {
       values: [],
-      filterOptions:[]
+      filterOptions: []
     }
   }
 
-  componentWillMount(){
+  componentWillMount() {
     // Fetch Data
-    let Locations: any;
 
     api.getLocations((error: any, response: any) => {
-      if (error) {
-        if (error.response) {
-          let message = error.response.data.message
-          console.log('error message', message);
-        } else {
-          console.log('error message', error.message);
-        }
+      if (error && error.response) {
+        let message = error.response.data.message
+        console.log('error message', message);
+      } else if (error) {
+        console.log('error message', error.message);
       }
-      Locations = response;
-      let filterOptions: Array<Object> = Locations.map((location:any, index:number) => ({
+      let Locations = response;
+      let filterOptions: Array<Object> = Locations.map((location: any, index: number) => ({
         label: `City: ${location.city}, State: ${location.state}, Country: ${location.country}`,
         value: index
       }));
