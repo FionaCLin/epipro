@@ -201,7 +201,7 @@ Our shortcoming is that we cannot deal with the situation where the user inputs 
 
   
 ### Logger  
-We have an auto-generated log file under /PHASE1/API_SourceCode/Api_log.log. It contains the time that request happened, the requested URL and the status code it returns. Each time when the Api restarts, it will be overwritten.  
+We have an auto-generated log file under /PHASE1/API_SourceCode/Api_log.log. It contains the time that request happened, the requested URL and the status code it returns. Each time the Api restarts, it will be overwritten and log the latest information.  
   
 
 ## Developement and Deployment Environment
