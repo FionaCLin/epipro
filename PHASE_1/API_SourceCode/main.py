@@ -24,6 +24,7 @@ from flask_cors import CORS
 from flask_restplus import fields
 from flask_restplus import inputs
 from flask_restplus import reqparse
+import logging
 import config
 import pymongo
 from pymongo import MongoClient
@@ -414,5 +415,15 @@ if __name__ == '__main__':
 	# This is used when running locally only. When deploying to Google App
 	# Engine, a webserver process such as Gunicorn will serve the app. This
 	# can be configured by adding an `entrypoint` to app.yaml.
+	logging.basicConfig(
+		filename='Api_log.log', 
+		filemode='w',
+		format='%(asctime)s - %(message)s', 
+		datefmt='%d-%b-%y %H:%M:%S',
+		level=logging.INFO)
+	logging.info('LET THE GAMES BEGIN! API STARTS')
+	logging.info('==========================================')
 	app.run(host='127.0.0.1', port=config.PORT, debug=True)
+	
+
 # [END gae_python37_app]
