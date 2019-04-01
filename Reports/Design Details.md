@@ -198,6 +198,10 @@ At this time, we can use full text search again to search "Australia", and the r
   
 ### Shortcomings  
 Our shortcoming is that we cannot deal with the situation where the user inputs Start-date or End-date with \'xx\'. We forced the users to enter complete datetime in order to limit cases we have to concern. Although this is a drawback for user input flexiability, it allows us to get a complete and valid time range, and allow a more accurate search result for users. For our purposes, this is a reasonable tradeoff.  
+
+  
+## Logger  
+We have an auto-generated log file under /PHASE1/API_SourceCode/Api_log.log. It contains the time that request happened, the requested URL and the status code it returns. Each time when the Api restarts, it will be overwritten.  
   
 
 ## Developement and Deployment Environment
