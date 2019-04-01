@@ -1,7 +1,6 @@
 import React from 'react';
 import '../css/Home.css';
 import Select from 'react-select';
-import Locations from '../dummydata/locations.json';
 import { BackendAPI } from '../API'
 
 let api = new BackendAPI();
@@ -11,11 +10,6 @@ export default class LocationSearch extends React.Component<ILocationSearchProps
   constructor(props: ILocationSearchProps) {
     super(props);
 
-    // let filterOptions: Array<Object> = Locations.map((location, index) => ({
-    //   label: location.city + ", " + location.state + ", " + location.country,
-    //   value: index
-    // }));
-    // console.log(filterOptions);
     this.state = {
       values: [],
       filterOptions:[]
