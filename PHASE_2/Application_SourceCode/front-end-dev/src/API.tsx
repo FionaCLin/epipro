@@ -41,7 +41,7 @@ export class BackendAPI {
   }
 
   getAllReports(cb: (err: any, res: any) => any) {
-    axios.get(`${this.baseURL}api/v1/reports/all`)
+    axios.get(`${this.baseURL}api/v1/reports/filter`)
       .then((response: AxiosResponse) => {
         cb(null, response.data)
       })
@@ -61,6 +61,7 @@ export class BackendAPI {
   }
 
   getFiltedReports(filter: IFilterOptions, cb:(err: any, res: any) => any) {
+    //base_urlapi/v1/reports/filter?Start-date=2018-06-02T00%3A00%3A00&End-date=2018-08-08T00%3A00%3A00&Key-terms=Outbreak&Location=Kenya&Start=1&Limit=3
     let q :string[] = [];
     if (filter.locations) {
       q.push(`Location=${filter.locations}`)

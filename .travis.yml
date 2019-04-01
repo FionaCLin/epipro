@@ -1,0 +1,38 @@
+# Use Dockerized infrastructure
+sudo: false
+language: python
+# Cache our Gcloud SDK between commands
+python:
+  - "3.7-dev"  # 3.7 development branch
+
+env:
+# Make sure gcloud command is on our PATH and the App Engine SDK is in the Python path
+- GAE_PYTHONPATH=${HOME}/.cache/google_appengine PATH=$PATH:${HOME}/google-cloud-sdk/bin PYTHONPATH=${PYTHONPATH}:${GAE_PYTHONPATH} CLOUDSDK_CORE_DISABLE_PROMPTS=1
+before_install:
+# [START auth]
+# Decrypt the credentials we added to the repo using the key we added with the Travis command line tool
+- openssl aes-256-cbc -K $encrypted_c6f649e554dd_key -iv $encrypted_c6f649e554dd_iv -in PHASE_1/TestScripts/credentials.tar.gz.enc -out credentials.tar.gz -d
+- openssl aes-256-cbc -K $encrypted_05acc0af6317_key -iv $encrypted_05acc0af6317_iv -in config.py.enc -out PHASE_1/API_SourceCode/config.py -d
+- tar -xzf credentials.tar.gz
+# install flask and pytest for Virtual container testing
+- mkdir -p PHASE_1/API_SourceCode/lib
+- pip install -r PHASE_1/API_SourceCode/requirements.txt -t PHASE_1/API_SourceCode/lib/
+- pip install -r PHASE_1/API_SourceCode/requirements.txt 
+- pip install pytest
+script:
+# unit testing 
+- ./PHASE_1/TestScripts/unit-test.sh
+
+# deploy staging branch 
+deploy:
+  provider: gae
+  skip_cleanup: true # Skip cleanup so api_key.py and vendored dependencies are still there
+  keyfile: client-secret.json
+  project: epiproapp
+  config: PHASE_1/API_SourceCode/app.yaml
+  default: true  # default project app version
+  on: production #<--update this for final submission
+
+after_deploy:
+# after deploy e2e testing
+- python3 PHASE_1/TestScripts/e2e_test.py

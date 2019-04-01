@@ -13,8 +13,8 @@ def check_date(date_line):
     dateTime2 = date_line_format.search(date_line).group(2)
     date1_group = date_format.search(dateTime1)
     date2_group = date_format.search(dateTime2)
-    print(dateTime1)
-    print(dateTime2)
+    # print(dateTime1)
+    # print(dateTime2)
 
     #YEAR1 > YEAR2
     year1 = date1_group.group(0)
@@ -81,13 +81,45 @@ def is_before(date1, date2):
     return check_date(date_line)
 
 
+# two dates are of format, respective
+# date of publication:^(\d{4})-(\d\d|xx)-(\d\d|xx)T(\d\d|xx):(\d\d|xx):(\d\d|xx)$
+# start date:^(\d{4})-(\d\d|xx)-(\d\d|xx)T(\d\d|xx):(\d\d|xx):(\d\d|xx)$
+def align_date(pub_date, date_line):
+    
+    date_format = re.compile(r'^(\d{4})-(\d\d|xx)-(\d\d|xx)T(\d\d|xx):(\d\d|xx):(\d\d|xx)')
+    date_line_group = date_format.search(date_line)
+    pub_date_group = date_format.search(pub_date)
+
+    year = pub_date_group.group(1)
+    month = pub_date_group.group(2)
+    day = pub_date_group.group(3)
+    hour = pub_date_group.group(4)
+    minute = pub_date_group.group(5)
+    second = pub_date_group.group(6)
+
+    if month == 'xx':
+        month = date_line_group.group(2)
+    if day == 'xx':
+        day = date_line_group.group(3)
+    if hour == 'xx':
+        hour = date_line_group.group(4)
+    if minute == 'xx':
+        minute = date_line_group.group(5)
+    if second == 'xx':
+        second = date_line_group.group(6)
+    
+    final_date = year + '-' + month + '-' + day + 'T' + hour + ':' + minute + ':' + second 
+
+    return final_date
 #for testing
 # def main():
-#     result = check_date('2019-01-01T12:00:00 to 2019-01-01T13:00:00')
-#     print(result)
-#     date = swap_date('2019-01-01T12:00:00 to 2018-01-01T13:00:00')
-#     print(date)
-#     result1 = is_before("2020-01-01T12:00:00", "2019-01-02T12:00:00")
-#     print(result1)
+#     # result = check_date('2019-01-01T12:00:00 to 2019-01-01T13:00:00')
+#     # print(result)
+#     # date = swap_date('2019-01-01T12:00:00 to 2018-01-01T13:00:00')
+#     # print(date)
+#     # result1 = is_before("2020-01-01T12:00:00", "2019-01-02T12:00:00")
+#     # print(result1)
+#     # result = align_date('2019-xx-xxTxx:10:xx', '2018-10-13T12:23:15')
+#     # print(result)
 # if __name__ == '__main__':
 #     main()
