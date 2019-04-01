@@ -6,6 +6,7 @@ import { Card } from 'react-bootstrap';
 export default class ArticleCard extends React.Component<IArticleCardProps, IArticleCardState> {
   constructor(props: IArticleCardProps) {
     super(props);
+    console.log("HERE");
   }
   
   render() {

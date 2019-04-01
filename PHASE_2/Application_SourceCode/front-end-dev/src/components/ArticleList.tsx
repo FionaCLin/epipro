@@ -2,10 +2,10 @@ import React from 'react';
 import '../css/Home.css';
 import { ListGroup } from 'react-bootstrap';
 import ArticleCard from './ArticleCard';
+import ArticleData from '../dummydata/example-article.json';
 import { BackendAPI } from '../API'
 
 let api = new BackendAPI();
-let ArticleData;
 export default class ArticleList extends React.Component<IArticleListProps, IArticleListState> {
   constructor(props: IArticleListProps) {
     super(props);
@@ -13,6 +13,7 @@ export default class ArticleList extends React.Component<IArticleListProps, IArt
       articleList: []
     }
   }
+  
   componentWillMount() {
     api.getAllReports((error: any, response: any) => {
       if (error && error.response) {
@@ -23,18 +24,24 @@ export default class ArticleList extends React.Component<IArticleListProps, IArt
       }
       let articleList = response;
       console.log(articleList)
-      // not sure how to mount the reports to the article card.
       this.setState({
-        ...articleList
-      })
-    })
+        articleList: articleList
+      });
+    });
   }
-  render() {
 
+  showList() {
+    return this.state.articleList.map((articleData: any) => {
+      return <ArticleCard {...articleData}/>
+    });
+  }
+
+  render() {
+    console.log(this.state);
     return (
       <ListGroup variant="flush">
         <ListGroup.Item>
-          <ArticleCard {...ArticleData} />
+        { this.showList()}
         </ListGroup.Item>
 
       </ListGroup>
