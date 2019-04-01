@@ -353,7 +353,7 @@ class disease_reports_with_filter(Resource):
 		start_date = start_date.strip()
 		end_date = end_date.strip()
 
-		date_format = re.compile(r'^(\d{4})-(\d\d)-(\d\d)T(\d\d):(\d\d):(\d\d)')
+		date_format = re.compile(r'^(\d{4})-(\d\d)-(\d\d)T(\d\d):(\d\d):(\d\d)$')
 		# make sure the format is right(both dates)
 		if not date_format.match(start_date):
 			return { 'message': 'START DATE format is wrong, please try again, no \'xx\' is accepted'}, 400
