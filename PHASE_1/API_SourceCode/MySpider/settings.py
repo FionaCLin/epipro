@@ -65,9 +65,9 @@ ROBOTSTXT_OBEY = False
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ## will not run pipeline currently
-#ITEM_PIPELINES = {
-#    'MySpider.pipelines.MyspiderPipeline': 300,
-#}
+ITEM_PIPELINES = {
+    'MySpider.pipelines.MyspiderPipeline': 300,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html

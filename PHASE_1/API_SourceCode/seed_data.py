@@ -1,10 +1,11 @@
 import pymongo
 from pymongo import MongoClient
 import json
+import config
 
 client = MongoClient(
-    'mongodb://user:password@host:27017/database', 27017)
-db = client['database']
+    'mongodb://user:password@host:27017/database', 27017)#<--target host
+db = client['database']#<--target database
 collection.create_index([('$**', 'text')])
 
 locations = {
@@ -26,7 +27,7 @@ locations = {
 }
 
 for k in ['New South Wales', 'Victoria']:
-    collection = db['test_location']
+    collection = db['test_location'] #<--- update to ur collection
     for loc in locations[k]:
         city = {
             'country': 'Australia',
@@ -84,6 +85,7 @@ keyterms = {
     ]
 }
 for t in ['specific', 'general']:
+    collection = db['Key_Terms'] #<--- update to ur collection
     for k in keyterms[t]:
         for j in keyterms[t][k]:
             term = {
@@ -94,7 +96,7 @@ for t in ['specific', 'general']:
             collection.insert_one(term)
 
 with open('../TestScripts/sample_output/sample_disease_report.json') as f:
+    collection = db['test_reports'] #<--- update to ur collection
     file_data = json.load(f)
-
-collection.insert_one(file_data)
+    collection.insert_one(file_data)
 client.close()

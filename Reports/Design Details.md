@@ -6,24 +6,10 @@ Before producing our API module design, we studied some of the relevant concepts
 
 All the required handlers will be created for each of our API modules. Each API module will run in REST web service mode and will handle the corresponding REST request. Our web server will be built and host on the Google cloud platform, using a low cost App Engine Standard Environment. The EpiPro Application will then be able to serve REST API requests 24/7. More details on the Google App Engine is available [here](https://cloud.google.com/appengine/docs/).
 
-## API Design Module
-[//]: # (2. Discuss	your	current	thinking	about	how	parameters can	be	passed	to	your module	and	how	results	are	collected.	Show	an	example	of	a	possible interaction .e.g.- sample	HTTP	calls	with	URL	and	parameters)
-### APIs Design
-After brainstorming about the query parameters, studying the usage of the disease report for the API and refering to the specification requirements, we have concluded upon the REST API list below. The user is able to fetch and filter disease reports based on these three information queries:
 
-#### Period of Interest
-This refers to what specific time period the user is interested in for the disease report retrieval. We have two main APIs involved in this process. The first one helps retrieve all disease reports from the database, where the parameters are related to pagination e.g. start, limit. The second one helps filter by specific period in time, which can be passed to this module using the parameters indicating the beginning and/or end of this period e.g. start-date and end-date. Other optional parameters a filter by given keyterms or location.
+## Scrapper Design Module
 
-#### Keyterms
-The main API involving keyterms involves the category parameter, which helps group the keyterms given by the project specification. This parameter can only be given two values - 'general' or 'specific'. The API responds by returning general or specific keyterms, as outlined in the project specification.
-
-#### Location
-Location helps the user restrict the disease reports to a designated geographical location. Two main APIs are involved with this. The first one will return all locations mentioned in disease reports, with no additional input query parameter required. The second one accepts a parameter of the geonameID, and will respond with detailed information corresponding to the given geogrphical ID.
-
-More details on the APIs structure available [here](https://epiproapp.appspot.com/api/v1/doc/) on the EpiPro Online Documentation.
-
-### Collect Disease Reports
-#### Webscraping with Scrapy and Selenium
+### Webscraping with Scrapy and Selenium
 As our data source WHO is a dynamic website which also provides search and filter functionalities, we chose Selenium and Scrapy frameworks to build and define our web scraper, over other alternatives like BeautifulSoup, Pyspider and Portia.
 
 <table>
@@ -95,13 +81,128 @@ First of all, Scrapy was the recommended webscraping tool for this specific work
 
 However, Scrapy alone does not work for all web pages. Although it is considered the most suitable for properly rendering XML and HTML pages across a large data set, it does not handle JavaScript well. We also need to consider JavaScript frameworks driven pages such as React and Angular, which means, in practice, that there will be different kinds of timers and interactive elements involved. Another peculiarity of Scrapy is that it goes through pages by accessing their URLs. However, there are some buttons on the webpages which won’t have any URLs linked to them when you inspect the element or get the source code (through xpath or css). Therefore, Selenium will be used as our testing automation framework, on top of our Scrapy web crawling framework. Selenium will help simulate browser usage to retrive data from those JavaScript frameworks driven web pages, and requesting with Scrapy will be used to get the required data in a data file format during collection process.
 
-#### Collection Process
+### Collection Process
 The news and articles will be collected by our pre-defined Scraper from the searched and filtered url of the WHO website. We will then extract their title, url, content, published data, and region from the url's source file. Then, all the information will be processed and packed in the designated disease report format, and will be stored in our database. This process will recur will be autonomously performed monthly.
 
 The disease reports collection process will proceed as described below:
 * Filter region, period and data from the located WHO page's HTML code. The relevant WHO page will be located from the WHO main website by using keyword search, url and title. This process can be realized using the selector method in Scrapy. 
 * Once relevant result is found, another Scraper is used to get the source from each url. As there are a great amount of articles and news, this process should shedule monthly and run concurrently with the other process.
 * After raw data soure HTML files are retrived and the required data is extarcted and cleaned up, we compose and structure the disease reports. Using the structure of raw HTML file, xpath method can be utilised to find out required information for composing disease reports. Since the disease reports are retrived and updated monthly, the resulting disease reports will be cached in the database for serving application query.  
+
+### Implementation method  
+We used Python scrappy library to develop our scraper. The scraper consist of two spiders - url spider and content spider. The url spider is used to access and cache headline with urls of news from our data source, while the content spider is used to access the content of these urls and extract report data from the main text. The structure of our implementation contains:
+* Items - defined the object field we need to crawl from data source
+* Spider - access and extract data 
+* Pipelines - formalizing the item and storage  
+  
+There are two main reasons we decided to use this structure. Firstly, we can segment the date access and storage processes so that we formalize our report structure easier on the pipeline. Moreover, we can store our data individually which avoid usage of long list
+
+### Challenge addressed
+The key challenge of our scraper is extract required data from the main text. Located the data basing on appearance of some special word. For example, it is likely to get the affected number on the sentence with verb 'reported', 'confirmed'. For those unsolved cases we manually extract on the pipelines process. We also implemented some functions to recognize and compare time in the main text
+
+
+## API Design Module
+[//]: # (2. Discuss	your	current	thinking	about	how	parameters can	be	passed	to	your module	and	how	results	are	collected.	Show	an	example	of	a	possible interaction .e.g.- sample	HTTP	calls	with	URL	and	parameters)
+
+
+### EpiPro API Online Documentation  
+APIs live demonstration available [here](https://epiproapp.appspot.com/api/v1/doc/)  
+  
+### API architecture  
+After brainstorming about the query parameters, studying the usage of the disease report for the API and refering to the specification requirements, we have concluded upon the REST API list below: 
+  
+#### __GET /reports/filter__ 
+This endpoint will return all the reports that satisfy user requirements. 
+When all parameters are empty, the endpoint will return all disease reports existed in the database. 
+All the parameters are optional, and these are all 6 query parameters that can be used in the endpoint: 
+* __Start-date/End-date__: This refers to what specific time period the user is interested in for the disease report retrieval.  
+No 'xx' values aree accepted here and the user must enter valid dates.  
+When no Start-date is entered, it will be set to a predefined date. The default Start-date is 2016-01-01T00:00:00. When End-date is empty, it will be set to current date time.  
+Input Format: YYYY-MM-DDTHH:MM:SS   
+* __Key-terms__: The keywords that user wants to search. This is case insensitive.   
+Input Format: Keyword1,Keyword2,.. 
+* __Location__: Location helps the user restrict the disease reports to a designated geographical location, and it is case insensitive.  
+Input Format: User should enter the complete word, e.g. if user enters 'sydn', nothing will return, instead user should enter 'sydney'. 
+* __Start/Limit__: These parameters are for pagination. 
+The default value for Start is 1, and for Limit is 100.  
+Input Format: non-negative integer only. 
+
+#### __GET /reports/key-terms/\<term_type\>__ 
+This endpoint will return all predefined key terms from our database in case the user doesn't know what to search. 
+Here is the only path parameter: 
+
+* __term_type__: This parameter helps group the keyterms given by the project specification and  can only be given two values:  __[general]__ or __[specific]__, where both case insensitive. 
+[general] is a wilder range keyword e.g. \"outbreak\", while [specific] refers to a limited but detailed range e.g. \"Zika\". 
+
+#### __GET /reports/locations/\<area\>__
+This endpoint will return all the locations information when given an area name. 
+Usage example: When user want to know what cities are in in a certain country, saying Australia. User can enter Australia in \"area\", the endpoint will return all places that are within Austrlia. 
+Here is the only path parameter in this endpoint: 
+
+* __area__: a location name given by the user, which is case insensitive.  User should enter the complete word e.g. if user enters 'sydn', nothing will return, instead user should enter 'sydney'. 
+
+#### __GET /reports/locations/all__  
+This endpoint will return all the locations that existed in the database. 
+  
+__Justification__: We deleted the endpoint GET /reports/all, since our latest GET /reports/filter will return all disease reports in the database, which has the same function as GET /reports/all.  
+  
+### Justification for API modules
+Here are the reasons why we chose to create the 4 APIs, as seen above.  
+  
+__For GET /reports/filter__:  
+This is required in spec, but we added two extra parameters: Start and Limit. Considering that there is a considerable size to the amount of disease reports where each contains lots of information, it's better to provide pagination function so that user can fetch small chunk of reports and have better evaluation on the presentation of the information.  
+  
+__For GET /reports/key-terms/\<term_type\>__:  
+This one is necessary because keywords can cover a wide range, from disease type to syndrome to headline. If we don't provide some typical keywords, users may have no idea where to start their search. We also divided the keyword range into __general__ and __specific__, which allows the user to understand how to utilize this endpoint to do different scales of search.  
+  
+__For GET /reports/locations/area__:  
+We provided this endpoint to allow users to get valid location information from a certain area. The importance of this endpoint is that user can use it to know which cities are under a certian country/state and also which several sub-areas have disease reports stored in the database. Some remote countries may have many small cities without any valid disease reports. This endpoint will save the time by not showing the city name so that user can know there is no related report stored within our database.  
+  
+__For GET /reports/locations/all__:  
+We considered that the user may require this endpoint to do a location drop down list, were it can autocomplete. It's convenient to give all locations to user at one time.  
+
+### Challenges addressed
+Search is the main challenge we met during implementation.  
+Search involves 3 main ranges - keyword searching, date searching, and inclusive location searching.  
+  
+* __Keyword Search__:  
+This is the most difficult and important task in the api. As for a normal MongoDB search, we usually use the index search alongside find() from the MongoDB command. This means that if we adopt this method to do the keyword search, we need to know the exact index of the keyword. For example, when the keyword is \"Acute Flacid Paralysis\", firstly we have to know this keyword is of index \"syndrome\" and then we can search for the reports with find() method. This requires a lot more effort and time to finish one single search, which can be inefficient.  
+Starting from version 2.4, MongoDB began with an experimental feature supporting Full-Text Search using Text Indexes. This full text search provides us with a high speed searching, allowing us to search throughout the whole report without knowing which index the input keyword exactly should be in.  
+  
+* __Date Search__:  
+The challenge in a date search is the date accuracy. Since the specification allows some "xx" included in the datetime string, it's hard to tell whether the date is inside the time range given by user.  
+Firstly we have to clarify that the date we search here is __date of publication__ in report.  
+Secondly, the start and end date given by user must be accurate date time (without xx).  
+To solve this problem, we assume that all the "xx" in the date of publication is equal to the start date given by user.  
+For example, when the date of publication is 2019-01-13Txx:xx:xx, the start date given by the user is 2019-01-12T12:32:22. Our api will proceess the date of publication to 2019-01-13T12:32:22, and then perform the comparison.  
+  
+* __Inclusive Location Search__:  
+We provided an inclusive location search, which means, when user searches with a wider range location, results from all inclusive locations will also be presented. For example, when user searches \"Australia\", the results will not only send back reports that contain Australia, but also all reports include other states like "New South Wales" and other cities like "Melbourne" that are inside Australia.
+Our solution is whenever our scrapper extracts location information from the WHO website, it will also invoke the api from "http://www.geonames.org/", in order to get the complete __Country/State(if applicable)/City__. First, we store country info in the index __location[country]__, and put the state and city info in __location[location]__, in the \"CITY, STATE\"  string format.  At the same time, we also stored __Country/State(if applicable)/City__ in json format into our __location__ collection in the database.  
+If only the location "Sydney" occurs in the original website article, when we don't use above method, the __location__ entry inside the disease report should look like this:  
+```javascript
+location: {
+    'country':'',
+    'location':'Sydney'
+}
+```  
+If the user searches "Austalia", this report will not be returned as there is no "Australia" occurring in the report.  
+However, after using our method, the new json should look like this:  
+```javascript
+location: {
+    'country': 'Australia',
+    'location': 'Sydney, New South Wales'
+}
+```  
+At this time, we can use full text search again to search "Australia", and the report will be returned as expected.  
+  
+### Shortcomings  
+Our shortcoming is that we cannot deal with the situation where the user inputs Start-date or End-date with \'xx\'. We forced the users to enter complete datetime in order to limit cases we have to concern. Although this is a drawback for user input flexiability, it allows us to get a complete and valid time range, and allow a more accurate search result for users. For our purposes, this is a reasonable tradeoff.  
+
+  
+### Logger  
+We have an auto-generated log file under /PHASE1/API_SourceCode/Api_log.log. It contains the time that request happened, the requested URL and the status code it returns. Each time the Api restarts, it will be overwritten and log the latest information.  
+  
 
 ## Developement and Deployment Environment
 ### Developement
@@ -137,11 +238,4 @@ Since Travis integrates with GitHub and runs tests in isolation, it can run on t
 [More Detail on Travis CI testing within Google Cloud App Engine](https://cloud.google.com/solutions/continuous-delivery-with-travis-ci). Hence, our integration tests will be developed on Travis CI and used by a CI/CD service on Google Cloud Platform (GCP) to deploy your app as part of the build process.
 
 We will apply the practice of continuous integration (CI) and continuous delivery (CD), which involves using tools like Travis CI, to ensure that all new code is automatically and consistently tested for errors. This allows us to streamline our development and deployment process, as well as ensure developed components work within the production environment and all related web services work together before it is deployed to the production enviroment. Continuous delivery (CD) goes one step further by ensuring we can deploy every build into a production-like environment and then pass integration tests in that environment.
-
-[//]: # (2.2. API	design	and	testing details	D2 )
-[//]: # ( • Describe	final architecture	of	your	API,	justify	the	choice	of	implementation,	challenges	addressed	and	shortcomings.)
-[//]: # (• Provide	the	URL	of	your	API	specification.)
-## Challenges Addressed and Shortcomings
-[//]: # (Challenges addressed - any problems encountered during API production and resolved)
-[//]: # (Shortcomings - any problems encountered and not resolved/unable to meet requirements for certain parts)
 
