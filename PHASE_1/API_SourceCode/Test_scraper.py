@@ -57,7 +57,7 @@ def test_format(collection):
         assert True == isinstance(test['headline'], str)
         assert True == isinstance(test['main_text'], str)
         assert True == isinstance(test['reports'], list)
-        assert True == isinstance(test['reports'][0]['disease'], str)
+        assert True == isinstance(test['reports'][0]['disease'], list)
         assert True == isinstance(test['reports'][0]['syndrome'], str)
         assert True == isinstance(test['reports'][0]['reported_events'], list)
         assert True == isinstance(
