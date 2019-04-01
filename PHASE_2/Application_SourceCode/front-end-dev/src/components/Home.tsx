@@ -22,7 +22,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
     console.log(this.state,'constructor')
   }
 
-  componentDidMount() {
+  componentWillMount() {
     let doc_url:string='';
     api.getAPIdocURL((error: any, response: any) => {
       if (error) {

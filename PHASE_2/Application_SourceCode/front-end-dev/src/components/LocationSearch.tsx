@@ -1,7 +1,6 @@
 import React from 'react';
 import '../css/Home.css';
 import Select from 'react-select';
-import Locations from '../dummydata/locations.json';
 import { BackendAPI } from '../API'
 
 let api = new BackendAPI();
@@ -11,17 +10,33 @@ export default class LocationSearch extends React.Component<ILocationSearchProps
   constructor(props: ILocationSearchProps) {
     super(props);
 
-    let filterOptions: Array<Object> = Locations.map((location, index) => ({
-      label: location.city + ", " + location.state + ", " + location.country,
-      value: index
-    }));
-    console.log(filterOptions);
     this.state = {
       values: [],
-      filterOptions
+      filterOptions: []
     }
   }
 
+  componentWillMount() {
+    // Fetch Data
+
+    api.getLocations((error: any, response: any) => {
+      if (error && error.response) {
+        let message = error.response.data.message
+        console.log('error message', message);
+      } else if (error) {
+        console.log('error message', error.message);
+      }
+      let Locations = response;
+      let filterOptions: Array<Object> = Locations.map((location: any, index: number) => ({
+        label: `City: ${location.city}, State: ${location.state}, Country: ${location.country}`,
+        value: index
+      }));
+      this.setState({
+        values: [],
+        filterOptions
+      })
+    });
+  }
   private handleChange(event: Array<any>) {
     let values: Array<Number> = event.map(option => (option.value));
     this.setState({ values });
@@ -30,23 +45,6 @@ export default class LocationSearch extends React.Component<ILocationSearchProps
   }
 
   render() {
-
-    // Fetch Data
-    let Locations: any;
-
-    api.getLocations((error: any, response: any) => {
-      if (error) {
-        if (error.response) {
-          let message = error.response.data.message
-          console.log(message, 'ppp');
-        } else {
-          console.log(error.message, 'ppp');
-        }
-      }
-      Locations = response;
-      console.log(Locations, 'locations in Location tsx')
-    });
-
     return (
       <div className="Filter-element">
         <b>Locations</b>
