@@ -54,9 +54,9 @@ db = client[config.MONGO_DB]
 
 parser = reqparse.RequestParser()
 
-LOCATION = 'test_location'
+LOCATION = 'location'
 KEY_TERMS = 'key_terms'
-REPORTS = 'test_report'
+REPORTS = 'reports'
 #############################################################################################
 #   MODEL   #
 #####  REPSONSE for /api/reports/locations/<:id> #####
@@ -325,6 +325,7 @@ class disease_reports_with_filter(Resource):
 		if limit is None:
 			limit = 100
 
+
 		try: 
 			start = int(start)-1
 		except ValueError:
@@ -349,12 +350,15 @@ class disease_reports_with_filter(Resource):
 			if format_search:
 				end_date = format_search.group(0)
 
+		start_date = start_date.strip()
+		end_date = end_date.strip()
+
 		date_format = re.compile(r'^(\d{4})-(\d\d)-(\d\d)T(\d\d):(\d\d):(\d\d)')
 		# make sure the format is right(both dates)
 		if not date_format.match(start_date):
-			return { 'message': 'START DATE format is wrong, please try again' }, 400
+			return { 'message': 'START DATE format is wrong, please try again, no \'xx\' is accepted'}, 400
 		if not date_format.match(end_date):
-			return { 'message': 'END DATE format is wrong, please try again' }, 400
+			return { 'message': 'END DATE format is wrong, please try again, no \'xx\' is accepted' }, 400
 		# make sure the order of date
 		if not DT.is_before(start_date, end_date):
 			return { 'message': 'START DATE must be before END DATE' }, 400
@@ -362,15 +366,18 @@ class disease_reports_with_filter(Resource):
 		# check valid query && filter with key terms and location
 		search_string = '\''
 		if key_terms:
+			key_terms = key_terms.strip()
+
 			key_terms_list = re.compile(r' *, *').split(key_terms)
 			for key in key_terms_list:
 				search_string += '\"' + key + '\" '
 
 		if location:
+			location = location.strip()
 			#make sure location is more than a whole world
 			count = location_dictionary.count_documents({"$text": {"$search": location}})
 			if count <= 0:
-				return { 'message': 'LOCATION name is invaild, please enter a correct location name' }, 400
+				return { 'message': 'LOCATION name is invaild or no related reports in database, please enter a correct location name, or enter another location' }, 400
 			search_string += '\"' + location + '\" '
 
 		search_string = search_string.strip() + '\''
