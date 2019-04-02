@@ -10,19 +10,21 @@
 # into the test folder for the test script run
 # the work around solution is to make a bash script to trigger 
 # the test in the API_SourceCode
-pwd
-if [[ $@ ]];
+
+if [[ $1  = 'list' ]];
 then
-  for i in $@;
-  do
-    echo "************ test $i ************"
-    python3 ./PHASE_1/API_SourceCode/test_$i.py
-  done
+  ls ./PHASE_1/API_SourceCode | grep -e '[tT]est'| sed 's/[tT]est_//' |  sed 's/.py//'
 else
-  echo "************ test main ************"
-  python3 ./PHASE_1/API_SourceCode/test_main.py
-  echo "************ test date ************"
-  python3 ./PHASE_1/API_SourceCode/test_date.py
-  echo "*********** test scraper ***********"
-  python3  PHASE_1/API_SourceCode/Test_scraper.py
+
+  if [[ $@ ]];
+    test=$@
+  then
+    test=`ls ./PHASE_1/API_SourceCode | grep -e '[tT]est'| sed 's/.py//'`
+    echo $test
+  fi
+  for i in $test;
+    do
+      echo "************ test $i ************"
+      py.test ./PHASE_1/API_SourceCode/$i.py -p no:warnings
+    done
 fi
