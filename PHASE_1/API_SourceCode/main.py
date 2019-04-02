@@ -30,7 +30,7 @@ import pymongo
 from pymongo import MongoClient
 import enum
 import re
-from datetime import datetime,time
+from datetime import datetime, time
 import date_tool as DT
 
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app
@@ -39,12 +39,12 @@ app = Flask(__name__)
 blueprint = Blueprint('api', __name__, url_prefix='/api/v1')
 app.config['RESTPLUS_MASK_SWAGGER'] = False
 api = Api(
-	blueprint,
-	doc='/doc/',
-	version='1.0',
-	default="EpiPro",  # Default namespace
-	title="EpiPro REST API Documentation",  # Documentation Title
-	description="This is a EpiPro App REST API.\r\n SENG3011 workshop project"
+    blueprint,
+    doc='/doc/',
+    version='1.0',
+    default="EpiPro",  # Default namespace
+    title="EpiPro REST API Documentation",  # Documentation Title
+    description="This is a EpiPro App REST API.\r\n SENG3011 workshop project"
 )  # Documentation Description
 
 CORS(app)
@@ -67,62 +67,62 @@ REPORTS = 'reports'
 #       city: string
 #     }
 location = api.model(
-	'location_info', 
-	{
-		'country': fields.String,
-		'state': fields.String,
-		'city': fields.String,
-	})
+    'location_info',
+    {
+        'country': fields.String,
+        'state': fields.String,
+        'city': fields.String,
+    })
 
-#####  RESPONSE for /api/reports/key_terms
+# RESPONSE for /api/reports/key_terms
 #      {id, type, category and name}
 key_term = api.model(
-	'key_term', 
-	{
-		'keyTerm_id': fields.Integer,
-		'type': fields.String(enum=['general', 'specific']),
-		'category': fields.String,
-		'name': fields.String
-	})
+    'key_term',
+    {
+        'keyTerm_id': fields.Integer,
+        'type': fields.String(enum=['general', 'specific']),
+        'category': fields.String,
+        'name': fields.String
+    })
 
-#####  RESPONSE for /api/reports
+# RESPONSE for /api/reports
 #       This is a DISEASE REPORT json format
 location_detail = api.model(
-	'location_detail', 
-	{
-		'country': fields.String,
-		'location': fields.String
-	})
+    'location_detail',
+    {
+        'country': fields.String,
+        'location': fields.String
+    })
 
 reported_event = api.model(
-	'report-event',
-	{
-		'type': fields.String,
-		# TO DO: choose the right format
-		'date': fields.DateTime,
-		'location': fields.Nested(location_detail),
-		'number-affected': fields.Integer
-	})
+    'report-event',
+    {
+        'type': fields.String,
+        # TO DO: choose the right format
+        'date': fields.DateTime,
+        'location': fields.Nested(location_detail),
+        'number-affected': fields.Integer
+    })
 
 report = api.model(
-	'report',
-	{
-		'disease': fields.List(fields.String),
-		'syndrome': fields.List(fields.String),
-		'reported_events': fields.List(fields.Nested(reported_event)),
-		'comment':fields.String
-	})
+    'report',
+    {
+        'disease': fields.List(fields.String),
+        'syndrome': fields.List(fields.String),
+        'reported_events': fields.List(fields.Nested(reported_event)),
+        'comment': fields.String
+    })
 
 disease_report_model = api.model(
-	'disease-report',
-	{
-		'url': fields.String,
-		# TO DO: more look on the date format
-		'date_of_publication': fields.DateTime,
-		'headline': fields.String,
-		'main_text': fields.String,
-		'reports': fields.List(fields.Nested(report))
-	})
+    'disease-report',
+    {
+        'url': fields.String,
+        # TO DO: more look on the date format
+        'date_of_publication': fields.DateTime,
+        'headline': fields.String,
+        'main_text': fields.String,
+        'reports': fields.List(fields.Nested(report))
+    })
 
 
 #####################################################################################################
@@ -131,12 +131,12 @@ disease_report_model = api.model(
 # default index page render to REST api doc
 @app.route('/')
 def index():
-	return render_template("index.html", token=api.base_url + 'doc')
+    return render_template("index.html", token=api.base_url + 'doc')
 
 # default index page render to REST api doc
 @app.route('/api/v1/doc-url')
 def doc_url():
-	return '{}doc'.format(api.base_url)
+    return '{}doc'.format(api.base_url)
 
 
 ######################
@@ -149,22 +149,22 @@ def doc_url():
 @api.route('/reports/locations/all')
 class locations(Resource):
 
-	@api.response(200, 'Data fetched successfully', location)
-	@api.response(400, 'Bad request')
-	@api.response(404, 'No data found')
-	@api.doc(description="Get all the disease related locations that occured in all disease reports we have.")
-	def get(self):
-		collection = db[LOCATION]
-		result = []
+    @api.response(200, 'Data fetched successfully', location)
+    @api.response(400, 'Bad request')
+    @api.response(404, 'No data found')
+    @api.doc(description="Get all the disease related locations that occured in all disease reports we have.")
+    def get(self):
+        collection = db[LOCATION]
+        result = []
 
-		for report_location in collection.find():
-			e = {}
-			e['country'] = report_location['country']
-			e['state'] = report_location['state']
-			e['city'] = report_location['city']
-			result.append(e)
+        for report_location in collection.find():
+            e = {}
+            e['country'] = report_location['country']
+            e['state'] = report_location['state']
+            e['city'] = report_location['city']
+            result.append(e)
 
-		return result, 200
+        return result, 200
 
 
 ######################
@@ -181,29 +181,29 @@ class locations(Resource):
 @api.route('/reports/locations/<string:area>')
 class locations_with_area(Resource):
 
-	@api.response(200, 'Specific location info fetched successfully', location)
-	@api.response(400, 'Bad request')
-	@api.response(404, 'No data found')
-	@api.doc(description="Get the location info with an given area name")
-	@api.doc(params={
-		'area': 'a place you want to find either country or state or city'
-	})
-	def get(self, area):
-		collection = db[LOCATION]
-		search_string = "\'" + area + "\'"
-		cursor = collection.find({"$text": {"$search": search_string}}, {"_id": 0})
-		result = []
+    @api.response(200, 'Specific location info fetched successfully', location)
+    @api.response(400, 'Bad request')
+    @api.response(404, 'No data found')
+    @api.doc(description="Get the location info with an given area name")
+    @api.doc(params={
+        'area': 'a place you want to find either country or state or city'
+    })
+    def get(self, area):
+        collection = db[LOCATION]
+        search_string = "\'" + area + "\'"
+        cursor = collection.find({"$text": {"$search": search_string}}, {"_id": 0})
+        result = []
 
-		for entry in cursor:
-			result.append(entry)
+        for entry in cursor:
+            result.append(entry)
 
-		if not result:
-			return {
-				'message':
-				'Sorry, there is no data matched, make sure you enter the whole words you want to search'
-			}, 404
+        if not result:
+            return {
+                'message':
+                    'Sorry, there is no data matched, make sure you enter the whole words you want to search'
+            }, 404
 
-		return result, 200
+        return result, 200
 
 
 ######################
@@ -217,49 +217,51 @@ class locations_with_area(Resource):
 #    Response an array of key_terms, each key_term contains id, type and name
 @api.route('/reports/key-terms/<string:term_type>')
 class key_terms(Resource):
-	@api.response(200, 'Key term list fetched successfully', key_term)
-	@api.response(400, 'Bad request, check the parameters')
-	@api.response(404, 'No data found')
-	@api.param('category', 'Optional, find out A agent keywords')
-	@api.doc(params={'term_type': 'Can ONLY be [general] or [specific]'})
-	@api.doc(description="This endpoint will return all predefined key terms from our database \
-		in case user doesn't know what to search. In predefined keywords, there are two types: [general] or [specific].\
-		\n	[general] is a wilder range keyword, while [specific] refers to a limited but detailed range.\
-		\n [general|specific] is case insensitive.")
-	def get(self, term_type):
-		term_type = term_type.lower()
-		if term_type not in ['general', 'specific']:
-			return {
-				'message':
-				'make sure that term-type can only be general or specific'
-			}, 400
-		collection = db[KEY_TERMS]
+    @api.response(200, 'Key term list fetched successfully', key_term)
+    @api.response(400, 'Bad request, check the parameters')
+    @api.response(404, 'No data found')
+    @api.param('category', 'Optional, find out A agent keywords')
+    @api.doc(params={'term_type': 'Can ONLY be [general] or [specific]'})
+    @api.doc(description="This endpoint will return all predefined key terms from our database \
+		in case user doesn't know what to search.\
+        \n * <b>terms-type</b>: the type of each key-terms and only two types <i>general</i> or <i>specific</i> are available.\
+		\n\t\t - <i>general</i> is a wilder range keyword\
+        \n\t\t - <i>specific</i> refers to a limited but detailed range. So the category can use to further filter this type of key-terms\
+        \n * <b>category</b> each key-term can be either <i>none</i> or <i>A Agents</i> 2 categories, additional category can create for extra data source fetching\
+		\n both <i>general</i> and <i>specific</i> are case insensitive.")
+    def get(self, term_type):
+        term_type = term_type.lower()
+        if term_type not in ['general', 'specific']:
+            return {
+                'message':
+                    'make sure that term-type can only be general or specific'
+            }, 400
+        collection = db[KEY_TERMS]
 
-		result = []
-		my_query = {'type': re.compile(term_type, re.IGNORECASE)}
-		query = request.args.get('category')
+        result = []
+        my_query = {'type': re.compile(term_type, re.IGNORECASE)}
+        query = request.args.get('category')
 
-		if query is not None:
-			if term_type == "specific":
-				query = query.lower()
-				my_query = {
-					'type': re.compile(term_type, re.IGNORECASE),
-					'category': re.compile(query, re.IGNORECASE)
-				}
-			else:
-				return {
-					'message':
-					'category is under specific type, please enter again'
-				}, 400
-		cursor = collection.find(my_query,{ "_id": 0 })
-		for entry in cursor:
-			result.append(entry)
+        if query is not None:
+            if term_type == "specific":
+                query = query.lower()
+                my_query = {
+                    'type': re.compile(term_type, re.IGNORECASE),
+                    'category': re.compile(query, re.IGNORECASE)
+                }
+            else:
+                return {
+                    'message':
+                        'category is under specific type, please enter again'
+                }, 400
+        cursor = collection.find(my_query, {"_id": 0})
+        for entry in cursor:
+            result.append(entry)
 
-		if not result:
-			return {'message': 'Sorry, there is no data matched'}, 404
+        if not result:
+            return {'message': 'Sorry, there is no data matched'}, 404
 
-		return result, 200
-
+        return result, 200
 
 
 ######################
@@ -282,148 +284,153 @@ class key_terms(Resource):
 @api.route('/reports/filter')
 class disease_reports_with_filter(Resource):
 
-	@api.response(200, 'Specific location info fetched successfully', disease_report_model)
-	@api.response(400, 'Bad request')
-	@api.response(404, 'Page found')
-	@api.param('Limit','Limit to the number of responsed reports')
-	@api.param('Start','Start from the n-th report')
-	@api.param('Location','A location(city/country/state etc.) that user is interested in')
-	@api.param('Key-terms','The key terms user want to search')
-	@api.param('End-date','End date of period of interest, FORMAT: YYYY-MM-DDTHH:MM:SS')
-	@api.param('Start-date','Start date of period of interest, FORMAT: YYYY-MM-DDTHH:MM:SS')
-	@api.doc(description="This endpoint will return all the reports that satisfy user requirements. \
+    @api.response(200, 'Specific location info fetched successfully', disease_report_model)
+    @api.response(400, 'Bad request')
+    @api.response(404, 'Page found')
+    @api.param('Limit', 'Limit to the number of responsed reports')
+    @api.param('Start', 'Start from the n-th report')
+    @api.param('Location', 'A location(city/country/state etc.) that user is interested in')
+    @api.param('Key-terms', 'The key terms user want to search')
+    @api.param('End-date', 'End date of period of interest, FORMAT: YYYY-MM-DDTHH:MM:SS')
+    @api.param('Start-date', 'Start date of period of interest, FORMAT: YYYY-MM-DDTHH:MM:SS')
+    @api.doc(description="This endpoint will return all the reports that satisfy user requirements. \
 		 When all parameters are empty, the endpoint will return all reports existed in the database.\
 		\n All the parameters are optional, please follow the parameter descriptions when you want to pass an input.\
-		\n Start-date/End-date: The period that user is interested in. No 'xx' accept here, you must enter valid dates.\
-		 When no Start-date entered, it will be set to predefined date. The default Start-date is 2016-01-01T00:00:00. When End-date is empty, it will be set to current date time.\
-		\n		Format: YYYY-MM-DDTHH:MM:SS \
-		\n Key-terms: The keywords that user wants to search, case insensitive.\
-		\n		Format: Keyword1,Keyword2,..\
-		\n Location: A location that user is concerned about,case insensitive.\
-		\n		Format: You need to enter the complete word, for example:\
-		if enter 'sydn' nothing will return, you need to enter sydney.\
-		\n Start/Limit: These are for pagination. The default value for Start is 1, and for Limit is 100.\
+		\n * Start-date/End-date: \
+        \n\t\t - The period that user is interested in. <strong>Reports are available between 2016-2019</strong>.\
+        \n\t\t - No 'xx' accept in YYYY-MM-DD, you must enter valid dates matching the time range of existing reports.\
+		\n\t\t - When Start-date is empty, it will be set to default date. The default Start-date is 2016-01-01T00:00:00.\
+        \n\t\t - When End-date is empty, it will be set to current date time as default.\
+		\n\t\t<b><i>Input Format: YYYY-MM-DDTHH:MM:SS<i></b>\
+        \n * Key-terms: The keywords that user wants to search, case insensitive.\
+		\n\t\t<b><i>Input Format: Keyword1,Keyword2,..<i></b>\
+		\n * Location: A location that user is concerned about, case insensitive and whole word earch.\
+		\n\t\t<b><i>Input Format: Syndey<i></b>\
+		\n * Start: the number of the report to start query. The default value is 1\
+        \n * Limit: the numbers of report to return. The default value is 100.\
 		\n		Format: positive integer only.")
-	def get(self):
+    def get(self):
 
-		collection = db[REPORTS]
-		location_dictionary = db[LOCATION]
+        collection = db[REPORTS]
+        location_dictionary = db[LOCATION]
 
-		without_date = []
-		result = []
+        without_date = []
+        result = []
 
-		start_date = request.args.get('Start-date')
-		end_date = request.args.get('End-date')
-		key_terms = request.args.get('Key-terms')
-		location = request.args.get('Location')
+        start_date = request.args.get('Start-date')
+        end_date = request.args.get('End-date')
+        key_terms = request.args.get('Key-terms')
+        location = request.args.get('Location')
 
-		start = request.args.get('Start')
-		limit = request.args.get('Limit')
+        start = request.args.get('Start')
+        limit = request.args.get('Limit')
 
-		# pagination
-		if start is None:
-			start = 1
-		if limit is None:
-			limit = 100
+        # pagination
+        if start is None:
+            start = 1
+        if limit is None:
+            limit = 100
 
+        try:
+            start = int(start)-1
+        except ValueError:
+            return {'message': 'START must be positive an integer'}, 400
+        try:
+            limit = int(limit)
+        except ValueError:
+            return {'message': 'LIMIT must be positive an integer'}, 400
 
-		try: 
-			start = int(start)-1
-		except ValueError:
-			return { 'message': 'START must be positive an integer' }, 400
-		try: 
-			limit = int(limit)
-		except ValueError:
-			return { 'message': 'LIMIT must be positive an integer' }, 400
+        if start < 0:
+            return {'message': 'START must be positive an integer'}, 400
+        if limit <= 0:
+            return {'message': 'LIMIT must be positive an integer'}, 400
 
+        # check date formate && order
+        if start_date is None:
+            start_date = '2016-01-01T00:00:00'
+        if end_date is None:
+            end_date = datetime.now().isoformat()
+            format_search = re.search('^([^.]*)', end_date, re.IGNORECASE)
+            if format_search:
+                end_date = format_search.group(0)
 
-		if start < 0:
-			return { 'message': 'START must be positive an integer' }, 400
-		if limit <= 0:
-			return { 'message': 'LIMIT must be positive an integer' }, 400
+        dates = {
+            'START DATE': start_date.strip(),
+            'END DATE': end_date.strip()
+        }
 
-		# check date formate && order
-		if start_date is None:
-			start_date = '2016-01-01T00:00:00'
-		if end_date is None:
-			end_date = datetime.now().isoformat()
-			format_search = re.search('^([^.]*)', end_date, re.IGNORECASE)
-			if format_search:
-				end_date = format_search.group(0)
+        date_format = re.compile(
+            r'^(201[7-9])-((0[1-9]|1[012]))-((0[1-9]|[12][0-9]|3[01]))T([01]?[0-9]|2[0-3]|xx):([0-5][0-9]|xx):([0-5][0-9]|xx)$')
+        # make sure the format is right(both dates)
+        for k in list(dates.keys()):
+            if not date_format.match(dates[k]):
+                return {'message': '{} format is wrong, please try again'.format(k)}, 400
+            else:
+                date, time = dates[k].split('T')
+                time = time.replace('x', '0')
+                dates[k] = '{}T{}'.format(date, time)
+        # make sure the order of date
+        if not DT.is_before(dates['START DATE'], dates['END DATE']):
+            return {'message': 'START DATE must be before END DATE'}, 400
+            # check valid query && filter with key terms and location
 
-		start_date = start_date.strip()
-		end_date = end_date.strip()
+        search_string = '\''
+        if key_terms:
+            key_terms = key_terms.strip()
 
-		date_format = re.compile(r'^(\d{4})-(\d\d)-(\d\d)T(\d\d):(\d\d):(\d\d)$')
-		# make sure the format is right(both dates)
-		if not date_format.match(start_date):
-			return { 'message': 'START DATE format is wrong, please try again, no \'xx\' is accepted'}, 400
-		if not date_format.match(end_date):
-			return { 'message': 'END DATE format is wrong, please try again, no \'xx\' is accepted' }, 400
-		# make sure the order of date
-		if not DT.is_before(start_date, end_date):
-			return { 'message': 'START DATE must be before END DATE' }, 400
+            key_terms_list = re.compile(r' *, *').split(key_terms)
+            for key in key_terms_list:
+                search_string += '\"' + key + '\" '
 
-		# check valid query && filter with key terms and location
-		search_string = '\''
-		if key_terms:
-			key_terms = key_terms.strip()
+        if location:
+            location = location.strip()
+            # make sure location is more than a whole world
+            count = location_dictionary.count_documents({"$text": {"$search": location}})
+            if count <= 0:
+                return {'message': 'LOCATION name is invaild or no related reports in database, please enter a correct location name, or enter another location'}, 400
+            search_string += '\"' + location + '\" '
 
-			key_terms_list = re.compile(r' *, *').split(key_terms)
-			for key in key_terms_list:
-				search_string += '\"' + key + '\" '
+        search_string = search_string.strip() + '\''
 
-		if location:
-			location = location.strip()
-			#make sure location is more than a whole world
-			count = location_dictionary.count_documents({"$text": {"$search": location}})
-			if count <= 0:
-				return { 'message': 'LOCATION name is invaild or no related reports in database, please enter a correct location name, or enter another location' }, 400
-			search_string += '\"' + location + '\" '
+        if search_string == "''":
+            cursor = collection.find({}, {"_id": 0}).skip(start).limit(limit)
+        else:
+            cursor = collection.find({"$text": {"$search": search_string}}, {"_id": 0}).skip(start).limit(limit)
 
-		search_string = search_string.strip() + '\''
+        for entry in cursor:
+            without_date.append(entry)
 
-		if search_string == "''":
-			cursor = collection.find({},{ "_id": 0 }).skip(start).limit(limit)
-		else:
-			cursor = collection.find({"$text": {"$search": search_string}}, { "_id": 0 }).skip(start).limit(limit)
+        # implement date filter
+        # convert string to datetime
+        for entry in without_date:
+            # replace xx equal to start date element
+            pub_date = DT.align_date(entry['date_of_publication'], dates['START DATE'])
 
-		for entry in cursor:
-			without_date.append(entry)
-		
-		# implement date filter
-		# convert string to datetime
-		for entry in without_date:
-			# replace xx equal to start date element
-			pub_date = DT.align_date(entry['date_of_publication'], start_date)
+            # compare date
+            start_date_com = datetime.strptime(dates['START DATE'], '%Y-%m-%dT%H:%M:%S').isoformat()
+            end_date_com = datetime.strptime(dates['END DATE'], '%Y-%m-%dT%H:%M:%S').isoformat()
+            pub_date_com = datetime.strptime(pub_date, '%Y-%m-%dT%H:%M:%S').isoformat()
 
-			# compare date
-			start_date_com = datetime.strptime(start_date, '%Y-%m-%dT%H:%M:%S').isoformat()
-			end_date_com = datetime.strptime(end_date, '%Y-%m-%dT%H:%M:%S').isoformat()
-			pub_date_com = datetime.strptime(pub_date, '%Y-%m-%dT%H:%M:%S').isoformat()
+            if start_date_com <= pub_date_com and pub_date_com <= end_date_com:
+                result.append(entry)
 
-			if start_date_com <= pub_date_com and pub_date_com <= end_date_com:
-				result.append(entry)
-
-		return result, 200
-
+        return result, 200
 
 
 #######################################################################################################
-
 if __name__ == '__main__':
-	# This is used when running locally only. When deploying to Google App
-	# Engine, a webserver process such as Gunicorn will serve the app. This
-	# can be configured by adding an `entrypoint` to app.yaml.
-	logging.basicConfig(
-		filename='Api_log.log', 
-		filemode='w',
-		format='%(asctime)s - %(message)s', 
-		datefmt='%d-%b-%y %H:%M:%S',
-		level=logging.INFO)
-	logging.info('LET THE GAMES BEGIN! API STARTS')
-	logging.info('==========================================')
-	app.run(host='127.0.0.1', port=config.PORT, debug=True)
-	
+    # This is used when running locally only. When deploying to Google App
+    # Engine, a webserver process such as Gunicorn will serve the app. This
+    # can be configured by adding an `entrypoint` to app.yaml.
+    logging.basicConfig(
+        filename='Api_log.log',
+        filemode='w',
+        format='%(asctime)s - %(message)s',
+        datefmt='%d-%b-%y %H:%M:%S',
+        level=logging.INFO)
+    logging.info('LET THE GAMES BEGIN! API STARTS')
+    logging.info('==========================================')
+    app.run(host='127.0.0.1', port=config.PORT, debug=True)
+
 
 # [END gae_python37_app]
