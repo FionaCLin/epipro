@@ -297,9 +297,9 @@ class disease_reports_with_filter(Resource):
 		 When all parameters are empty, the endpoint will return all reports existed in the database.\
 		\n All the parameters are optional, please follow the parameter descriptions when you want to pass an input.\
 		\n * Start-date/End-date: \
-        \n\t\t - The period that user is interested in. <strong>Reports are available between 2016-2019</strong>.\
+        \n\t\t - The period that user is interested in. <strong>Reports are available between 2017-2019</strong>.\
         \n\t\t - No 'xx' accept in YYYY-MM-DD, you must enter valid dates matching the time range of existing reports.\
-		\n\t\t - When Start-date is empty, it will be set to default date. The default Start-date is 2016-01-01T00:00:00.\
+		\n\t\t - When Start-date is empty, it will be set to default date. The default Start-date is 2017-01-01T00:00:00.\
         \n\t\t - When End-date is empty, it will be set to current date time as default.\
 		\n\t\t<b><i>Input Format: YYYY-MM-DDTHH:MM:SS<i></b>\
         \n * Key-terms: The keywords that user wants to search, case insensitive.\
@@ -347,7 +347,7 @@ class disease_reports_with_filter(Resource):
 
         # check date formate && order
         if start_date is None:
-            start_date = '2016-01-01T00:00:00'
+            start_date = '2017-01-01T00:00:00'
         if end_date is None:
             end_date = datetime.now().isoformat()
             format_search = re.search('^([^.]*)', end_date, re.IGNORECASE)
@@ -360,7 +360,7 @@ class disease_reports_with_filter(Resource):
         }
         print(dates)
         date_format = re.compile(
-            r'^(201[6-9])-((0[1-9]|1[012]))-((0[1-9]|[12][0-9]|3[01]))T([01]?[0-9]|2[0-3]|xx):([0-5][0-9]|xx):([0-5][0-9]|xx)$')
+            r'^(201[7-9])-((0[1-9]|1[012]))-((0[1-9]|[12][0-9]|3[01]))T([01]?[0-9]|2[0-3]|xx):([0-5][0-9]|xx):([0-5][0-9]|xx)$')
         # make sure the format is right(both dates)
         for k in list(dates.keys()):
             if not date_format.match(dates[k]):
