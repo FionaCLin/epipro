@@ -6,6 +6,7 @@ import ArticleData from '../dummydata/example-article.json';
 import { BackendAPI } from '../API'
 
 let api = new BackendAPI();
+
 export default class ArticleList extends React.Component<IArticleListProps, IArticleListState> {
   constructor(props: IArticleListProps) {
     super(props);
@@ -22,15 +23,14 @@ export default class ArticleList extends React.Component<IArticleListProps, IArt
       } else if (error) {
         console.log('error message', error.message);
       }
-      let articleList = response;
-      console.log(articleList)
+
       this.setState({
-        articleList: articleList
+        articleList: response
       });
     });
   }
 
-  showList() {
+  showArticleList() {
     return this.state.articleList.map((articleData: any) => {
       return <ArticleCard {...articleData}/>
     });
@@ -41,7 +41,7 @@ export default class ArticleList extends React.Component<IArticleListProps, IArt
     return (
       <ListGroup variant="flush">
         <ListGroup.Item>
-        { this.showList()}
+          {this.showArticleList()}
         </ListGroup.Item>
 
       </ListGroup>

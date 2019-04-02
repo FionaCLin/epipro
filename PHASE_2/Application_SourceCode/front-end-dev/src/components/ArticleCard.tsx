@@ -2,17 +2,20 @@ import React from 'react';
 import '../css/Home.css';
 import { Link } from 'react-router-dom';
 import { Card } from 'react-bootstrap';
+import Report from './Report';
 
 export default class ArticleCard extends React.Component<IArticleCardProps, IArticleCardState> {
   constructor(props: IArticleCardProps) {
     super(props);
-    console.log("HERE");
   }
   
   render() {
     return (
       <div>
-        <Link to='/article' className='link'>
+        <Link to={{
+          pathname:'/article',
+          state: this.props
+        }}>
           <Card>
             <div className="Card-hover">
             <Card.Body>
@@ -37,6 +40,7 @@ interface IArticleCardProps {
   date_of_publication: string;
   headline: string;
   main_text: string;
+  reports: Array<Report>;
 }
 
 interface IArticleCardState {    
