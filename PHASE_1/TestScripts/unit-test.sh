@@ -11,20 +11,27 @@
 # the work around solution is to make a bash script to trigger 
 # the test in the API_SourceCode
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 if [[ $1  = 'list' ]];
 then
-  ls ./PHASE_1/API_SourceCode | grep -e '[tT]est'| sed 's/[tT]est_//' |  sed 's/.py//'
+  ls $DIR/../API_SourceCode | grep -e '[tT]est'| sed 's/[tT]est_//' |  sed 's/.py//'
 else
-
-  if [[ $@ ]];
-    test=$@
+  
+  if [[ $# == 0 ]];
   then
-    test=`ls ./PHASE_1/API_SourceCode | grep -e '[tT]est'| sed 's/.py//'`
-    echo $test
+    test=`ls $DIR/../API_SourceCode | grep -e '[tT]est'| sed 's/.py//'`
+  else
+    test=$@
   fi
+
   for i in $test;
-    do
+  do
+    if [[ -f $DIR/../API_SourceCode/$i.py ]];
+    then
       echo "************ test $i ************"
-      py.test ./PHASE_1/API_SourceCode/$i.py -p no:warnings
-    done
+      py.test $DIR/../API_SourceCode/$i.py -p no:warnings
+    else
+      echo $DIR/../API_SourceCode/$i.py is not found
+    fi
+  done
 fi
