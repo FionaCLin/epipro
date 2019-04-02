@@ -227,7 +227,7 @@ class key_terms(Resource):
         \n * <b>terms-type</b>: the type of each key-terms and only two types <i>general</i> or <i>specific</i> are available.\
 		\n\t\t - <i>general</i> is a wilder range keyword\
         \n\t\t - <i>specific</i> refers to a limited but detailed range. So the category can use to further filter this type of key-terms\
-        \n * <b>category</b> each key-term can be either <i>none</i> or <i>A Agents</i> 2 categories, additional category can create for extra data source fetching\
+        \n * <b>category</b> each key-term can be either <i>none</i> or <i>A Agents</i>, additional category can create for extra data source fetching\
 		\n both <i>general</i> and <i>specific</i> are case insensitive.")
     def get(self, term_type):
         term_type = term_type.lower()
@@ -294,21 +294,22 @@ class disease_reports_with_filter(Resource):
     @api.param('End-date', 'End date of period of interest, FORMAT: YYYY-MM-DDTHH:MM:SS')
     @api.param('Start-date', 'Start date of period of interest, FORMAT: YYYY-MM-DDTHH:MM:SS')
     @api.doc(description="This endpoint will return all the reports that satisfy user requirements. \
-		 When all parameters are empty, the endpoint will return all reports existed in the database.\
-		\n All the parameters are optional, please follow the parameter descriptions when you want to pass an input.\
-		\n * Start-date/End-date: \
+		 When all parameters are empty, the endpoint will return all reports existed within the database.\
+		\n All the parameters are optional, please follow the parameter descriptions when you want to pass any input.\
+		\n * <b>Start-date/End-date</b>: \
         \n\t\t - The period that user is interested in. <strong>Reports are available between 2017-2019</strong>.\
-        \n\t\t - No 'xx' accept in YYYY-MM-DD, you must enter valid dates matching the time range of existing reports.\
+        \n\t\t - No 'xx' values are accepted in YYYY-MM-DD format, you must enter valid dates matching the time range of the existing reports.\
 		\n\t\t - When Start-date is empty, it will be set to default date. The default Start-date is 2017-01-01T00:00:00.\
         \n\t\t - When End-date is empty, it will be set to current date time as default.\
-		\n\t\t<b><i>Input Format: YYYY-MM-DDTHH:MM:SS<i></b>\
-        \n * Key-terms: The keywords that user wants to search, case insensitive.\
-		\n\t\t<b><i>Input Format: Keyword1,Keyword2,..<i></b>\
-		\n * Location: A location that user is concerned about, case insensitive and whole word earch.\
-		\n\t\t<b><i>Input Format: Syndey<i></b>\
-		\n * Start: the number of the report to start query. The default value is 1\
-        \n * Limit: the numbers of report to return. The default value is 100.\
-		\n		Format: positive integer only.")
+		\n\t\t<i>Input Format: YYYY-MM-DDTHH:MM:SS</i>\
+        \n\n * <b>Key-terms</b>: The keywords that user wants to search. This is case insensitive.\
+		\n\t\t<i>Input Format: Keyword1,Keyword2,..</i>\
+		\n\n * <b>Location</b>: A location that user is concerned about. This is case insensitive and it is whole word search.\
+		\n\t\t<i>Input Format: Syndey</i>\
+		\n\n * <b>Start</b>: the number of the report to start the query from. The default value is 1\
+        \n\t\t<i>Input	Format: positive integer only.</i>\
+        \n\n * <b>Limit</b>: the numbers of report to return. The default value is 100.\
+		\n\t\t<i>Input	Format: positive integer only.</i>")
     def get(self):
 
         collection = db[REPORTS]
