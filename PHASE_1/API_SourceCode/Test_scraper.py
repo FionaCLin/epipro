@@ -11,6 +11,14 @@ import config
 #
 # run test:
 # python scraper_test.py
+client = MongoClient(config.MONGO_URI, config.PORT)
+db = client[config.MONGO_DB]
+collection = db['reports']
+test_list = [
+    'https://www.who.int/csr/don/06-june-2018-ebola-drc/en/',
+    'https://www.who.int/csr/don/29-march-2018-cholera-somalia/en/',
+    'https://www.who.int/csr/don/20-april-2018-lassa-fever-nigeria/en/'
+]
 
 '''
 1.
@@ -46,7 +54,7 @@ The ongoing cholera outbreak in Somalia started in December '
 '''
 
 
-def test_format(collection):
+def test_format():
     counter = 0
     for test in collection.find():
         # test format
@@ -58,7 +66,8 @@ def test_format(collection):
         assert True == isinstance(test['main_text'], str)
         assert True == isinstance(test['reports'], list)
         assert True == isinstance(test['reports'][0]['disease'], list)
-        assert True == isinstance(test['reports'][0]['syndrome'], str)
+        print(type(test['reports'][0]['syndrome']),test['reports'][0]['syndrome'])
+        assert True == isinstance(test['reports'][0]['syndrome'], list)
         assert True == isinstance(test['reports'][0]['reported_events'], list)
         assert True == isinstance(
             test['reports'][0]['reported_events'][0]['type'], str)
@@ -71,14 +80,14 @@ def test_format(collection):
         assert True == isinstance(
             test['reports'][0]['reported_events'][0]['location']['location'], str)
         assert True == isinstance(
-            test['reports'][0]['reported_events'][0]['number-affected'], str)
+            test['reports'][0]['reported_events'][0]['number-affected'], int)
         # print(test)
 
         counter = counter + 1
     print('Passed test scraper generated format')
 
 
-def test_data_extraction(collection):
+def test_data_extraction():
     counter = 0
     for url in test_list:
         test = collection.find({'url': url})
@@ -101,19 +110,11 @@ def test_data_extraction(collection):
 
 
 if __name__ == '__main__':
-    client = MongoClient(config.MONGO_URI, config.PORT)
-    db = client[config.MONGO_DB]
-    collection = db['reports']
-    test_list = [
-        'https://www.who.int/csr/don/06-june-2018-ebola-drc/en/',
-        'https://www.who.int/csr/don/29-march-2018-cholera-somalia/en/',
-        'https://www.who.int/csr/don/20-april-2018-lassa-fever-nigeria/en/'
-    ]
 
     print('## test scraper generated format')
-    test_format(collection)
+    test_format()
     print('## test scraper data extraction')
-    test_data_extraction(collection)
+    test_data_extraction()
 
     #self.collection_2.find({"$text": {"$search": words[0]}})
     # testing format
