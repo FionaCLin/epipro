@@ -1,0 +1,80 @@
+[{
+  "diseases": "",
+  "locations": "",
+  "start_date": "time",
+  "end_date": "time"
+},
+{
+  "frequency_graph": {
+    "diseases": "",
+    "locations": "",
+    "start_date": "time",
+    "end_date": "time",
+    "frequency": [
+      {
+        "date": "2017-02-25Txx:xx:xx",
+        "count": 1
+      },
+      {
+        "date": "2017-02-26Txx:xx:xx",
+        "count": 1
+      },
+      {
+        "date": "2018-02-25Txx:xx:xx",
+        "count": 1
+      },
+      {
+        "date": "2018-02-26Txx:xx:xx",
+        "count": 1
+      },
+      {
+        "date": "2018-02-27Txx:xx:xx",
+        "count": 1
+      },
+      {
+        "date": "2018-02-28Txx:xx:xx",
+        "count": 1
+      },
+      {
+        "date": "2018-03-27Txx:xx:xx",
+        "count": 1
+      },
+      {
+        "date": "2018-03-28Txx:xx:xx",
+        "count": 1
+      },
+      {
+        "date": "2018-04-27Txx:xx:xx",
+        "count": 1
+      },
+      {
+        "date": "2018-04-28Txx:xx:xx",
+        "count": 1
+      }, {
+        "date": "2019-04-27Txx:xx:xx",
+        "count": 1
+      },
+      {
+        "date": "2019-04-28Txx:xx:xx",
+        "count": 1
+      }
+    ]
+  },
+  "head_map": [
+    {
+      "locations": [
+        {
+          "location": "place",
+          "arcticle_count": 10
+        }
+      ],
+      "diseases": "something"
+    }
+  ],
+  "histogram": {
+    "infection": 10,
+    "dead": 10,
+    "recovered": 10,
+    "infection": 10
+  }
+}]
