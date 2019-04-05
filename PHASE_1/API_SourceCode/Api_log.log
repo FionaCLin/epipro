@@ -1,5 +1,57 @@
-01-Apr-19 14:56:16 - LET THE GAMES BEGIN! API STARTS
-01-Apr-19 14:56:16 - ==========================================
-01-Apr-19 14:56:16 -  * Debugger is active!
-01-Apr-19 14:56:16 -  * Debugger PIN: 279-870-163
-01-Apr-19 14:56:16 -  * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+01-Apr-19 15:31:39 - LET THE GAMES BEGIN! API STARTS
+01-Apr-19 15:31:39 - ==========================================
+01-Apr-19 15:31:39 -  * Debugger is active!
+01-Apr-19 15:31:40 -  * Debugger PIN: 116-551-130
+01-Apr-19 15:31:40 -  * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+01-Apr-19 15:34:08 - 127.0.0.1 - - [01/Apr/2019 15:34:08] "GET / HTTP/1.1" 200 -
+01-Apr-19 15:34:08 - 127.0.0.1 - - [01/Apr/2019 15:34:08] "GET /static/react/css/2.27b7e670.chunk.css HTTP/1.1" 200 -
+01-Apr-19 15:34:08 - 127.0.0.1 - - [01/Apr/2019 15:34:08] "GET /static/react/css/main.37944634.chunk.css HTTP/1.1" 200 -
+01-Apr-19 15:34:08 - 127.0.0.1 - - [01/Apr/2019 15:34:08] "GET /static/react/js/2.df1ed815.chunk.js HTTP/1.1" 200 -
+01-Apr-19 15:34:08 - 127.0.0.1 - - [01/Apr/2019 15:34:08] "GET /static/react/js/main.9fb0c39b.chunk.js HTTP/1.1" 200 -
+01-Apr-19 15:34:08 - 127.0.0.1 - - [01/Apr/2019 15:34:08] "GET /static/react/media/logo.bf63f469.png HTTP/1.1" 200 -
+01-Apr-19 15:34:08 - 127.0.0.1 - - [01/Apr/2019 15:34:08] "GET /static/react/media/bg.867ae83a.jpg HTTP/1.1" 200 -
+01-Apr-19 15:34:09 - 127.0.0.1 - - [01/Apr/2019 15:34:09] "GET /static/react/epipro.ico HTTP/1.1" 200 -
+01-Apr-19 15:34:09 - 127.0.0.1 - - [01/Apr/2019 15:34:09] "GET /static/react/manifest.json HTTP/1.1" 200 -
+01-Apr-19 15:36:40 - 127.0.0.1 - - [01/Apr/2019 15:36:40] "GET / HTTP/1.1" 200 -
+01-Apr-19 15:36:56 - 127.0.0.1 - - [01/Apr/2019 15:36:56] "GET /api/v1/doc HTTP/1.1" 301 -
+01-Apr-19 15:36:56 - 127.0.0.1 - - [01/Apr/2019 15:36:56] "GET /api/v1/doc/ HTTP/1.1" 200 -
+01-Apr-19 15:36:56 - 127.0.0.1 - - [01/Apr/2019 15:36:56] "GET /swaggerui/droid-sans.css HTTP/1.1" 200 -
+01-Apr-19 15:36:56 - 127.0.0.1 - - [01/Apr/2019 15:36:56] "GET /swaggerui/swagger-ui-standalone-preset.js HTTP/1.1" 200 -
+01-Apr-19 15:36:56 - 127.0.0.1 - - [01/Apr/2019 15:36:56] "GET /swaggerui/swagger-ui-bundle.js HTTP/1.1" 200 -
+01-Apr-19 15:36:56 - 127.0.0.1 - - [01/Apr/2019 15:36:56] "GET /swaggerui/swagger-ui.css HTTP/1.1" 200 -
+01-Apr-19 15:36:57 - 127.0.0.1 - - [01/Apr/2019 15:36:57] "GET /api/v1/swagger.json HTTP/1.1" 200 -
+01-Apr-19 15:36:57 - 127.0.0.1 - - [01/Apr/2019 15:36:57] "GET /swaggerui/favicon-32x32.png HTTP/1.1" 200 -
+01-Apr-19 15:37:14 - 127.0.0.1 - - [01/Apr/2019 15:37:14] "GET /api/v1/reports/filter?Start-date=2019-04-01T04%3A37%3A00.925Z&End-date=2019-04-01T04%3A37%3A00.925Z HTTP/1.1" 400 -
+01-Apr-19 15:37:30 - 127.0.0.1 - - [01/Apr/2019 15:37:30] "GET /api/v1/reports/filter?End-date=2019-04-01T04%3A37%3A00.925Z HTTP/1.1" 400 -
+01-Apr-19 15:38:31 - 127.0.0.1 - - [01/Apr/2019 15:38:31] "GET /api/v1/reports/filter?End-date=2019-04-01T04%3A37%3A00 HTTP/1.1" 200 -
+01-Apr-19 15:38:37 - 127.0.0.1 - - [01/Apr/2019 15:38:37] "GET /api/v1/reports/filter?End-date=2019-04-01T04%3A37%3A00.925Z HTTP/1.1" 400 -
+01-Apr-19 15:38:44 - 127.0.0.1 - - [01/Apr/2019 15:38:44] "GET /api/v1/reports/filter?Start-date=2019-04-01T04%3A37%3A00.925Z&End-date=2019-04-01T04%3A37%3A00.925Z HTTP/1.1" 400 -
+01-Apr-19 15:39:12 - 127.0.0.1 - - [01/Apr/2019 15:39:12] "GET /api/v1/reports/filter?Start-date=2019-04-01T04%3A37%3A00&End-date=2019-04-01T04%3A37%3A00 HTTP/1.1" 200 -
+01-Apr-19 15:39:20 - 127.0.0.1 - - [01/Apr/2019 15:39:20] "GET /api/v1/reports/filter?End-date=2019-04-01T04%3A37%3A00 HTTP/1.1" 200 -
+01-Apr-19 15:44:41 - 127.0.0.1 - - [01/Apr/2019 15:44:41] "GET /api/v1/reports/filter?Key-terms=inf HTTP/1.1" 200 -
+01-Apr-19 15:44:49 - 127.0.0.1 - - [01/Apr/2019 15:44:49] "GET /api/v1/reports/filter?Key-terms=infect HTTP/1.1" 200 -
+01-Apr-19 15:45:13 - 127.0.0.1 - - [01/Apr/2019 15:45:13] "GET /api/v1/reports/filter?Location=Saudi%20Arabia HTTP/1.1" 200 -
+01-Apr-19 15:50:37 - 127.0.0.1 - - [01/Apr/2019 15:50:37] "GET /api/v1/reports/filter?Start=1 HTTP/1.1" 200 -
+01-Apr-19 15:50:56 - 127.0.0.1 - - [01/Apr/2019 15:50:56] "GET /api/v1/reports/filter?Start=2 HTTP/1.1" 200 -
+01-Apr-19 15:51:05 - 127.0.0.1 - - [01/Apr/2019 15:51:05] "GET /api/v1/reports/filter?Start=2&Limit=1 HTTP/1.1" 200 -
+01-Apr-19 15:51:12 - 127.0.0.1 - - [01/Apr/2019 15:51:12] "GET /api/v1/reports/filter?Limit=1 HTTP/1.1" 200 -
+01-Apr-19 15:52:01 - 127.0.0.1 - - [01/Apr/2019 15:52:01] "GET /api/v1/reports/key-terms/general HTTP/1.1" 200 -
+01-Apr-19 15:52:17 - 127.0.0.1 - - [01/Apr/2019 15:52:17] "GET /api/v1/reports/key-terms/general?category=A%20agent HTTP/1.1" 400 -
+01-Apr-19 15:52:27 - 127.0.0.1 - - [01/Apr/2019 15:52:27] "GET /api/v1/reports/key-terms/specific?category=A%20agent HTTP/1.1" 200 -
+01-Apr-19 15:52:53 - 127.0.0.1 - - [01/Apr/2019 15:52:53] "GET /api/v1/reports/locations/all HTTP/1.1" 200 -
+01-Apr-19 15:54:54 - 127.0.0.1 - - [01/Apr/2019 15:54:54] "GET /api/v1/reports/locations/all HTTP/1.1" 200 -
+01-Apr-19 15:57:27 - 127.0.0.1 - - [01/Apr/2019 15:57:27] "GET /api/v1/reports/filter?Key-terms=operational HTTP/1.1" 200 -
+01-Apr-19 15:58:34 - 127.0.0.1 - - [01/Apr/2019 15:58:34] "GET /api/v1/reports/locations/australia HTTP/1.1" 200 -
+01-Apr-19 15:58:42 - 127.0.0.1 - - [01/Apr/2019 15:58:42] "GET /api/v1/reports/locations/india HTTP/1.1" 404 -
+01-Apr-19 15:58:51 - 127.0.0.1 - - [01/Apr/2019 15:58:51] "GET /api/v1/reports/locations/congo HTTP/1.1" 200 -
+01-Apr-19 15:59:26 - 127.0.0.1 - - [01/Apr/2019 15:59:26] "GET /api/v1/reports/locations/%C3%89quateur HTTP/1.1" 200 -
+01-Apr-19 16:01:11 - 127.0.0.1 - - [01/Apr/2019 16:01:11] "GET /api/v1/reports/filter?Location=Saudi%20Arabia HTTP/1.1" 200 -
+01-Apr-19 16:20:19 - 127.0.0.1 - - [01/Apr/2019 16:20:19] "GET /api/v1/doc/ HTTP/1.1" 200 -
+01-Apr-19 16:20:19 - 127.0.0.1 - - [01/Apr/2019 16:20:19] "GET /swaggerui/droid-sans.css HTTP/1.1" 200 -
+01-Apr-19 16:20:19 - 127.0.0.1 - - [01/Apr/2019 16:20:19] "GET /swaggerui/swagger-ui.css HTTP/1.1" 200 -
+01-Apr-19 16:20:19 - 127.0.0.1 - - [01/Apr/2019 16:20:19] "GET /swaggerui/swagger-ui-standalone-preset.js HTTP/1.1" 200 -
+01-Apr-19 16:20:19 - 127.0.0.1 - - [01/Apr/2019 16:20:19] "GET /swaggerui/swagger-ui-bundle.js HTTP/1.1" 200 -
+01-Apr-19 16:20:21 - 127.0.0.1 - - [01/Apr/2019 16:20:21] "GET /api/v1/swagger.json HTTP/1.1" 200 -
+01-Apr-19 16:20:40 - 127.0.0.1 - - [01/Apr/2019 16:20:40] "GET /api/v1/reports/filter?Start-date=2019-04-01T05%3A20%3A25.262Z&End-date=2019-04-01T05%3A20%3A25.262Z HTTP/1.1" 400 -
+01-Apr-19 16:20:48 - 127.0.0.1 - - [01/Apr/2019 16:20:48] "GET /api/v1/reports/filter?Start-date=2019-04-01T05%3A20%3A25.262Z HTTP/1.1" 400 -
+01-Apr-19 16:20:59 - 127.0.0.1 - - [01/Apr/2019 16:20:59] "GET /api/v1/reports/filter?End-date=2019-04-01T05%3A20%3A25.262Z HTTP/1.1" 400 -

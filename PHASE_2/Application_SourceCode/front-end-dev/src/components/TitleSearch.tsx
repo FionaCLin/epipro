@@ -6,7 +6,7 @@ export default class TitleSearch extends React.Component<ITitleSearchProps, ITit
   constructor(props: ITitleSearchProps) {
     super(props);
     this.state = {
-        title: ''
+        title: this.props.title
     }
   }
   
@@ -34,6 +34,7 @@ export default class TitleSearch extends React.Component<ITitleSearchProps, ITit
 }
 
 interface ITitleSearchProps {
+    title: string;
     updateTitle: (e: object) => void;
     onSearch: () => void;
 }

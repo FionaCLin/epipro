@@ -6,7 +6,7 @@ import TimeSearch from './TimeSearch';
 import ArticleList from './ArticleList';
 import LocationSearch from './LocationSearch';
 import KeytermSearch from './KeytermSearch';
-import { BackendAPI } from '../API';
+import { BackendAPI, IFilterOptions } from '../API';
 import { isNull } from 'util';
 
 let api = new BackendAPI();
@@ -19,24 +19,26 @@ export default class Search extends React.Component<ISearchProps, ISearchState> 
         if (isNull(sessionSearch)) {
             this.state = {
                 title: '',
-                keyterms: '',
-                locations: '',
-                startDate: '',
-                endDate: '',
+                keyterms: [],
+                locations: [],
+                startDate: null,
+                endDate: null,
                 advancedFilter: false,
                 articleList: undefined
-            }   
+            }
         } else {
-            this.state = JSON.parse(sessionSearch);
+            let sessionState = JSON.parse(sessionSearch);
+            sessionState.startDate = new Date(sessionState.startDate);
+            sessionState.endDate = new Date(sessionState.endDate);
+            this.state = sessionState;
         }
 
         this.handleChange = this.handleChange.bind(this);
         this.onSearch = this.onSearch.bind(this);
     }
 
-    onSearch() {
-        let apiFilterState: ISearchState = Object.assign({}, this.state);
-        if (this.state.title.length != 0) apiFilterState.keyterms += ',' + this.state.title;
+    private onSearch() {
+        let apiFilterState: IFilterOptions = this.createApiFilterState();
         
         this.setState({
             articleList: null
@@ -49,15 +51,32 @@ export default class Search extends React.Component<ISearchProps, ISearchState> 
             } else if (error) {
                 console.log('error message', error.message);
             }
-
-            console.log(response);
-
             this.setState({
                 articleList: response
             });
             sessionStorage.setItem('search', JSON.stringify(this.state));
-            console.log(sessionStorage.getItem('search'));
         });
+    }
+
+    private createApiFilterState() {
+        return ({
+            keyterms: this.stringifyKeyterms(),
+            locations: this.state.locations.join(','),
+            startDate: this.stringifyDates(this.state.startDate),
+            endDate: this.stringifyDates(this.state.endDate),
+        });
+    }
+
+    private stringifyDates(date: Date | null) {
+        return (!isNull(date) ? date.toISOString().slice(0, -5) : '');
+    }
+
+    private stringifyKeyterms() {
+        let keytermString: string = this.state.keyterms.join(',');
+        if (this.state.title.length != 0) {
+            keytermString += ','  + this.state.title;
+        }
+        return keytermString;
     }
 
     private handleChange(event: any) {
@@ -70,7 +89,7 @@ export default class Search extends React.Component<ISearchProps, ISearchState> 
             <div className="Main">
                 <h1>SEARCH</h1>
                 <div>
-                    <TitleSearch onSearch={this.onSearch} updateTitle={this.handleChange} />
+                    <TitleSearch title={this.state.title} onSearch={this.onSearch} updateTitle={this.handleChange} />
                 </div>
                 <Button
                     onClick={() => this.handleChange({advancedFilter: !this.state.advancedFilter})}
@@ -83,9 +102,9 @@ export default class Search extends React.Component<ISearchProps, ISearchState> 
                 </Button>
                 <Collapse in={this.state.advancedFilter}>
                     <div id="collapse-filters" className="Filter-panel">
-                        <KeytermSearch updateKeyterm={this.handleChange}/>
-                        <LocationSearch updateLocation={this.handleChange}/>
-                        <TimeSearch updateTime={this.handleChange}/>
+                        <KeytermSearch keyterms={this.state.keyterms} updateKeyterm={this.handleChange}/>
+                        <LocationSearch locations={this.state.locations} updateLocation={this.handleChange}/>
+                        <TimeSearch startDate={this.state.startDate} endDate={this.state.endDate} updateTime={this.handleChange}/>
                         <div className="Filter-button">
                             <Button onClick={this.onSearch}>Advanced Search</Button>
                         </div>
@@ -105,9 +124,9 @@ interface ISearchProps {
 interface ISearchState {
     advancedFilter: boolean;
     title: string;
-    keyterms: string;
-    locations: string;
-    startDate: string;
-    endDate: string;
+    keyterms: Array<string>;
+    locations: Array<string>;
+    startDate: Date | null;
+    endDate: Date | null;
     articleList: Array<any> | null | undefined;
 }

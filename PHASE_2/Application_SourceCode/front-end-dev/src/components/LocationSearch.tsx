@@ -11,7 +11,7 @@ export default class LocationSearch extends React.Component<ILocationSearchProps
     super(props);
 
     this.state = {
-      values: [],
+      values: this.props.locations,
       filterOptions: []
     }
   }
@@ -26,10 +26,7 @@ export default class LocationSearch extends React.Component<ILocationSearchProps
       }
       let filterOptions: Array<Object> = this.createFilterOptions(response);
 
-      this.setState({
-        values: [],
-        filterOptions
-      })
+      this.setState({filterOptions})
     });
   }
 
@@ -58,10 +55,10 @@ export default class LocationSearch extends React.Component<ILocationSearchProps
   }
 
   private handleChange(event: Array<any>) {
-    let values: Array<Number> = event.map(option => (option.label));
+    let values: Array<String> = event.map(option => (option.label));
     this.setState({ values });
     console.log({ values });
-    this.props.updateLocation({ locations: values.join(',') });
+    this.props.updateLocation({ locations: values });
   }
 
   render() {
@@ -75,6 +72,7 @@ export default class LocationSearch extends React.Component<ILocationSearchProps
           classNamePrefix="select"
           placeholder="Select location..."
           onChange={(e: any) => this.handleChange(e)}
+          value={this.state.values.map((value: String) => { return { label: value, value }})}
         />
       </div>
     );
@@ -83,9 +81,10 @@ export default class LocationSearch extends React.Component<ILocationSearchProps
 
 interface ILocationSearchProps {
   updateLocation: (event: object) => void;
+  locations: Array<string>;
 }
 
 interface ILocationSearchState {
-  values: Array<Object>;
+  values: Array<String>;
   filterOptions: Array<Object>
 }

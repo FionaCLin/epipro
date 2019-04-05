@@ -18,7 +18,7 @@ export default class KeytermSearch extends React.Component<IKeytermSearchProps, 
 
         this.state = {
             filterType: 0,
-            values: [],
+            values: this.props.keyterms,
             filterOptions: [],
             keyterms: []
         }
@@ -32,9 +32,9 @@ export default class KeytermSearch extends React.Component<IKeytermSearchProps, 
 
     private handleChange(event: Array<any>) {
         console.log(event);
-        let values: Array<String> = event.map(option => (option.value));
+        let values: Array<String> = event.map(option => (option.label));
         this.setState({ values });
-        this.props.updateKeyterm(({ keyterms: values.join(',') }));
+        this.props.updateKeyterm(({ keyterms: values }));
     }
 
     private addFilterOptions(filterType: any) {
@@ -86,6 +86,7 @@ export default class KeytermSearch extends React.Component<IKeytermSearchProps, 
                             classNamePrefix="select"
                             placeholder="Select keyterms..."
                             onChange={(e: any) => this.handleChange(e)}
+                            value={this.state.values.map((value: String) => { return { label: value, value }})}
                         />
                     </div>
                 </div>
@@ -95,6 +96,7 @@ export default class KeytermSearch extends React.Component<IKeytermSearchProps, 
 }
 
 interface IKeytermSearchProps {
+    keyterms: Array<String>;
     updateKeyterm: (event: object) => void;
 }
 
