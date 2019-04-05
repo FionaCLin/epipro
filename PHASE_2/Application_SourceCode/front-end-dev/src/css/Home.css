@@ -8,6 +8,15 @@
   pointer-events: none;
 }
 
+.loading {
+  height: 350px;
+  width: 350px;
+  pointer-events: none;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .App-header {
   min-height: 100vh;
   display: flex;
@@ -19,7 +28,7 @@
 }
 
 .Main {
-  margin: 50px 150px 50px 150px;
+  margin: 50px 250px 50px 250px;
 }
 
 .Filter-element{
@@ -57,7 +66,7 @@
 
 
 .ArticleList-division {
-  margin-top: 75px;
+  margin-top: 25px;
 }
 
 .ReportList-division {

@@ -11,7 +11,7 @@ export default class ArticleCard extends React.Component<IArticleCardProps, IArt
 
   trimText(main_text: string) {
     let cutCount: number = main_text.length;
-    const minCut: number = 200;
+    const minCut: number = 500;
 
     if (cutCount > minCut) {
       cutCount = minCut;
@@ -29,7 +29,7 @@ export default class ArticleCard extends React.Component<IArticleCardProps, IArt
         <Link to={{
           pathname:'/article',
           state: this.props
-        }}>
+        }} className="link">
           <Card>
             <div className="Card-hover">
             <Card.Body>

@@ -7,27 +7,42 @@ import ArticleList from './ArticleList';
 import LocationSearch from './LocationSearch';
 import KeytermSearch from './KeytermSearch';
 import { BackendAPI } from '../API';
+import { isNull } from 'util';
 
 let api = new BackendAPI();
 
 export default class Search extends React.Component<ISearchProps, ISearchState> {
     constructor(props: ISearchProps) {
         super(props);
-        this.state = {
-            title: '',
-            keyterms: '',
-            locations: '',
-            startDate: '',
-            endDate: '',
-            advancedFilter: false,
-            articleList: null
+
+        let sessionSearch = sessionStorage.getItem('search');
+        if (isNull(sessionSearch)) {
+            this.state = {
+                title: '',
+                keyterms: '',
+                locations: '',
+                startDate: '',
+                endDate: '',
+                advancedFilter: false,
+                articleList: undefined
+            }   
+        } else {
+            this.state = JSON.parse(sessionSearch);
         }
+
         this.handleChange = this.handleChange.bind(this);
         this.onSearch = this.onSearch.bind(this);
     }
 
     onSearch() {
-        api.getFilteredReports(this.state, (error: any, response: any) => {
+        let apiFilterState: ISearchState = Object.assign({}, this.state);
+        if (this.state.title.length != 0) apiFilterState.keyterms += ',' + this.state.title;
+        
+        this.setState({
+            articleList: null
+        })
+
+        api.getFilteredReports(apiFilterState, (error: any, response: any) => {
             if (error && error.response) {
                 let message = error.response.data.message
                 console.log('error message', message);
@@ -40,6 +55,8 @@ export default class Search extends React.Component<ISearchProps, ISearchState> 
             this.setState({
                 articleList: response
             });
+            sessionStorage.setItem('search', JSON.stringify(this.state));
+            console.log(sessionStorage.getItem('search'));
         });
     }
 
@@ -53,7 +70,7 @@ export default class Search extends React.Component<ISearchProps, ISearchState> 
             <div className="Main">
                 <h1>SEARCH</h1>
                 <div>
-                    <TitleSearch updateTitle={this.handleChange} />
+                    <TitleSearch onSearch={this.onSearch} updateTitle={this.handleChange} />
                 </div>
                 <Button
                     onClick={() => this.handleChange({advancedFilter: !this.state.advancedFilter})}
@@ -92,5 +109,5 @@ interface ISearchState {
     locations: string;
     startDate: string;
     endDate: string;
-    articleList: Array<any> | null;
+    articleList: Array<any> | null | undefined;
 }

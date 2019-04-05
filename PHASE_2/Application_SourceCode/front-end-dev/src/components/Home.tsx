@@ -19,6 +19,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
     this.state={
       api_doc_url: ''
     }
+    sessionStorage.clear();
     console.log(this.state,'constructor')
   }
 
