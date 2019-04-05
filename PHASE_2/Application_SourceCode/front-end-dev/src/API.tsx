@@ -1,11 +1,10 @@
 import axios, { AxiosError, AxiosResponse } from 'axios'
 
-interface IFilterOptions {
+export interface IFilterOptions {
     keyterms: string;
     locations: string;
-    start_date: string;
-    end_date: string;
-    
+    startDate: string;
+    endDate: string;
 }
 
 export class BackendAPI {
@@ -60,7 +59,7 @@ export class BackendAPI {
       });
   }
 
-  getFiltedReports(filter: IFilterOptions, cb:(err: any, res: any) => any) {
+  getFilteredReports(filter: IFilterOptions, cb:(err: any, res: any) => any) {
     let q :string[] = [];
     if (filter.locations) {
       q.push(`Location=${filter.locations}`)
@@ -68,19 +67,18 @@ export class BackendAPI {
     if (filter.keyterms) {
       q.push(`Key-terms=${filter.keyterms}`)
     }
-    if (filter.start_date) {
-      q.push(`Start-date=${filter.start_date}`)
+    if (filter.startDate) {
+      q.push(`Start-date=${filter.startDate}`)
     }
-    if(filter.end_date){
-      q.push(`End-date=${filter.start_date}`)
+    if(filter.endDate){
+      q.push(`End-date=${filter.endDate}`)
     }
     let url = '';
-    if (q.length>1) {
-      url = `${this.baseURL}api/v1/reports/filter?${q[0]}`
-    } else {
-      let query = q.join('&')
-      url = `${this.baseURL}api/v1/reports/filter?${query}`
-    }
+
+    let query = q.join('&')
+    url = `${this.baseURL}api/v1/reports/filter?${query}`
+
+    console.log(url);
  
     axios.get(url)
       .then((response: AxiosResponse) => {

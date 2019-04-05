@@ -17,8 +17,6 @@ export default class LocationSearch extends React.Component<ILocationSearchProps
   }
 
   componentWillMount() {
-    // Fetch Data
-
     api.getLocations((error: any, response: any) => {
       if (error && error.response) {
         let message = error.response.data.message
@@ -26,22 +24,44 @@ export default class LocationSearch extends React.Component<ILocationSearchProps
       } else if (error) {
         console.log('error message', error.message);
       }
-      let Locations = response;
-      let filterOptions: Array<Object> = Locations.map((location: any, index: number) => ({
-        label: `City: ${location.city}, State: ${location.state}, Country: ${location.country}`,
-        value: index
-      }));
+      let filterOptions: Array<Object> = this.createFilterOptions(response);
+
       this.setState({
         values: [],
         filterOptions
       })
     });
   }
+
+  createFilterOptions(locations: Array<any>) {
+    let filteredLocations: Array<string> = [];
+
+    filteredLocations = locations.map((location: any) => this.createLocationLabel(location));
+    filteredLocations = filteredLocations.filter(function(elem, index, self) {
+      return index === self.indexOf(elem);
+    });
+
+    return filteredLocations.map((location: string, index: number) => ({
+      label: location,
+      value: index
+    }));
+  }
+
+  createLocationLabel(location: any) {
+    let locationLabel: string = '';
+    
+    if (location.city.length != 0) locationLabel = locationLabel.concat(location.city, ", ");
+    if (location.state.length != 0) locationLabel = locationLabel.concat(location.state, ", ");
+    if (location.country.length != 0) locationLabel = locationLabel.concat(location.country);
+  
+    return locationLabel;
+  }
+
   private handleChange(event: Array<any>) {
-    let values: Array<Number> = event.map(option => (option.value));
+    let values: Array<Number> = event.map(option => (option.label));
     this.setState({ values });
     console.log({ values });
-    this.props.updateLocation({ locations: values });
+    this.props.updateLocation({ locations: values.join(',') });
   }
 
   render() {
@@ -66,6 +86,6 @@ interface ILocationSearchProps {
 }
 
 interface ILocationSearchState {
-  values: Array<Number>;
+  values: Array<Object>;
   filterOptions: Array<Object>
 }

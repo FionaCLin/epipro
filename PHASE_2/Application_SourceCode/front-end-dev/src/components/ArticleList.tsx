@@ -2,42 +2,21 @@ import React from 'react';
 import '../css/Home.css';
 import { ListGroup } from 'react-bootstrap';
 import ArticleCard from './ArticleCard';
-import ArticleData from '../dummydata/example-article.json';
-import { BackendAPI } from '../API'
-
-let api = new BackendAPI();
+import { isNullOrUndefined } from 'util';
 
 export default class ArticleList extends React.Component<IArticleListProps, IArticleListState> {
   constructor(props: IArticleListProps) {
     super(props);
-    this.state = {
-      articleList: []
-    }
-  }
-  
-  componentWillMount() {
-    api.getAllReports((error: any, response: any) => {
-      if (error && error.response) {
-        let message = error.response.data.message
-        console.log('error message', message);
-      } else if (error) {
-        console.log('error message', error.message);
-      }
-
-      this.setState({
-        articleList: response
-      });
-    });
   }
 
   showArticleList() {
-    return this.state.articleList.map((articleData: any) => {
+    if (!isNullOrUndefined(this.props.articleList))
+    return this.props.articleList.map((articleData: any) => {
       return <ArticleCard {...articleData}/>
     });
   }
 
   render() {
-    console.log(this.state);
     return (
       <ListGroup variant="flush">
         <ListGroup.Item>
@@ -50,8 +29,8 @@ export default class ArticleList extends React.Component<IArticleListProps, IArt
 }
 
 interface IArticleListProps {
+  articleList: Array<any> | null;
 }
 
 interface IArticleListState {
-  articleList: Array<any>;
 }

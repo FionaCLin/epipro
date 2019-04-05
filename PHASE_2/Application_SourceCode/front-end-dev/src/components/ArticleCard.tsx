@@ -8,6 +8,20 @@ export default class ArticleCard extends React.Component<IArticleCardProps, IArt
   constructor(props: IArticleCardProps) {
     super(props);
   }
+
+  trimText(main_text: string) {
+    let cutCount: number = main_text.length;
+    const minCut: number = 200;
+
+    if (cutCount > minCut) {
+      cutCount = minCut;
+      while (cutCount < main_text.length && main_text.charAt(cutCount) != ' ') {
+        cutCount++;
+      }
+    }
+
+    return main_text.substring(0, cutCount);
+  }
   
   render() {
     return (
@@ -25,7 +39,7 @@ export default class ArticleCard extends React.Component<IArticleCardProps, IArt
                   { this.props.url } • { this.props.date_of_publication }
                 </i>
               </Card.Subtitle>
-              <Card.Text>{ this.props.main_text }</Card.Text>
+              <Card.Text>{ this.trimText(this.props.main_text) }...</Card.Text>
               </Card.Body>
               </div>
           </Card>
