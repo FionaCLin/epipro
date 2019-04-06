@@ -7,7 +7,8 @@ import ArticleList from './ArticleList';
 import LocationSearch from './LocationSearch';
 import KeytermSearch from './KeytermSearch';
 import { BackendAPI, IFilterOptions } from '../API';
-import { isNull } from 'util';
+import { isNull, isNullOrUndefined } from 'util';
+import PaginateSearch from './PaginateSearch';
 
 let api = new BackendAPI();
 
@@ -24,12 +25,15 @@ export default class Search extends React.Component<ISearchProps, ISearchState> 
                 startDate: null,
                 endDate: null,
                 advancedFilter: false,
-                articleList: undefined
+                articleList: undefined,
+                currentPage: 1,
+                showCount: 10,
+                articleCount: 0
             }
         } else {
             let sessionState = JSON.parse(sessionSearch);
-            sessionState.startDate = new Date(sessionState.startDate);
-            sessionState.endDate = new Date(sessionState.endDate);
+            sessionState.startDate = this.parseDates(sessionState.startDate);
+            sessionState.endDate = this.parseDates(sessionState.endDate);
             this.state = sessionState;
         }
 
@@ -37,11 +41,16 @@ export default class Search extends React.Component<ISearchProps, ISearchState> 
         this.onSearch = this.onSearch.bind(this);
     }
 
+    private parseDates(date: string | null) {
+        return (!isNull(date) ? new Date(date) : date);
+    }
+
     private onSearch() {
         let apiFilterState: IFilterOptions = this.createApiFilterState();
         
         this.setState({
-            articleList: null
+            articleList: null,
+            articleCount: null
         })
 
         api.getFilteredReports(apiFilterState, (error: any, response: any) => {
@@ -52,8 +61,11 @@ export default class Search extends React.Component<ISearchProps, ISearchState> 
                 console.log('error message', error.message);
             }
             this.setState({
-                articleList: response
+                articleList: response,
+                articleCount: (!isNullOrUndefined(response)) ? response.length : 0,
+                currentPage: 1
             });
+            console.log(response.length);
             sessionStorage.setItem('search', JSON.stringify(this.state));
         });
     }
@@ -84,6 +96,16 @@ export default class Search extends React.Component<ISearchProps, ISearchState> 
         console.log(event);
     }
 
+    private paginateArticleList() {
+        if (!isNullOrUndefined(this.state.articleList)) {
+            let end: number = this.state.currentPage * this.state.showCount;
+            let start: number = end - this.state.showCount;
+            return this.state.articleList.slice(start, end);
+        } else {
+            return this.state.articleList;
+        }
+    }
+
     render() {
         return (
             <div className="Main">
@@ -111,7 +133,13 @@ export default class Search extends React.Component<ISearchProps, ISearchState> 
                     </div>
                 </Collapse>
                 <div className='ArticleList-division' />
-                <ArticleList articleList={this.state.articleList}/>
+                <ArticleList articleList={this.paginateArticleList()}/>
+                <PaginateSearch
+                    articleCount={this.state.articleCount}
+                    currentPage={this.state.currentPage}
+                    showCount={this.state.showCount}
+                    updatePaginate={this.handleChange}
+                />
             </div>
         );
     }
@@ -129,4 +157,7 @@ interface ISearchState {
     startDate: Date | null;
     endDate: Date | null;
     articleList: Array<any> | null | undefined;
+    currentPage: number;
+    showCount: number;
+    articleCount: number | null;
 }

@@ -6,7 +6,6 @@ import { isNull } from 'util';
 export default class TimeSearch extends React.Component<ITimeSearchProps, ITimeSearchState> {
   constructor(props: ITimeSearchProps) {
     super(props);
-    console.log(this.props);
     this.state = {
       startDate: this.props.startDate,
       endDate: this.props.endDate,

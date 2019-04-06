@@ -73,6 +73,7 @@ export class BackendAPI {
     if(filter.endDate){
       q.push(`End-date=${filter.endDate}`)
     }
+    q.push(`Limit=300`);
     let url = '';
 
     let query = q.join('&')
