@@ -12,6 +12,7 @@
     "@types/react-router-dom": "^4.3.1",
     "@types/react-scrollable-anchor": "^0.6.0",
     "@types/react-select": "^2.0.15",
+    "@types/recharts": "^1.1.16",
     "animated-scroll-to": "^1.2.2",
     "axios": "^0.18.0",
     "bootstrap": "^4.3.1",
@@ -23,6 +24,7 @@
     "react-router-dom": "^5.0.0",
     "react-scripts": "2.1.8",
     "react-select": "^2.4.2",
+    "recharts": "^1.5.0",
     "typescript": "^3.3.4000"
   },
   "scripts": {

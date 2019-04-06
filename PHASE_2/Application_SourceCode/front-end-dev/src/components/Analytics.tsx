@@ -7,9 +7,11 @@ import DiseaseSearch from './DiseaseSearch';
 import GoogleAPI, { IFilterOptions } from '../Google';
 import { isNull } from 'util';
 import GoogleMapReact from 'google-map-react';
+import {LineChart} from 'recharts';
 
 let newsAPI = new GoogleAPI();
 let mapsAPIkey = 'AIzaSyAWAexUwY_tKggKe5GoqUmdCLV3h8si3Co';
+//http://recharts.org/en-US/examples
 
 export default class Analytics extends React.Component<IAnalyticsProps, IAnalyticsState> {
   constructor(props: IAnalyticsProps) {
