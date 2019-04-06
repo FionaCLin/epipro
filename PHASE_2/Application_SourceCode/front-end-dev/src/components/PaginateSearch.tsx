@@ -2,6 +2,7 @@ import React from 'react';
 import '../css/Home.css';
 import { Pagination } from 'react-bootstrap';
 import { isNull } from 'util';
+import animateScrollTo from 'animated-scroll-to';
 
 const pageDisplayLimit: number = 5;
 const pageMargin: number = Math.floor(pageDisplayLimit/2);
@@ -9,9 +10,6 @@ const pageMargin: number = Math.floor(pageDisplayLimit/2);
 export default class PaginateSearch extends React.Component<IPaginateSearchProps, IPaginateSearchState> {
     constructor(props: IPaginateSearchProps) {
         super(props);
-        this.state = {
-            currentPage: this.props.currentPage
-        }
     }
 
     calculateTotalPages() {
@@ -50,12 +48,9 @@ export default class PaginateSearch extends React.Component<IPaginateSearchProps
 
     private changePage(newPage: number) {
         if (newPage != this.props.currentPage) {
-            this.setState({
-                currentPage: newPage
-            });
-
+            this.props.updatePaginate({currentPage: newPage});
+            animateScrollTo(0);
         }
-        this.props.updatePaginate({currentPage: newPage});
     }
 
     private showPagination() {
@@ -95,4 +90,5 @@ interface IPaginateSearchProps {
 }
 
 interface IPaginateSearchState {
+
 }
