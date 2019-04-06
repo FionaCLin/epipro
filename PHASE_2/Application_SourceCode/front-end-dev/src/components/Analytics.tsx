@@ -1,0 +1,85 @@
+import React from 'react';
+import '../css/Home.css';
+import TimeSearch from './TimeSearch';
+import LocationSearch from './LocationSearch';
+import { Button } from 'react-bootstrap';
+import DiseaseSearch from './DiseaseSearch';
+import GoogleAPI, { IFilterOptions } from '../Google';
+import { isNull } from 'util';
+
+let googleAPI = new GoogleAPI();
+
+export default class Analytics extends React.Component<IAnalyticsProps, IAnalyticsState> {
+  constructor(props: IAnalyticsProps) {
+    super(props);
+    this.state = {
+        disease: '',
+        locations: [],
+        startDate: null,
+        endDate: null,
+
+    };
+
+    this.handleChange = this.handleChange.bind(this);
+    this.onAnalyze = this.onAnalyze.bind(this);
+  }
+
+  private handleChange(event: any) {
+      this.setState(event);
+  }
+
+  private onAnalyze() {
+    let apiFilterState: IFilterOptions = this.createApiFilterState();
+    googleAPI.getFilteredMedia(apiFilterState, (error: any, response: any) => {
+        if (error && error.response) {
+            let message = error.response.data.message
+            console.log('error message', message);
+        } else if (error) {
+            console.log('error message', error.message);
+        }
+        console.log(response);
+        //this.setState({});
+    });
+  }
+
+    private createApiFilterState() {
+        let apiFilterState: IFilterOptions = {
+            disease: this.state.disease,
+            location: this.state.locations[0],
+            startDate: this.stringifyDates(this.state.startDate),
+            endDate: this.stringifyDates(this.state.endDate),
+        };
+        console.log(apiFilterState);
+        return apiFilterState;
+    }
+
+    private stringifyDates(date: Date | null) {
+        return (!isNull(date) ? date.toISOString().slice(0, -5) : '');
+    }
+
+  render() {
+    return (
+        <div className="Main">
+            <h1>ANALYZE</h1>
+            <div id="collapse-filters" className="Filter-panel">
+                <DiseaseSearch disease={this.state.disease} updateDisease={this.handleChange}/>
+                <LocationSearch locations={this.state.locations} updateLocation={this.handleChange}/>
+                <TimeSearch startDate={this.state.startDate} endDate={this.state.endDate} updateTime={this.handleChange}/>
+                <div className="Filter-button">
+                    <Button onClick={this.onAnalyze}>Create Analytics</Button>
+                </div>
+            </div>  
+        </div>
+    );
+  }
+}
+
+interface IAnalyticsProps {
+}
+
+interface IAnalyticsState {
+    disease: string;
+    locations: Array<string>;
+    startDate: Date | null;
+    endDate: Date | null;
+}

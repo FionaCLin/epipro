@@ -52,6 +52,7 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
             <p>Predict. Prevent. Protect.</p>
             <a href={this.state.api_doc_url}>EpiPro API Documentation</a>
             <Link to='/search'>Search</Link>
+            <Link to='/analyze'>Analyze</Link>
           </header>
         </div>
       </div>
