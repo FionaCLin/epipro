@@ -8,22 +8,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
+
 <body>
-    <button style="float:right;" onclick="myFunction()"><i class="fa fa-refresh" style="font-size:24px">Refresh Log File</i></button>
+    <button style="float:right;" onclick="myFunction()"><i class="fa fa-refresh" style="font-size:24px">Refresh Log
+            File</i></button>
     <h1>EpiProApp live log file</h1>
     <div class="log">
-        {% for i in content %}
-        <p>
-            {{i}}
-        </p>
-        {% endfor %}
+        <p></p>
     </div>
 </body>
 <script>
-    function myFunction() {
-        location.reload();
-    }
-    setInterval(function () {
+
+    function fetch() {
         console.log("Hello");
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
@@ -38,7 +34,16 @@
         };
         xhttp.open("GET", "http://localhost:8080/api/v1/api_log?content=True", true);
         xhttp.send();
-    }, 60*1000);
+    }
+
+    fetch()
+    setInterval(function () {
+        fetch()
+    }, 60 * 1000);
+    function myFunction() {
+        location.reload();
+        fetch()
+    }
 </script>
 
 </html>

@@ -175,11 +175,10 @@ def log_file():
     # List all projects you have access to
     content = list([])
     for entry in client.list_entries(projects=PROJECT_IDS, filter_=FILTER):  # API call(s)
-        # print('*'*50)
         content.append(json.dumps(entry.payload_json))
 
     if isContent == None:
-        return render_template("log.html", content=content)
+        return render_template("log.html")
     else:
         content = '\n'.join(content)
     return content
