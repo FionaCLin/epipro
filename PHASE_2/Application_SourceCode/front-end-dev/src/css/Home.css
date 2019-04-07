@@ -8,6 +8,13 @@
   pointer-events: none;
 }
 
+.Frequency-chart {
+  text-align: center;
+  float: left;
+  height: 450px;
+  width: 50%;
+}
+
 .loading {
   height: 350px;
   width: 350px;
