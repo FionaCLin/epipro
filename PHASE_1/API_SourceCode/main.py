@@ -13,9 +13,9 @@
 # limitations under the License.
 
 #### DON'T KNOW WHAT THIS FOR #####
-# from lib import *
-# [START gae_python37_app]
+from lib import *
 
+# [START gae_python37_app]
 from flask import Flask, Blueprint
 from flask import Flask, url_for, redirect, render_template
 from flask_restplus import Resource, Api
@@ -24,34 +24,39 @@ from flask_cors import CORS
 from flask_restplus import fields
 from flask_restplus import inputs
 from flask_restplus import reqparse
-import logging
+# import logging
 import config
 import pymongo
 from pymongo import MongoClient
 import enum
 import re
-from datetime import datetime, time
+import sys
+import json as json
+import os
+from google.cloud import logging
+from datetime import timedelta, date, datetime, time
 import date_tool as DT
 
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app
 # called `app` in `main.py`.
 app = Flask(__name__)
- # This is used when running locally only. When deploying to Google App
-# Engine, a webserver process such as Gunicorn will serve the app. This
-# can be configured by adding an `entrypoint` to app.yaml.
-logging.basicConfig(
-    filemode='w',
-    format='%(asctime)s - %(message)s',
-    datefmt='%d-%b-%y %H:%M:%S',
-    level=logging.INFO)
-logging.info('LET THE GAMES BEGIN! API STARTS')
-logging.info('==========================================')
-logger = logging.getLogger('werkzeug')
-handler = logging.FileHandler('Api_log.log')
-logger.addHandler(handler)
-# Also add the handler to Flask's logger for cases
-#  where Werkzeug isn't used as the underlying WSGI server.
-app.logger.addHandler(handler)
+
+#  # This is used when running locally only. When deploying to Google App
+# # Engine, a webserver process such as Gunicorn will serve the app. This
+# # can be configured by adding an `entrypoint` to app.yaml.
+# logging.basicConfig(
+#     filemode='w',
+#     format='%(asctime)s - %(message)s',
+#     datefmt='%d-%b-%y %H:%M:%S',
+#     level=logging.INFO)
+# logging.info('LET THE GAMES BEGIN! API STARTS')
+# logging.info('==========================================')
+# logger = logging.getLogger('werkzeug')
+# handler = logging.FileHandler('./log/Api_log.log')
+# logger.addHandler(handler)
+# # Also add the handler to Flask's logger for cases
+# #  where Werkzeug isn't used as the underlying WSGI server.
+# app.logger.addHandler(handler)
 
 blueprint = Blueprint('api', __name__, url_prefix='/api/v1')
 app.config['RESTPLUS_MASK_SWAGGER'] = False
@@ -158,14 +163,26 @@ def doc_url():
 
 @app.route('/api/v1/api_log')
 def log_file():
-    f = open('./Api_log.log', 'r')
     isContent = request.args.get('content')
+    t1 = datetime.today().isoformat(timespec='milliseconds')
+    t0 = (datetime.today() - timedelta(hours=1)).isoformat(timespec='milliseconds')
+    PROJECT_IDS = ["epiproapp"]
+    FILTER = \
+        "resource.type=\"gae_app\"\nresource.labels.module_id=\"default\"\nresource.labels.version_id=\"production\"\nlogName=\"projects/epiproapp/logs/appengine.googleapis.com%2Frequest_log\"\n\n (timestamp<\"{}Z\" OR (timestamp=\"{}Z\" insertId<\"5ca9ddaf0003ac4a395f805f\")) timestamp<\"{}Z\" timestamp<=\"{}Z\"".format(
+            t1, t0, t1, t0)
+
+    client = logging.Client.from_service_account_json('./EpiProApp-log.json')
+    # List all projects you have access to
+    content = list([])
+    for entry in client.list_entries(projects=PROJECT_IDS, filter_=FILTER):  # API call(s)
+        # print('*'*50)
+        content.append(json.dumps(entry.payload_json))
+
     if isContent == None:
-        content = reversed(f.readlines())
         return render_template("log.html", content=content)
     else:
-        content = f.read()
-        return content
+        content = '\n'.join(content)
+    return content
 
 ######################
 ##      CLOSED      ##
@@ -219,7 +236,8 @@ class locations_with_area(Resource):
     def get(self, area):
         collection = db[LOCATION]
         search_string = "\'" + area + "\'"
-        cursor = collection.find({"$text": {"$search": search_string}}, {"_id": 0})
+        cursor = collection.find(
+            {"$text": {"$search": search_string}}, {"_id": 0})
         result = []
 
         for entry in cursor:
@@ -414,7 +432,8 @@ class disease_reports_with_filter(Resource):
         if location:
             location = location.strip()
             # make sure location is more than a whole world
-            count = location_dictionary.count_documents({"$text": {"$search": location}})
+            count = location_dictionary.count_documents(
+                {"$text": {"$search": location}})
             if count <= 0:
                 return {'message': 'LOCATION name is invaild or no related reports in database, please enter a correct location name, or enter another location'}, 400
             search_string += '\"' + location + '\" '
@@ -424,7 +443,8 @@ class disease_reports_with_filter(Resource):
         if search_string == "''":
             cursor = collection.find({}, {"_id": 0}).skip(start).limit(limit)
         else:
-            cursor = collection.find({"$text": {"$search": search_string}}, {"_id": 0}).skip(start).limit(limit)
+            cursor = collection.find({"$text": {"$search": search_string}}, {
+                                     "_id": 0}).skip(start).limit(limit)
 
         for entry in cursor:
             without_date.append(entry)
@@ -433,12 +453,16 @@ class disease_reports_with_filter(Resource):
         # convert string to datetime
         for entry in without_date:
             # replace xx equal to start date element
-            pub_date = DT.align_date(entry['date_of_publication'], dates['START DATE'])
+            pub_date = DT.align_date(
+                entry['date_of_publication'], dates['START DATE'])
 
             # compare date
-            start_date_com = datetime.strptime(dates['START DATE'], '%Y-%m-%dT%H:%M:%S').isoformat()
-            end_date_com = datetime.strptime(dates['END DATE'], '%Y-%m-%dT%H:%M:%S').isoformat()
-            pub_date_com = datetime.strptime(pub_date, '%Y-%m-%dT%H:%M:%S').isoformat()
+            start_date_com = datetime.strptime(
+                dates['START DATE'], '%Y-%m-%dT%H:%M:%S').isoformat()
+            end_date_com = datetime.strptime(
+                dates['END DATE'], '%Y-%m-%dT%H:%M:%S').isoformat()
+            pub_date_com = datetime.strptime(
+                pub_date, '%Y-%m-%dT%H:%M:%S').isoformat()
 
             if start_date_com <= pub_date_com and pub_date_com <= end_date_com:
                 result.append(entry)
