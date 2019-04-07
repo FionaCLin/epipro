@@ -19,7 +19,7 @@
 from flask import Flask, Blueprint
 from flask import Flask, url_for, redirect, render_template
 from flask_restplus import Resource, Api
-from flask import request
+from flask import request, send_file
 from flask_cors import CORS
 from flask_restplus import fields
 from flask_restplus import inputs
@@ -36,6 +36,23 @@ import date_tool as DT
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app
 # called `app` in `main.py`.
 app = Flask(__name__)
+ # This is used when running locally only. When deploying to Google App
+# Engine, a webserver process such as Gunicorn will serve the app. This
+# can be configured by adding an `entrypoint` to app.yaml.
+logging.basicConfig(
+    filemode='w',
+    format='%(asctime)s - %(message)s',
+    datefmt='%d-%b-%y %H:%M:%S',
+    level=logging.INFO)
+logging.info('LET THE GAMES BEGIN! API STARTS')
+logging.info('==========================================')
+logger = logging.getLogger('werkzeug')
+handler = logging.FileHandler('Api_log.log')
+logger.addHandler(handler)
+# Also add the handler to Flask's logger for cases
+#  where Werkzeug isn't used as the underlying WSGI server.
+app.logger.addHandler(handler)
+
 blueprint = Blueprint('api', __name__, url_prefix='/api/v1')
 app.config['RESTPLUS_MASK_SWAGGER'] = False
 api = Api(
@@ -139,6 +156,17 @@ def doc_url():
     return '{}doc'.format(api.base_url)
 
 
+@app.route('/api/v1/api_log')
+def log_file():
+    f = open('./Api_log.log', 'r')
+    isContent = request.args.get('content')
+    if isContent == None:
+        content = reversed(f.readlines())
+        return render_template("log.html", content=content)
+    else:
+        content = f.read()
+        return content
+
 ######################
 ##      CLOSED      ##
 ######################
@@ -223,12 +251,12 @@ class key_terms(Resource):
     @api.param('category', 'Optional, find out A agent keywords')
     @api.doc(params={'term_type': 'Can ONLY be [general] or [specific]'})
     @api.doc(description="This endpoint will return all predefined key terms from our database \
-		in case user doesn't know what to search.\
+        in case user doesn't know what to search.\
         \n * <b>terms-type</b>: the type of each key-terms and only two types <i>general</i> or <i>specific</i> are available.\
-		\n\t\t - <i>general</i> is a wilder range keyword\
+        \n\t\t - <i>general</i> is a wilder range keyword\
         \n\t\t - <i>specific</i> refers to a limited but detailed range. So the category can use to further filter this type of key-terms\
         \n * <b>category</b> each key-term can be either <i>none</i> or <i>A Agents</i>, additional category can create for extra data source fetching\
-		\n both <i>general</i> and <i>specific</i> are case insensitive.")
+        \n both <i>general</i> and <i>specific</i> are case insensitive.")
     def get(self, term_type):
         term_type = term_type.lower()
         if term_type not in ['general', 'specific']:
@@ -294,22 +322,22 @@ class disease_reports_with_filter(Resource):
     @api.param('End-date', 'End date of period of interest, FORMAT: YYYY-MM-DDTHH:MM:SS')
     @api.param('Start-date', 'Start date of period of interest, FORMAT: YYYY-MM-DDTHH:MM:SS')
     @api.doc(description="This endpoint will return all the reports that satisfy user requirements. \
-		 When all parameters are empty, the endpoint will return all reports existed within the database.\
-		\n All the parameters are optional, please follow the parameter descriptions when you want to pass any input.\
-		\n * <b>Start-date/End-date</b>: \
+         When all parameters are empty, the endpoint will return all reports existed within the database.\
+        \n All the parameters are optional, please follow the parameter descriptions when you want to pass any input.\
+        \n * <b>Start-date/End-date</b>: \
         \n\t\t - The period that user is interested in. <strong>Reports are available between 2017-2019</strong>.\
         \n\t\t - No 'xx' values are accepted in YYYY-MM-DD format, you must enter valid dates matching the time range of the existing reports.\
-		\n\t\t - When Start-date is empty, it will be set to default date. The default Start-date is 2017-01-01T00:00:00.\
+        \n\t\t - When Start-date is empty, it will be set to default date. The default Start-date is 2017-01-01T00:00:00.\
         \n\t\t - When End-date is empty, it will be set to current date time as default.\
-		\n\t\t<i>Input Format: YYYY-MM-DDTHH:MM:SS</i>\
+        \n\t\t<i>Input Format: YYYY-MM-DDTHH:MM:SS</i>\
         \n\n * <b>Key-terms</b>: The keywords that user wants to search. This is case insensitive.\
-		\n\t\t<i>Input Format: Keyword1,Keyword2,..</i>\
-		\n\n * <b>Location</b>: A location that user is concerned about. This is case insensitive and it is whole word search.\
-		\n\t\t<i>Input Format: Syndey</i>\
-		\n\n * <b>Start</b>: the number of the report to start the query from. The default value is 1\
+        \n\t\t<i>Input Format: Keyword1,Keyword2,..</i>\
+        \n\n * <b>Location</b>: A location that user is concerned about. This is case insensitive and it is whole word search.\
+        \n\t\t<i>Input Format: Syndey</i>\
+        \n\n * <b>Start</b>: the number of the report to start the query from. The default value is 1\
         \n\t\t<i>Input	Format: positive integer only.</i>\
         \n\n * <b>Limit</b>: the numbers of report to return. The default value is 100.\
-		\n\t\t<i>Input	Format: positive integer only.</i>")
+        \n\t\t<i>Input	Format: positive integer only.</i>")
     def get(self):
 
         collection = db[REPORTS]
@@ -420,17 +448,7 @@ class disease_reports_with_filter(Resource):
 
 #######################################################################################################
 if __name__ == '__main__':
-    # This is used when running locally only. When deploying to Google App
-    # Engine, a webserver process such as Gunicorn will serve the app. This
-    # can be configured by adding an `entrypoint` to app.yaml.
-    logging.basicConfig(
-        filename='Api_log.log',
-        filemode='w',
-        format='%(asctime)s - %(message)s',
-        datefmt='%d-%b-%y %H:%M:%S',
-        level=logging.INFO)
-    logging.info('LET THE GAMES BEGIN! API STARTS')
-    logging.info('==========================================')
+
     app.run(host='127.0.0.1', port=config.PORT, debug=True)
 
 
