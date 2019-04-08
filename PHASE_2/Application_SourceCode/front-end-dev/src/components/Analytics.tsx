@@ -11,6 +11,7 @@ import FrequencyGraph from './FrequencyGraph';
 import HistogramGraph from './HistogramGraph';
 import MediaCoverage from './MediaCoverage';
 import Header from './Header';
+import { Redirect } from 'react-router-dom';
 
 let newsAPI = new GoogleAPI();
 
@@ -61,6 +62,10 @@ export default class Analytics extends React.Component<IAnalyticsProps, IAnalyti
     }
 
     render() {
+        if (isNull(sessionStorage.getItem('login'))) {
+            return <Redirect to='/' />;
+        }
+
         return (
             <div className="bg">
                 <Header />

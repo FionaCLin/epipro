@@ -2,9 +2,10 @@ import React from 'react';
 import '../css/Home.css';
 import Report from './Report';
 import ReportList from './ReportList';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import Header from './Header';
+import { isNull } from 'util';
 
 export default class Article extends React.Component<IArticleProps, IArticleState>{
   constructor(props: IArticleProps) {
@@ -16,7 +17,9 @@ export default class Article extends React.Component<IArticleProps, IArticleStat
   }
   
   render() {
-    console.log(this.state);
+    if (isNull(sessionStorage.getItem('login'))) {
+        return <Redirect to='/' />;
+    }
     return (
         <div className="bg">
             <Header />
