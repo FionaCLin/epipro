@@ -5,3 +5,4 @@ client-secret.json
 api_key.py
 config.py
 .DS_Store
+PHASE_1/API_SourceCode/EpiProApp-log.json
