@@ -178,13 +178,13 @@ def log_file():
     client = logging.Client.from_service_account_json('./EpiProApp-log.json')
     # List all projects you have access to
     content = list([])
-    for entry in client.list_entries(projects=PROJECT_IDS, filter_=FILTER):
+    for entry in client.list_entries(projects=PROJECT_IDS, filter_=FILTER, order_by="timestamp desc"):
         content.append(json.dumps(entry.payload_json))
 
     if isContent == None:
-        return render_template("log.html", content=reversed(content))
+        return render_template("log.html", content=content)
     else:
-        content = '\n'.join(reversed(content))
+        content = '\n'.join(content)
     return content
 
 ######################
