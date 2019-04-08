@@ -10,6 +10,7 @@ import HeatMap from './Heatmap';
 import FrequencyGraph from './FrequencyGraph';
 import HistogramGraph from './HistogramGraph';
 import MediaCoverage from './MediaCoverage';
+import Header from './Header';
 
 let newsAPI = new GoogleAPI();
 
@@ -61,21 +62,26 @@ export default class Analytics extends React.Component<IAnalyticsProps, IAnalyti
 
     render() {
         return (
-            <div className="Main">
-                <h1>ANALYZE</h1>
-                <div id="collapse-filters" className="Filter-panel">
-                    <DiseaseSearch disease={this.state.disease} updateDisease={this.handleChange}/>
-                    <LocationSearch locations={this.state.locations} updateLocation={this.handleChange}/>
-                    <TimeSearch startDate={this.state.startDate} endDate={this.state.endDate} updateTime={this.handleChange}/>
-                    <div className="Filter-button">
-                        <Button onClick={this.onAnalyze}>Create Analytics</Button>
+            <div className="bg">
+                <Header />
+                <body id="top">
+                    <div className="Main">
+                    <h1>ANALYZE</h1>
+                    <div id="collapse-filters" className="Filter-panel">
+                        <DiseaseSearch disease={this.state.disease} updateDisease={this.handleChange}/>
+                        <LocationSearch locations={this.state.locations} updateLocation={this.handleChange}/>
+                        <TimeSearch startDate={this.state.startDate} endDate={this.state.endDate} updateTime={this.handleChange}/>
+                        <div className="Filter-button">
+                            <Button onClick={this.onAnalyze}>Create Analytics</Button>
+                        </div>
                     </div>
-                </div>
-                <div className='ArticleList-division' />
-                <FrequencyGraph />
-                <HeatMap />
-                <HistogramGraph title='Histogram of events related to Zika'/>
-                <MediaCoverage />
+                    <div className='ArticleList-division' />
+                        <FrequencyGraph />
+                        <HeatMap />
+                        <HistogramGraph title='Histogram of events related to Zika'/>
+                        <MediaCoverage />
+                    </div>
+                </body>
             </div>
         );
     }

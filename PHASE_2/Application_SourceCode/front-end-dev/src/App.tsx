@@ -6,8 +6,6 @@ import Article from './components/Article';
 import { BackendAPI } from './API'
 import Analytics from './components/Analytics';
 
-let api = new BackendAPI();
-
 export default class App extends Component<IAppProps, IAppState> {
   constructor(props: IAppProps) {
     super(props);
@@ -34,5 +32,4 @@ interface IAppProps {
 }
 
 interface IAppState {
-
 }

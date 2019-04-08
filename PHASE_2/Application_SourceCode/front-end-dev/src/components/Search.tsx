@@ -9,6 +9,7 @@ import KeytermSearch from './KeytermSearch';
 import { BackendAPI, IFilterOptions } from '../API';
 import { isNull, isNullOrUndefined } from 'util';
 import PaginateSearch from './PaginateSearch';
+import Header from './Header';
 
 let api = new BackendAPI();
 
@@ -108,39 +109,43 @@ export default class Search extends React.Component<ISearchProps, ISearchState> 
 
     render() {
         return (
-            <div className="Main">
+            <div className="bg">
+                <Header />
                 <body id="top">
-                    <h1>SEARCH</h1>
-                    <div>
-                        <TitleSearch title={this.state.title} onSearch={this.onSearch} updateTitle={this.handleChange} />
-                    </div>
-                    <Button
-                        onClick={() => this.handleChange({advancedFilter: !this.state.advancedFilter})}
-                        aria-controls="collapse-filters"
-                        aria-expanded={this.state.advancedFilter}
-                        variant="secondary" size="sm"
-                        block
-                    >
-                        Advanced Filters
-                    </Button>
-                    <Collapse in={this.state.advancedFilter}>
-                        <div id="collapse-filters" className="Filter-panel">
-                            <KeytermSearch keyterms={this.state.keyterms} updateKeyterm={this.handleChange}/>
-                            <LocationSearch locations={this.state.locations} updateLocation={this.handleChange}/>
-                            <TimeSearch startDate={this.state.startDate} endDate={this.state.endDate} updateTime={this.handleChange}/>
-                            <div className="Filter-button">
-                                <Button onClick={this.onSearch}>Advanced Search</Button>
+                    <div className="Main">
+                            <h1>SEARCH</h1>
+                            <div>
+                                <TitleSearch title={this.state.title} onSearch={this.onSearch} updateTitle={this.handleChange} />
                             </div>
-                        </div>
-                    </Collapse>
-                    <div className='ArticleList-division' />
-                    <ArticleList articleList={this.paginateArticleList()}/>
-                    <PaginateSearch
-                        articleCount={this.state.articleCount}
-                        currentPage={this.state.currentPage}
-                        showCount={this.state.showCount}
-                        updatePaginate={this.handleChange}
-                    />
+                            <Button
+                                onClick={() => this.handleChange({advancedFilter: !this.state.advancedFilter})}
+                                aria-controls="collapse-filters"
+                                aria-expanded={this.state.advancedFilter}
+                                variant="secondary" size="sm"
+                                block
+                            >
+                                Advanced Filters
+                            </Button>
+                            <Collapse in={this.state.advancedFilter}>
+                                <div id="collapse-filters" className="Filter-panel">
+                                    <KeytermSearch keyterms={this.state.keyterms} updateKeyterm={this.handleChange}/>
+                                    <LocationSearch locations={this.state.locations} updateLocation={this.handleChange}/>
+                                    <TimeSearch startDate={this.state.startDate} endDate={this.state.endDate} updateTime={this.handleChange}/>
+                                    <div className="Filter-button">
+                                        <Button onClick={this.onSearch}>Advanced Search</Button>
+                                    </div>
+                                </div>
+                            </Collapse>
+                            <div className='ArticleList-division' />
+                            <ArticleList articleList={this.paginateArticleList()}/>
+                            <br></br>
+                            <PaginateSearch
+                                articleCount={this.state.articleCount}
+                                currentPage={this.state.currentPage}
+                                showCount={this.state.showCount}
+                                updatePaginate={this.handleChange}
+                            />
+                    </div>
                 </body>
             </div>
         );

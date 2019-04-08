@@ -2,9 +2,12 @@
   text-align: center;
 }
 
+.App-theme {
+    background-color: darkslateblue;
+}
+
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
-  height: 20vmin;
   pointer-events: none;
 }
 
@@ -47,8 +50,25 @@
   color: white;
 }
 
+
+body {
+    background-image: url("../imgs/bg.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
 .Main {
-  margin: 50px 250px 50px 250px;
+    width: 80%;
+    min-height: 100vh;
+    padding: 50px;
+    height: 100%;
+    position: relative;
+    background-color: white;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
 }
 
 .Filter-element{
@@ -120,14 +140,6 @@
 
 .Keyterm-right {
   width: 100%;
-}
-
-.bg {
-  background-image: url("../imgs/bg.jpg");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  height: 100%;
 }
 
 .link {
