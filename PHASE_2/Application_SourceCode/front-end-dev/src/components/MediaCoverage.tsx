@@ -44,9 +44,11 @@ export default class MediaCoverage extends React.Component<IMediaCoverageProps, 
                     Media Coverage
                 </Button>
                 <Collapse in={this.state.collapse}>
-                    <div id="media" style={{height: '450px', margin: '10px'}}>
-                        <GoogleCardList data={this.props.googleData}/>
-                        <TweetList data={this.props.tweetData}/>
+                    <div id="media">
+                        <div className="Analytics-collapse">
+                            <GoogleCardList data={this.props.googleData}/>
+                            <TweetList data={this.props.tweetData}/>
+                        </div>
                     </div>
                 </Collapse>
                 <br></br>

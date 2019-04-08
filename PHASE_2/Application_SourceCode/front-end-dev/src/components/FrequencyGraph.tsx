@@ -112,13 +112,15 @@ export default class FrequencyGraph extends React.Component<IFrequencyGraphProps
                     Frequency Mentions
                 </Button>
                 <Collapse in={this.state.collapse}>
-                    <div id="frequency" style={{height: '450px', margin: '10px'}}>
-                        <FrequencyFormat title='Frequency of Zika mentions on articles at WHO' types={['WHO']} chartData={this.cleanChartData(this.state.frequencyData)}/>
-                        <FrequencyFormat title='Frequency of Zika mentions on different media coverage' types={['Twitter', 'Google']} chartData={this.cleanChartData(this.state.frequencyData)}/>
-                        <div style={{float: 'left', marginRight: '10px'}}>Date frequency:</div>
-                        <input type="radio" onClick={() => this.convertFrequency(frequencyFilters[0])} name="frequencyFilter" defaultChecked/>Day
-                        <input style={{marginLeft: '10px'}} type="radio" onClick={() => this.convertFrequency(frequencyFilters[1])} name="frequencyFilter" />Month
-                        <input style={{marginLeft: '10px'}} type="radio" onClick={() => this.convertFrequency(frequencyFilters[2])} name="frequencyFilter" />Year
+                    <div id="frequency">
+                        <div className="Analytics-collapse">
+                            <FrequencyFormat title='Frequency of Zika mentions on articles at WHO' types={['WHO']} chartData={this.cleanChartData(this.state.frequencyData)}/>
+                            <FrequencyFormat title='Frequency of Zika mentions on different media coverage' types={['Twitter', 'Google']} chartData={this.cleanChartData(this.state.frequencyData)}/>
+                            <div style={{float: 'left', marginRight: '10px'}}>Date frequency:</div>
+                            <input type="radio" onClick={() => this.convertFrequency(frequencyFilters[0])} name="frequencyFilter" defaultChecked/>Day
+                            <input style={{marginLeft: '10px'}} type="radio" onClick={() => this.convertFrequency(frequencyFilters[1])} name="frequencyFilter" />Month
+                            <input style={{marginLeft: '10px'}} type="radio" onClick={() => this.convertFrequency(frequencyFilters[2])} name="frequencyFilter" />Year
+                        </div>
                     </div>
                 </Collapse>
                 <br></br>

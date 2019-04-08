@@ -1,6 +1,5 @@
 import React from 'react';
 import '../css/Home.css';
-import { number } from 'prop-types';
 import { isNullOrUndefined } from 'util';
 import { Badge } from 'react-bootstrap';
 

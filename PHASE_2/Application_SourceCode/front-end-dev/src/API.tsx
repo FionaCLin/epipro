@@ -1,4 +1,5 @@
-import axios, { AxiosError, AxiosResponse } from 'axios'
+import axios, { AxiosResponse, AxiosError } from "axios";
+
 
 export interface IFilterOptions {
     keyterms: string;

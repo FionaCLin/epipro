@@ -40,19 +40,21 @@ export default class HistogramGraph extends React.Component<IHistogramGraphProps
         Event Histogram
       </Button>
       <Collapse in={this.state.collapse}>
-        <div id="histogram" style={{height: '450px', margin: '10px'}}>
-          <div className="Histogram-chart">
-          <b>{this.props.title}</b>
-          <ResponsiveContainer width = '100%' height = '100%' >
-            <BarChart data={this.props.histogramData}>
-              <CartesianGrid strokeDasharray="3 3"/>
-              <XAxis label={{value: 'Event types', position: 'insideBottom', offset: 0}} dataKey="event"/>
-              <YAxis label={{value: 'Event type count', position: 'insideLeft', angle: -90, offset: 25}}/>
-              <Tooltip/>
-              <Bar dataKey="count" fill="#8884d8" />
-            </BarChart>
-          </ResponsiveContainer>
-          </div>
+        <div id="histogram">
+            <div className="Analytics-collapse">
+                <div className="Histogram-chart">
+                    <b>{this.props.title}</b>
+                    <ResponsiveContainer width = '100%' height = '100%' >
+                        <BarChart data={this.props.histogramData}>
+                        <CartesianGrid strokeDasharray="3 3"/>
+                        <XAxis label={{value: 'Event types', position: 'insideBottom', offset: 0}} dataKey="event"/>
+                        <YAxis label={{value: 'Event type count', position: 'insideLeft', angle: -90, offset: 25}}/>
+                        <Tooltip/>
+                        <Bar dataKey="count" fill="#8884d8" />
+                        </BarChart>
+                    </ResponsiveContainer>
+                </div>
+            </div>
         </div>
       </Collapse>
       <br></br>

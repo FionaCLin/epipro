@@ -1,6 +1,5 @@
 import React from 'react';
 import '../css/Home.css';
-import TweetListEmbed from 'react-tweet-embed';
 import { Card, ListGroup } from 'react-bootstrap';
 import TweetEmbed from 'react-tweet-embed';
 
@@ -19,8 +18,8 @@ export default class TweetList extends React.Component<ITweetListProps, ITweetLi
                 <Card.Header as="h5">Tweets</Card.Header>
                 <Card.Body style={{maxHeight: '425px', overflowY: 'auto'}}>
                     <ListGroup variant="flush">
-                        {this.props.data.map((value: number) => {
-                            return <ListGroup.Item style={{display: 'block', marginRight: 'auto', marginLeft: 'auto'}}>
+                        {this.props.data.map((value: number, index: number) => {
+                            return <ListGroup.Item key={index} style={{display: 'block', marginRight: 'auto', marginLeft: 'auto'}}>
                                 <TweetEmbed id={value.toString()} placeholder={'loading'}/>
                             </ListGroup.Item>
                         })}

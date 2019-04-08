@@ -6,7 +6,6 @@ import { Button } from 'react-bootstrap';
 import DiseaseSearch from './DiseaseSearch';
 import GoogleAPI, { IFilterOptions } from '../Google';
 import { isNull } from 'util';
-import {LineChart} from 'recharts';
 import HeatMap from './Heatmap';
 import FrequencyGraph from './FrequencyGraph';
 import HistogramGraph from './HistogramGraph';

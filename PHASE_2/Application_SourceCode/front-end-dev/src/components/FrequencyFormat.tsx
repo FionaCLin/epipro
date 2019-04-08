@@ -18,8 +18,8 @@ export default class FrequencyFormat extends React.Component<IFrequencyFormatPro
                     <CartesianGrid strokeDasharray="3 3"/>
                     <Tooltip/>
                     <Legend />
-                    {this.props.types.map((type: string) => {
-                        return <Line type="monotone" dataKey={type} activeDot stroke="#82ca9d" />
+                    {this.props.types.map((type: string, index: number) => {
+                        return <Line key={index} type="monotone" dataKey={type} activeDot stroke="#82ca9d" />
                     })}
                 </LineChart>
             </ResponsiveContainer>

@@ -16,8 +16,8 @@ export default class GoogleCardList extends React.Component<IGoogleCardListProps
                 <Card.Header as="h5">Google Articles and Headlines</Card.Header>
                 <Card.Body style={{maxHeight: '425px', overflowY: 'auto'}}>
                     <ListGroup variant="flush">
-                        {this.props.data.map((value: any) => {
-                            return <ListGroup.Item style={{display: 'block', marginRight: 'auto', marginLeft: 'auto'}}>
+                        {this.props.data.map((value: any, index: number) => {
+                            return <ListGroup.Item key={index} style={{display: 'block', marginRight: 'auto', marginLeft: 'auto'}}>
                                 <GoogleCard {...value}/>
                             </ListGroup.Item>
                         })}

@@ -1,7 +1,7 @@
 import React from 'react';
 import '../css/Home.css';
 import Select from 'react-select';
-import CreatableSelect from 'react-select/lib/Creatable';
+import CreatableSelect from 'react-select';
 import { BackendAPI } from '../API'
 
 let api = new BackendAPI();

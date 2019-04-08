@@ -1,7 +1,7 @@
 import React from 'react';
 import '../css/Home.css';
 import GoogleMapReact from 'google-map-react';
-import { Card, ListGroup, ListGroupItem, Button, Collapse } from 'react-bootstrap';
+import { Card, ListGroup, Button, Collapse } from 'react-bootstrap';
 
 let mapsAPIkey = { key: 'AIzaSyAWAexUwY_tKggKe5GoqUmdCLV3h8si3Co' };
 
@@ -76,27 +76,29 @@ export default class HeatMap extends React.Component<IHeatMapProps, IHeatMapStat
                 Heatmap
             </Button>
             <Collapse in={this.state.collapse}>
-                <div id="heatmap" style={{height: '450px', margin: '10px'}}>
-                    <div style={{height: '450px', width: '70%', float: "left"}}>
-                        <GoogleMapReact
-                            bootstrapURLKeys={mapsAPIkey}
-                            defaultCenter={this.props.defaultCenter}
-                            defaultZoom={this.props.defaultZoom}
-                            heatmapLibrary={true}
-                            heatmap={this.props.heatMapData}
-                        >
-                        </GoogleMapReact>
-                    </div>
-                    <div style={{float: "left", height: '450px', margin: '0px 0px 0px 10px', width: '29%'}}>
-                        <Card style={{height:"100%"}}>
-                            <Card.Header as="h5">Zika occurences</Card.Header>
-                            <Card.Body>
-                                <ListGroup variant="flush">
-                                    <ListGroup.Item>Lower Pacific Heights, California, USA <div style={{float: 'right'}}><b>311</b></div></ListGroup.Item>
-                                    <ListGroup.Item>Marina District, California, USA <div style={{float: 'right'}}><b>25</b></div></ListGroup.Item>
-                                </ListGroup>
-                            </Card.Body>
-                        </Card>
+                <div id="heatmap">
+                    <div className="Analytics-collapse">
+                        <div style={{height: '450px', width: '70%', float: "left"}}>
+                            <GoogleMapReact
+                                bootstrapURLKeys={mapsAPIkey}
+                                defaultCenter={this.props.defaultCenter}
+                                defaultZoom={this.props.defaultZoom}
+                                heatmapLibrary={true}
+                                heatmap={this.props.heatMapData}
+                            >
+                            </GoogleMapReact>
+                        </div>
+                        <div style={{float: "left", height: '450px', marginLeft: '10px', width: '29%'}}>
+                            <Card style={{height:"100%"}}>
+                                <Card.Header as="h5">Zika occurences</Card.Header>
+                                <Card.Body>
+                                    <ListGroup variant="flush">
+                                        <ListGroup.Item>Lower Pacific Heights, California, USA <div style={{float: 'right'}}><b>311</b></div></ListGroup.Item>
+                                        <ListGroup.Item>Marina District, California, USA <div style={{float: 'right'}}><b>25</b></div></ListGroup.Item>
+                                    </ListGroup>
+                                </Card.Body>
+                            </Card>
+                        </div>
                     </div>
                 </div>
             </Collapse>
