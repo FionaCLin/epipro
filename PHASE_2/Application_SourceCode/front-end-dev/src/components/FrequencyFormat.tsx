@@ -10,16 +10,16 @@ export default class FrequencyFormat extends React.Component<IFrequencyFormatPro
   render() {
     return (
         <div className='Frequency-chart'>
-            <b>WHO CHART</b>
+            <b>{this.props.title}</b>
             <ResponsiveContainer width = '100%' height = '90%' >
                 <LineChart data={this.props.chartData}>
-                    <XAxis dataKey="time"/>
-                    <YAxis/>
+                    <XAxis label={{value: 'Dates', position: 'insideBottom', offset: 0}} dataKey="date"/>
+                    <YAxis label={{value: 'Mentions count', position: 'insideLeft', angle: -90, offset: 25}}/>
                     <CartesianGrid strokeDasharray="3 3"/>
                     <Tooltip/>
                     <Legend />
                     {this.props.types.map((type: string) => {
-                        return <Line type="monotone" dataKey={type} stroke="#82ca9d" />
+                        return <Line type="monotone" dataKey={type} activeDot stroke="#82ca9d" />
                     })}
                 </LineChart>
             </ResponsiveContainer>
@@ -29,7 +29,8 @@ export default class FrequencyFormat extends React.Component<IFrequencyFormatPro
 }
 
 interface IFrequencyFormatProps {
-    chartData: Array<Plot>;
+    title: string;
+    chartData?: Array<Plot>;
     types: Array<string>;
 }
 
@@ -37,6 +38,8 @@ interface IFrequencyFormatState {
 }
 
 interface Plot {
-    time: number;
-    value: number;
+    date: string;
+    WHO: number;
+    Twitter: number;
+    Google: number;
 }

@@ -9,9 +9,10 @@ import { isNull } from 'util';
 import {LineChart} from 'recharts';
 import HeatMap from './Heatmap';
 import FrequencyGraph from './FrequencyGraph';
+import HistogramGraph from './HistogramGraph';
+import MediaCoverage from './MediaCoverage';
 
 let newsAPI = new GoogleAPI();
-//http://recharts.org/en-US/examples
 
 export default class Analytics extends React.Component<IAnalyticsProps, IAnalyticsState> {
   constructor(props: IAnalyticsProps) {
@@ -74,6 +75,8 @@ export default class Analytics extends React.Component<IAnalyticsProps, IAnalyti
                 <div className='ArticleList-division' />
                 <FrequencyGraph />
                 <HeatMap />
+                <HistogramGraph title='Histogram of events related to Zika'/>
+                <MediaCoverage />
             </div>
         );
     }

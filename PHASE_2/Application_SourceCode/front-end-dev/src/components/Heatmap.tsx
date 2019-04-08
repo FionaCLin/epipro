@@ -9,7 +9,7 @@ export default class HeatMap extends React.Component<IHeatMapProps, IHeatMapStat
     constructor(props: IHeatMapProps) {
         super(props);
         this.state = {
-            collapse: false
+            collapse: true
         };
     }
 
@@ -89,7 +89,7 @@ export default class HeatMap extends React.Component<IHeatMapProps, IHeatMapStat
                     </div>
                     <div style={{float: "left", height: '450px', margin: '0px 0px 0px 10px', width: '29%'}}>
                         <Card style={{height:"100%"}}>
-                            <Card.Header as="h5">Occurences</Card.Header>
+                            <Card.Header as="h5">Zika occurences</Card.Header>
                             <Card.Body>
                                 <ListGroup variant="flush">
                                     <ListGroup.Item>Lower Pacific Heights, California, USA <div style={{float: 'right'}}><b>311</b></div></ListGroup.Item>
@@ -100,6 +100,7 @@ export default class HeatMap extends React.Component<IHeatMapProps, IHeatMapStat
                     </div>
                 </div>
             </Collapse>
+            <br></br>
         </div>
     );
   }
