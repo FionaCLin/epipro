@@ -14,7 +14,9 @@
             File</i></button>
     <h1>EpiProApp live log file</h1>
     <div class="log">
-        <p></p>
+        {% for i in content %}
+        <p>{{i}}</p>
+        {% endfor %}
     </div>
 </body>
 <script>
@@ -27,7 +29,6 @@
                 let content = '';
                 typeof this.responseText.split('\n').reverse().forEach((x, i) => {
                     content += `<p>${x}</p>`
-                    console.log(content)
                 })
                 document.getElementsByClassName("log")[0].innerHTML = content
             }

@@ -41,22 +41,6 @@ import date_tool as DT
 # called `app` in `main.py`.
 app = Flask(__name__)
 
-#  # This is used when running locally only. When deploying to Google App
-# # Engine, a webserver process such as Gunicorn will serve the app. This
-# # can be configured by adding an `entrypoint` to app.yaml.
-# logging.basicConfig(
-#     filemode='w',
-#     format='%(asctime)s - %(message)s',
-#     datefmt='%d-%b-%y %H:%M:%S',
-#     level=logging.INFO)
-# logging.info('LET THE GAMES BEGIN! API STARTS')
-# logging.info('==========================================')
-# logger = logging.getLogger('werkzeug')
-# handler = logging.FileHandler('./log/Api_log.log')
-# logger.addHandler(handler)
-# # Also add the handler to Flask's logger for cases
-# #  where Werkzeug isn't used as the underlying WSGI server.
-# app.logger.addHandler(handler)
 
 blueprint = Blueprint('api', __name__, url_prefix='/api/v1')
 app.config['RESTPLUS_MASK_SWAGGER'] = False
@@ -71,6 +55,26 @@ api = Api(
 
 CORS(app)
 app.register_blueprint(blueprint)
+
+try:
+    # This is used when running locally only. When deploying to Google App
+    # Engine, a webserver process such as Gunicorn will serve the app. This
+    # can be configured by adding an `entrypoint` to app.yaml.
+    logging.basicConfig(
+        filemode='w',
+        format='%(asctime)s - %(message)s',
+        datefmt='%d-%b-%y %H:%M:%S',
+        level=logging.INFO)
+    logging.info('LET THE GAMES BEGIN! API STARTS')
+    logging.info('==========================================')
+    logger = logging.getLogger('werkzeug')
+    handler = logging.FileHandler('./log/Api_log.log')
+    logger.addHandler(handler)
+    # Also add the handler to Flask's logger for cases
+    #  where Werkzeug isn't used as the underlying WSGI server.
+    app.logger.addHandler(handler)
+except:
+    pass
 
 client = MongoClient(config.MONGO_URI, config.MONGO_PORT)
 db = client[config.MONGO_DB]
@@ -174,13 +178,13 @@ def log_file():
     client = logging.Client.from_service_account_json('./EpiProApp-log.json')
     # List all projects you have access to
     content = list([])
-    for entry in client.list_entries(projects=PROJECT_IDS, filter_=FILTER):  # API call(s)
+    for entry in client.list_entries(projects=PROJECT_IDS, filter_=FILTER):
         content.append(json.dumps(entry.payload_json))
 
     if isContent == None:
-        return render_template("log.html")
+        return render_template("log.html", content=reversed(content))
     else:
-        content = '\n'.join(content)
+        content = '\n'.join(reversed(content))
     return content
 
 ######################
