@@ -27,7 +27,7 @@
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
                 let content = '';
-                typeof this.responseText.split('\n').reverse().forEach((x, i) => {
+                typeof this.responseText.split('\n').forEach((x, i) => {
                     content += `<p>${x}</p>`
                 })
                 document.getElementsByClassName("log")[0].innerHTML = content
