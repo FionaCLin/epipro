@@ -1,62 +1,30 @@
 import React from 'react';
 import logo from '../imgs/logo.png';
 import '../css/Home.css';
-import { Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import { BackendAPI } from '../API'
-
-let api = new BackendAPI();
-
-declare global {
-  interface Window {
-    token: any;
-  }
-}
+import Header from './Header';
 
 export default class Home extends React.Component<IHomeProps, IHomeState> {
-  constructor(props: IHomeProps) {
-    super(props);
-    this.state = {
-      api_doc_url: ''
+    constructor(props: IHomeProps) {
+        super(props);
+        console.log(this.state,'constructor');
     }
-    console.log(this.state, 'constructor')
-  }
 
-  componentDidMount() {
-    let doc_url: string = '';
-    api.getAPIdocURL((error: any, response: any) => {
-      if (error) {
-        if (error.response) {
-          let message = error.response.data.message
-          console.log(message, 'ppp');
-        } else {
-          console.log(error.message, 'ppp');
-        }
-        return
-      }
-      doc_url = response;
-      console.log(doc_url, 'doc url in app tsx to set state')
-      this.setState({ api_doc_url: doc_url })
-    });
-  }
-
+    static defaultProps = {
+        username: 'admin',
+        password: 'EpiProBreak219'
+    }
+  
   render() {
-    console.log('I am rendering', this.state)
     return (
       <div className="App">
-        <div className="bg">
+      <Header />
+        <body>
           <header className="App-header">
             <img src={logo} className="App-logo" alt="logo" />
-            <p>
-              <strong>
-                EpiPro API
-              </strong>
-            </p>
-            <p>Predict. Prevent. Protect.</p>
-            <a className="a" href={this.state.api_doc_url}>EpiPro API Documentation</a>
-            {/* <Link className="a" to='/search'>Search</Link> */}
+            <h1>Welcome to EpiPro</h1>
+            <h3>Predict. Prevent. Protect.</h3>
           </header>
-        </div>
+        </body>
       </div>
     );
   }
@@ -66,5 +34,4 @@ interface IHomeProps {
 }
 
 interface IHomeState {
-  api_doc_url: string;
 }

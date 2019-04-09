@@ -2,10 +2,42 @@
   text-align: center;
 }
 
+.App-theme {
+    background-color: darkslateblue;
+}
+
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
-  height: 20vmin;
   pointer-events: none;
+}
+
+.Frequency-chart {
+  text-align: center;
+  float: left;
+  height: 450px;
+  width: 50%;
+}
+
+.Histogram-chart {
+  text-align: center;
+  float: left;
+  height: 450px;
+  width: 100%;
+}
+
+.Analytics-collapse {
+    height: 450px;
+    min-height: 450px;
+    margin: 10px;
+}
+
+.loading {
+  height: 350px;
+  width: 350px;
+  pointer-events: none;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .App-header {
@@ -14,14 +46,28 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
   color: white;
 }
-.App .a{
-  color: #98fb98;
+
+
+body {
+    background-image: url("../imgs/bg.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
 }
+
 .Main {
-  margin: 50px 150px 50px 150px;
+    width: 80%;
+    min-height: 100vh;
+    padding: 50px;
+    height: 100%;
+    position: relative;
+    background-color: white;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
 }
 
 .Filter-element{
@@ -35,7 +81,7 @@
 .Filter-panel {
   padding: 10px 10px 10px 10px;
   background-color: lightgray;
-  border-radius: 0px 0px 5px 5px;
+  border-radius: 5px 5px 5px 5px;
 }
 
 .Filter-inline-1 {
@@ -59,7 +105,7 @@
 
 
 .ArticleList-division {
-  margin-top: 75px;
+  margin-top: 25px;
 }
 
 .ReportList-division {
@@ -95,14 +141,6 @@
   width: 100%;
 }
 
-.bg {
-  background-image: url("../imgs/bg.jpg");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  height: 100%;
-}
-
 .link {
   color: inherit;
   text-decoration: inherit;
@@ -119,6 +157,12 @@
 
 .Badge-division {
   margin: 0px 3px 0px 3px;
+}
+
+.pagination {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 @keyframes App-logo-spin {

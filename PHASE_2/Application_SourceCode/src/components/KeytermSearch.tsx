@@ -1,10 +1,8 @@
 import React from 'react';
 import '../css/Home.css';
 import Select from 'react-select';
-import CreatableSelect from 'react-select/lib/Creatable';
-import { string } from 'prop-types';
+import CreatableSelect from 'react-select';
 import { BackendAPI } from '../API'
-import { makeCreatableSelect } from 'react-select/lib/Creatable';
 
 let api = new BackendAPI();
 const filterTypes: Array<any> = [

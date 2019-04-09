@@ -8,7 +8,7 @@ export default class EventReport extends React.Component<IEventReportProps, IEve
     super(props);
   }
   
-  LocationCheck(location: LocationBasic | LocationAdvanced) {
+  checkLocation(location: LocationBasic | LocationAdvanced) {
       let locationProp = null;
       if (!isNullOrUndefined(location['geonames-id'])) {
         locationProp = <p><b>Location:</b> {location['geonames-id']}</p>;
@@ -27,7 +27,7 @@ export default class EventReport extends React.Component<IEventReportProps, IEve
                 </Badge>
             </p>
             <p><b>Date:</b> {this.props.date}</p>
-            {this.LocationCheck(this.props.location)}
+            {this.checkLocation(this.props.location)}
             <p><b>Number Affected:</b> {this.props['number-affected']}</p>
         </div>
         

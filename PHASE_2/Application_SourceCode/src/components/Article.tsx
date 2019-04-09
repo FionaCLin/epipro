@@ -1,42 +1,50 @@
 import React from 'react';
 import '../css/Home.css';
-import ArticleData from '../dummydata/example-article.json';
 import Report from './Report';
 import ReportList from './ReportList';
+import { Link } from 'react-router-dom';
+import { Button } from 'react-bootstrap';
+import Header from './Header';
 
 export default class Article extends React.Component<IArticleProps, IArticleState>{
   constructor(props: IArticleProps) {
     super(props);
   }
 
-  public static defaultProps = {
-    url: ArticleData.url,
-    date_of_publication: ArticleData.date_of_publication,
-    headline: ArticleData.headline,
-    main_text: ArticleData.main_text,
-    reports: ArticleData.reports
+  componentWillMount() {
+    this.setState(this.props.location.state);
   }
   
   render() {
     return (
-        <div className="Main">
-          <h1>{this.props.headline}</h1>
-          <p><i>URL: <a href={this.props.url}>{this.props.url}</a></i></p>
-          <p><i>DOP: {this.props.date_of_publication}</i></p>
-          <p>{this.props.main_text}</p>
-          <ReportList reports={this.props.reports} />
+        <div className="bg">
+            <Header />
+            <body id="top">
+                <div className="Main">
+                    <Link to='/search'><Button variant="outline-primary">Back to Search</Button></Link>
+                    <p></p>
+                    <br></br>
+                    <h1>{this.state.headline}</h1>
+                    <p><i>URL: <a href={this.state.url}>{this.state.url}</a></i></p>
+                    <p><i>DOP: {this.state.date_of_publication}</i></p>
+                    <p>{this.state.main_text}</p>
+                    <ReportList reports={this.state.reports} />
+                </div>
+            </body>
         </div>
     );
   }
 }
 
 interface IArticleProps {
+  history: any;
+  location: {state: IArticleState};
+}
+
+interface IArticleState {
   url: string;
   date_of_publication: string;
   headline: string;
   main_text: string;
-  reports: Array<Report>;
-}
-
-interface IArticleState {    
+  reports: Array<Report>;   
 }
