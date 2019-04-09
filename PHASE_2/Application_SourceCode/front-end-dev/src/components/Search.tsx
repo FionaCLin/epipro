@@ -10,7 +10,6 @@ import { BackendAPI, IFilterOptions } from '../API';
 import { isNull, isNullOrUndefined } from 'util';
 import PaginateSearch from './PaginateSearch';
 import Header from './Header';
-import { Redirect } from 'react-router-dom';
 
 let api = new BackendAPI();
 
@@ -109,10 +108,6 @@ export default class Search extends React.Component<ISearchProps, ISearchState> 
     }
 
     render() {
-        if (isNull(sessionStorage.getItem('login'))) {
-            return <Redirect to='/' />;
-        }
-
         return (
             <div className="bg">
                 <Header />
