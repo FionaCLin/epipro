@@ -1,7 +1,6 @@
 import React from 'react';
 import '../css/Home.css';
 import Select from 'react-select';
-import Locations from '../dummydata/locations.json';
 import { BackendAPI } from '../API'
 
 let api = new BackendAPI();
@@ -11,42 +10,58 @@ export default class LocationSearch extends React.Component<ILocationSearchProps
   constructor(props: ILocationSearchProps) {
     super(props);
 
-    let filterOptions: Array<Object> = Locations.map((location, index) => ({
-      label: location.city + ", " + location.state + ", " + location.country,
-      value: index
-    }));
-    console.log(filterOptions);
     this.state = {
-      values: [],
-      filterOptions
+      values: this.props.locations,
+      filterOptions: []
     }
   }
 
+  componentWillMount() {
+    api.getLocations((error: any, response: any) => {
+      if (error && error.response) {
+        let message = error.response.data.message
+        console.log('error message', message);
+      } else if (error) {
+        console.log('error message', error.message);
+      }
+      let filterOptions: Array<Object> = this.createFilterOptions(response);
+
+      this.setState({filterOptions})
+    });
+  }
+
+  createFilterOptions(locations: Array<any>) {
+    let filteredLocations: Array<string> = [];
+
+    filteredLocations = locations.map((location: any) => this.createLocationLabel(location));
+    filteredLocations = filteredLocations.filter(function(elem, index, self) {
+      return index === self.indexOf(elem);
+    });
+
+    return filteredLocations.map((location: string, index: number) => ({
+      label: location,
+      value: index
+    }));
+  }
+
+  createLocationLabel(location: any) {
+    let locationLabel: string = '';
+    
+    if (location.city.length != 0) locationLabel = locationLabel.concat(location.city, ", ");
+    if (location.state.length != 0) locationLabel = locationLabel.concat(location.state, ", ");
+    if (location.country.length != 0) locationLabel = locationLabel.concat(location.country);
+  
+    return locationLabel;
+  }
+
   private handleChange(event: Array<any>) {
-    let values: Array<Number> = event.map(option => (option.value));
+    let values: Array<String> = event.map(option => (option.label));
     this.setState({ values });
     console.log({ values });
     this.props.updateLocation({ locations: values });
   }
 
   render() {
-
-    // Fetch Data
-    let Locations: any;
-
-    api.getLocations((error: any, response: any) => {
-      if (error) {
-        if (error.response) {
-          let message = error.response.data.message
-          console.log(message, 'ppp');
-        } else {
-          console.log(error.message, 'ppp');
-        }
-      }
-      Locations = response;
-      console.log(Locations, 'locations in Location tsx')
-    });
-
     return (
       <div className="Filter-element">
         <b>Locations</b>
@@ -57,6 +72,7 @@ export default class LocationSearch extends React.Component<ILocationSearchProps
           classNamePrefix="select"
           placeholder="Select location..."
           onChange={(e: any) => this.handleChange(e)}
+          value={this.state.values.map((value: String) => { return { label: value, value }})}
         />
       </div>
     );
@@ -65,9 +81,10 @@ export default class LocationSearch extends React.Component<ILocationSearchProps
 
 interface ILocationSearchProps {
   updateLocation: (event: object) => void;
+  locations: Array<string>;
 }
 
 interface ILocationSearchState {
-  values: Array<Number>;
+  values: Array<String>;
   filterOptions: Array<Object>
 }

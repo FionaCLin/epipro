@@ -1,7 +1,7 @@
 import React from 'react';
 import '../css/Home.css';
 import EventReport from './EventReport';
-import { ListGroup, Card } from 'react-bootstrap';
+import { Card } from 'react-bootstrap';
 
 export default class EventReportList extends React.Component<IEventReportListProps, IEventReportListState>{
   constructor(props: IEventReportListProps) {

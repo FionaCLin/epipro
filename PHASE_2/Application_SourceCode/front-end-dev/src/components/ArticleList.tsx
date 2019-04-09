@@ -2,52 +2,54 @@ import React from 'react';
 import '../css/Home.css';
 import { ListGroup } from 'react-bootstrap';
 import ArticleCard from './ArticleCard';
-import ArticleData from '../dummydata/example-article.json'
-import { BackendAPI } from '../API'
-
-let api = new BackendAPI();
+import { isNullOrUndefined, isNull, isUndefined } from 'util';
+import loading from '../imgs/loading1.gif';
 
 export default class ArticleList extends React.Component<IArticleListProps, IArticleListState> {
   constructor(props: IArticleListProps) {
     super(props);
-    this.state = {
-      articleList: []
+  }
+
+  showArticleList() {
+    if (!isNullOrUndefined(this.props.articleList))
+    return this.props.articleList.map((articleData: any) => {
+      return <ArticleCard {...articleData}/>;
+    });
+  }
+
+  checkLoading() {
+    if (isNull(this.props.articleList)) {
+      return <img src={loading} className="loading" alt="loading" />;
     }
   }
-  componentWillMount() {
-    api.getAllReports((error: any, response: any) => {
-      if (error && error.response) {
-        let message = error.response.data.message
-        console.log('error message', message);
-      } else if (error) {
-        console.log('error message', error.message);
-      }
-      this.setState({
-        articleList: response
-      })
-    })
-  }
-  render() {
-    let list: any;
-    list = this.state.articleList.map((article: any) => {
-      return (
-        < ListGroup.Item >
-          <ArticleCard {...article} />
-        </ListGroup.Item >
-      )
 
-    })
+  checkResults() {
+    if (!isNullOrUndefined(this.props.articleList) && this.props.articleList.length == 0) {
+      return <p><br />No results found.</p>;
+    } else if (isUndefined(this.props.articleList)) {
+      return <p></p>;
+    }
+  }
+
+  render() {
     return (
-      <ListGroup variant="flush">
-        {list}
+
+    <div>
+    <ListGroup variant="flush">
+        <ListGroup.Item>
+          {this.showArticleList()}
+        </ListGroup.Item>
       </ListGroup>
+      {this.checkLoading()}
+      {this.checkResults()}
+    </div>
     );
   }
 }
 
 interface IArticleListProps {
+  articleList: Array<any> | null | undefined;
 }
 
 interface IArticleListState {
-  articleList: Array<any>;
 }

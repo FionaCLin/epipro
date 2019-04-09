@@ -7,20 +7,23 @@ export default class TimeSearch extends React.Component<ITimeSearchProps, ITimeS
   constructor(props: ITimeSearchProps) {
     super(props);
     this.state = {
-      startDate: null,
-      endDate: null,
+      startDate: this.props.startDate,
+      endDate: this.props.endDate,
       maxDate: new Date(),
       minDate: null
     }
+    if (!isNull(this.state.startDate)) this.changeMinMaxDate(this.state.startDate, 'startDate');
+    if (!isNull(this.state.startDate)) this.changeMinMaxDate(this.state.endDate, 'endDate');
   }
   
   private handleChange(event: Date | null, dateType: string) {
-    let timeReturn: any = {};
-    timeReturn[dateType] = event;
-    console.log(event);
-    this.setState(timeReturn);
+    let timeState: any = {};
+  
+    timeState[dateType] = event;
+    this.setState(timeState);
     this.changeMinMaxDate(event, dateType);
-    this.props.updateTime(timeReturn);
+
+    this.props.updateTime(timeState);
   }
 
   private changeMinMaxDate(newDate: Date | null, dateType: string) {
@@ -52,7 +55,6 @@ export default class TimeSearch extends React.Component<ITimeSearchProps, ITimeS
               startDate={this.state.startDate}
               endDate={this.state.endDate}
               dateFormat="dd/MM/yyyy"
-              minDate={this.state.minDate}
               maxDate={this.state.maxDate}
               onChange={(e:any) => this.handleChange(e, 'startDate')}
               placeholderText='Start Date'
@@ -79,6 +81,8 @@ export default class TimeSearch extends React.Component<ITimeSearchProps, ITimeS
 
 interface ITimeSearchProps {
   updateTime: (event: object) => void;
+  startDate: Date | null;
+  endDate: Date | null;
 }
 
 interface ITimeSearchState {

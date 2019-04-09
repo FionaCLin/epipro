@@ -6,7 +6,7 @@ export default class TitleSearch extends React.Component<ITitleSearchProps, ITit
   constructor(props: ITitleSearchProps) {
     super(props);
     this.state = {
-        title: ''
+        title: this.props.title
     }
   }
   
@@ -26,7 +26,7 @@ export default class TitleSearch extends React.Component<ITitleSearchProps, ITit
                 value={this.state.title}
             />
             <InputGroup.Append>
-                <Button>Search</Button>
+                <Button onClick={this.props.onSearch}>Search</Button>
             </InputGroup.Append>
         </InputGroup>
     );
@@ -34,7 +34,9 @@ export default class TitleSearch extends React.Component<ITitleSearchProps, ITit
 }
 
 interface ITitleSearchProps {
+    title: string;
     updateTitle: (e: object) => void;
+    onSearch: () => void;
 }
 
 interface ITitleSearchState {

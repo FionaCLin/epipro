@@ -1,12 +1,14 @@
 import React from 'react';
 import '../css/Home.css';
 import Select from 'react-select';
-import CreatableSelect from 'react-select/lib/Creatable';
-import { string } from 'prop-types';
+import CreatableSelect from 'react-select';
 import { BackendAPI } from '../API'
-import { makeCreatableSelect } from 'react-select/lib/Creatable';
 
 let api = new BackendAPI();
+const filterTypes: Array<any> = [
+    { label: 'General', value: 0, type: 'general' },
+    { label: 'Specific', value: 1, type: 'specific' }
+];
 
 export default class KeytermSearch extends React.Component<IKeytermSearchProps, IKeytermSearchState> {
     constructor(props: IKeytermSearchProps) {
@@ -14,43 +16,27 @@ export default class KeytermSearch extends React.Component<IKeytermSearchProps, 
 
         this.state = {
             filterType: 0,
-            values: [],
+            values: this.props.keyterms,
             filterOptions: [],
             keyterms: []
         }
     }
 
     componentWillMount() {
-        api.getKeyTerms('general', (error: any, response: any) => {
-            if (error && error.response) {
-                let message = error.response.data.message
-                console.log('error message', message);
-            } else if (error) {
-                console.log('error message', error.message);
-            }
-            let keyterms: Array<any> = response.map((keyterm: any, index: number) => ({
-                label: keyterm.name,
-                value: index,
-                type: keyterm.type
-            }))
-            this.setState({
-                filterType: 0,
-                values: [],
-                filterOptions: keyterms,
-                keyterms
-            })
-        });
+        this.addFilterOptions(filterTypes[1]);
+        this.addFilterOptions(filterTypes[0]);
+        this.changeType(filterTypes[0]);
     }
 
-
     private handleChange(event: Array<any>) {
-        let values: Array<Number> = event.map(option => (option.value));
+        console.log(event);
+        let values: Array<String> = event.map(option => (option.label));
         this.setState({ values });
         this.props.updateKeyterm(({ keyterms: values }));
     }
 
-    private changeType(event: any, filterTypes: Array<any>) {
-        api.getKeyTerms(event.type, (error: any, response: any) => {
+    private addFilterOptions(filterType: any) {
+        api.getKeyTerms(filterType.type, (error: any, response: any) => {
             if (error && error.response) {
                 let message = error.response.data.message
                 console.log('error message', message);
@@ -58,27 +44,27 @@ export default class KeytermSearch extends React.Component<IKeytermSearchProps, 
                 console.log('error message', error.message);
             }
 
-            let keyterms: Array<any> = response.map((keyterm: any, index: number) => ({
+            let newKeyterms: Array<any> = response.map((keyterm: any) => ({
                 label: keyterm.name,
-                value: index,
-                type: keyterm.type
-            }))
+                value: keyterm.name,
+                type: filterType.type
+            }));
+
             this.setState({
-                filterType: event.value,
-                values: [],
-                filterOptions: keyterms,
-                keyterms
+                keyterms: this.state.keyterms.concat(newKeyterms),
+                filterOptions: newKeyterms
             })
-            console.log(keyterms, `${event.type} key term in keyterm search tsx`)
+        });
+    }
+
+    private changeType(event: any) {
+        this.setState({
+            filterType: event.value,
+            filterOptions: this.state.keyterms.filter((keyterm: any) => keyterm.type == event.type)
         });
     }
 
     render() {
-
-        let filterTypes: Array<any> = [
-            { label: 'General', value: 0, type: 'general' },
-            { label: 'Specific', value: 1, type: 'specific' }
-        ]
         return (
             <div className="Filter-element">
                 <b>Keyterms</b>
@@ -87,7 +73,7 @@ export default class KeytermSearch extends React.Component<IKeytermSearchProps, 
                         <Select
                             value={filterTypes.filter(type => type.value == this.state.filterType)}
                             options={filterTypes}
-                            onChange={(e: any) => this.changeType(e, filterTypes)}
+                            onChange={(e: any) => this.changeType(e)}
                         />
                     </div>
                     <div className='Keyterm-right'>
@@ -98,6 +84,7 @@ export default class KeytermSearch extends React.Component<IKeytermSearchProps, 
                             classNamePrefix="select"
                             placeholder="Select keyterms..."
                             onChange={(e: any) => this.handleChange(e)}
+                            value={this.state.values.map((value: String) => { return { label: value, value }})}
                         />
                     </div>
                 </div>
@@ -107,12 +94,13 @@ export default class KeytermSearch extends React.Component<IKeytermSearchProps, 
 }
 
 interface IKeytermSearchProps {
+    keyterms: Array<String>;
     updateKeyterm: (event: object) => void;
 }
 
 interface IKeytermSearchState {
     filterType: Number;
-    values: Array<Number>;
+    values: Array<String>;
     filterOptions: Array<Object>;
-    keyterms: Array<any>;
+    keyterms: Array<Object>
 }
