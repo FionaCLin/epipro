@@ -172,7 +172,7 @@ def log_file():
     t0 = (datetime.today() - timedelta(hours=1)).isoformat(timespec='milliseconds')
     PROJECT_IDS = ["epiproapp"]
     FILTER = \
-        "resource.type=\"gae_app\"\nresource.labels.module_id=\"default\"\nresource.labels.version_id=\"production\"\nlogName=\"projects/epiproapp/logs/appengine.googleapis.com%2Frequest_log\"\n\n (timestamp<\"{}Z\" OR (timestamp=\"{}Z\" insertId<\"5ca9ddaf0003ac4a395f805f\")) timestamp<\"{}Z\" timestamp<=\"{}Z\"".format(
+        "resource.type=\"gae_app\"\nresource.labels.module_id=\"default\"\nresource.labels.version_id=\"demo\"\nlogName=\"projects/epiproapp/logs/appengine.googleapis.com%2Frequest_log\"\n\n (timestamp<\"{}Z\" OR (timestamp=\"{}Z\" insertId<\"5ca9ddaf0003ac4a395f805f\")) timestamp<\"{}Z\" timestamp<=\"{}Z\"".format(
             t1, t0, t1, t0)
 
     client = logging.Client.from_service_account_json('./EpiProApp-log.json')

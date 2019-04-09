@@ -9,7 +9,7 @@ export interface IFilterOptions {
 }
 
 export class BackendAPI {
-  baseURL: string = 'https://epiproapp.appspot.com/'
+  baseURL: string = 'https://demo-dot-epiproapp.appspot.com/'
   getKeyTerms(type: string, cb: (err: any, res: any) => any) {
     axios.get(`${this.baseURL}api/v1/reports/key-terms/${type}`)
       .then((response: AxiosResponse) => {
@@ -81,7 +81,7 @@ export class BackendAPI {
     url = `${this.baseURL}api/v1/reports/filter?${query}`
 
     console.log(url);
- 
+
     axios.get(url)
       .then((response: AxiosResponse) => {
         cb(null, response.data)
@@ -90,4 +90,4 @@ export class BackendAPI {
         cb(error, null)
       });
   }
-}  
+}
