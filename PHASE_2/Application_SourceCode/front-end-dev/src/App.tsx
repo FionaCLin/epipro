@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import Home from './components/Home';
 import Search from './components/Search';
 import Article from './components/Article';
@@ -16,10 +16,11 @@ export default class App extends Component<IAppProps, IAppState> {
       <main>
         <Router>
           <Switch>
-            <Route exact path="/" component={Home}></Route>
+            <Route exact path="/" component={Home} />
             <Route path="/search" component={Search} />
             <Route path="/article" component={Article} />
             <Route path="/analyze" component={Analytics} />
+            <Redirect to="/" />
           </Switch>
         </Router>
       </main>
