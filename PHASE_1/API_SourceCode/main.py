@@ -154,6 +154,10 @@ disease_report_model = api.model(
 #####################################################################################################
 
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('index.html', token=api.base_url + 'doc')
+
 # default index page render to REST api doc
 @app.route('/')
 def index():
