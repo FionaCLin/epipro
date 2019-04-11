@@ -13,7 +13,7 @@
 # limitations under the License.
 
 #### DON'T KNOW WHAT THIS FOR #####
-from lib import *
+# from lib import *
 
 # [START gae_python37_app]
 from flask import Flask, Blueprint
@@ -31,11 +31,13 @@ from pymongo import MongoClient
 import enum
 import re
 import sys
+import requests
 import json as json
 import os
-from google.cloud import logging
+# from google.cloud import logging
 from datetime import timedelta, date, datetime, time
 import date_tool as DT
+from pprint import pprint
 
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app
 # called `app` in `main.py`.
@@ -84,6 +86,7 @@ parser = reqparse.RequestParser()
 LOCATION = 'location'
 KEY_TERMS = 'key_terms'
 REPORTS = 'reports'
+DISEASES = 'diseases'
 #############################################################################################
 #   MODEL   #
 #####  REPSONSE for /api/reports/locations/<:id> #####
@@ -169,27 +172,56 @@ def doc_url():
     return '{}doc'.format(api.base_url)
 
 
-@app.route('/api/v1/api_log')
-def log_file():
-    isContent = request.args.get('content')
-    t1 = datetime.today().isoformat(timespec='milliseconds')
-    t0 = (datetime.today() - timedelta(hours=1)).isoformat(timespec='milliseconds')
-    PROJECT_IDS = ["epiproapp"]
-    FILTER = \
-        "resource.type=\"gae_app\"\nresource.labels.module_id=\"default\"\nresource.labels.version_id=\"demo\"\nlogName=\"projects/epiproapp/logs/appengine.googleapis.com%2Frequest_log\"\n\n (timestamp<\"{}Z\" OR (timestamp=\"{}Z\" insertId<\"5ca9ddaf0003ac4a395f805f\")) timestamp<\"{}Z\" timestamp<=\"{}Z\"".format(
-            t1, t0, t1, t0)
+# @app.route('/api/v1/api_log')
+# def log_file():
+#     isContent = request.args.get('content')
+#     t1 = datetime.today().isoformat(timespec='milliseconds')
+#     t0 = (datetime.today() - timedelta(hours=1)).isoformat(timespec='milliseconds')
+#     PROJECT_IDS = ["epiproapp"]
+#     FILTER = \
+#         "resource.type=\"gae_app\"\nresource.labels.module_id=\"default\"\nresource.labels.version_id=\"demo\"\nlogName=\"projects/epiproapp/logs/appengine.googleapis.com%2Frequest_log\"\n\n (timestamp<\"{}Z\" OR (timestamp=\"{}Z\" insertId<\"5ca9ddaf0003ac4a395f805f\")) timestamp<\"{}Z\" timestamp<=\"{}Z\"".format(
+#             t1, t0, t1, t0)
 
-    client = logging.Client.from_service_account_json('./EpiProApp-log.json')
-    # List all projects you have access to
-    content = list([])
-    for entry in client.list_entries(projects=PROJECT_IDS, filter_=FILTER, order_by="timestamp desc"):
-        content.append(json.dumps(entry.payload_json))
+#     client = logging.Client.from_service_account_json('./EpiProApp-log.json')
+#     # List all projects you have access to
+#     content = list([])
+#     for entry in client.list_entries(projects=PROJECT_IDS, filter_=FILTER, order_by="timestamp desc"):
+#         content.append(json.dumps(entry.payload_json))
 
-    if isContent == None:
-        return render_template("log.html", content=content)
-    else:
-        content = '\n'.join(content)
-    return content
+#     if isContent == None:
+#         return render_template("log.html", content=content)
+#     else:
+#         content = '\n'.join(content)
+#     return content
+
+
+
+
+######################
+##      CLOSED      ##
+######################
+# # diseases
+# GET /api/reports/diseases
+# -- Index diseases
+#   Response an array of diseases
+@api.route('/reports/diseases/all')
+class diseases(Resource):
+
+    @api.response(200, 'Data fetched successfully')
+    @api.response(400, 'Bad request')
+    @api.response(404, 'No data found')
+    @api.doc(description="Get all the disease occured in all disease reports we have.")
+    def get(self):
+        collection = db[DISEASES]
+        result = []
+
+        cursor = collection.find({},{"_id": 0})
+        for disease in cursor:
+            result.append(disease)
+
+        return result, 200
+
+
 
 ######################
 ##      CLOSED      ##
@@ -439,8 +471,8 @@ class disease_reports_with_filter(Resource):
         if location:
             location = location.strip()
             # make sure location is more than a whole world
-            count = location_dictionary.count_documents(
-                {"$text": {"$search": location}})
+            count = location_dictionary.count_documents({"$text": {"$search": location}})
+
             if count <= 0:
                 return {'message': 'LOCATION name is invaild or no related reports in database, please enter a correct location name, or enter another location'}, 400
             search_string += '\"' + location + '\" '
@@ -450,8 +482,7 @@ class disease_reports_with_filter(Resource):
         if search_string == "''":
             cursor = collection.find({}, {"_id": 0}).skip(start).limit(limit)
         else:
-            cursor = collection.find({"$text": {"$search": search_string}}, {
-                                     "_id": 0}).skip(start).limit(limit)
+            cursor = collection.find({"$text": {"$search": search_string}}, {"_id": 0}).skip(start).limit(limit)
 
         for entry in cursor:
             without_date.append(entry)
@@ -473,6 +504,112 @@ class disease_reports_with_filter(Resource):
 
             if start_date_com <= pub_date_com and pub_date_com <= end_date_com:
                 result.append(entry)
+
+        return result, 200
+
+######################
+##  IN PROGRESS     ##
+######################
+@api.route('/analytics')
+class data_analytics(Resource):
+
+    @api.response(200, 'Specific location info fetched successfully')
+    @api.response(400, 'Bad request')
+    @api.response(404, 'Page found')
+    @api.param('Location', 'A location(city/country/state etc.) that user is interested in')
+    @api.param('Disease', 'The key terms user want to search')
+    @api.param('End-date', 'End date of period of interest, FORMAT: YYYY-MM-DDTHH:MM:SS')
+    @api.param('Start-date', 'Start date of period of interest, FORMAT: YYYY-MM-DDTHH:MM:SS')    
+    def get(self):
+
+        result = {}
+        single_date_format = re.compile(r'^(\d{4})-(\d\d|xx)-(\d\d|xx)T(\d\d|xx):(\d\d|xx):(\d\d|xx)$')
+        range_date_format = re.compile(r'^(\d{4})-(\d\d|xx)-(\d\d|xx)T(\d\d|xx):(\d\d|xx):(\d\d|xx) to (\d{4})-(\d\d|xx)-(\d\d|xx)T(\d\d|xx):(\d\d|xx):(\d\d|xx)$')
+
+        start_date = request.args.get('Start-date')
+        end_date = request.args.get('End-date')
+        disease = request.args.get('Disease')
+        location = request.args.get('Location')
+
+
+        result['disease'] = disease
+        result['location'] = location
+        result['start_date'] = start_date
+        result['end_date'] = end_date 
+
+        r = requests.get("http://localhost:8080/api/v1/reports/filter?\
+            Start-date=" + str(start_date) + "&End-date=" + str(end_date) +\
+            "&Key-terms=" + str(disease) + "&Location=" + str(location))
+        content = r.json()
+        # pprint(content)
+        ## ============================  FREQUENCY ========================
+        result['frequency_graph'] = {}
+        result['frequency_graph']['frequency'] = []
+
+        record = {}
+
+        for rec in content:
+            date, _ = rec['date_of_publication'].split('T')
+            if date in record:
+                record[date] += 1
+            else:
+                record[date] = 1
+
+        for key in record:
+            e = {}
+            e['date'] = key
+            e['count'] = record[key] 
+            result['frequency_graph']['frequency'].append(e)
+
+        ## ================================ HEAT MAP ====================================
+        result['heat_map'] = {}
+        result['heat_map']['locations'] = []
+
+        ## ================================ EVENT GRAPH =================================
+        result['event_graph'] = []
+        record = {}
+
+        for rec in content:
+            reports = rec['reports']
+            for reported in reports:
+                reported_event = reported['reported_events']
+                for event in reported_event:
+                    date = event['date']
+                    if single_date_format.match(date):
+                        date_time, _ = date.split('T')
+                        print('it is a single date '+ date_time)
+                        if date_time in record:
+                            record[date_time] += 1
+                        else:
+                            record[date_time] = 1
+                    elif range_date_format.match(date):
+                        print('it is a date range '+ date)
+                        
+                        date_line_format = re.compile('^([^to ]*) to (.*)$')
+                        date_format = re.compile(r'^(\d{4})-(\d\d|xx)-(\d\d|xx)T(\d\d|xx):(\d\d|xx):(\d\d|xx)$')
+                        dateTime1 = date_line_format.search(date).group(1)
+                        print('datetime 1 is ' + dateTime1)
+                        dateTime2 = date_line_format.search(date).group(2)
+                        date1_group = date_format.search(dateTime1)
+                        date2_group = date_format.search(dateTime2)
+                        year1 = date1_group.group(1)
+                        print('year1 is '+ year1)
+
+                        year2 = int(date2_group.group(0))
+                        month1 = int(date1_group.group(1))
+                        month2 = int(date2_group.group(1))
+                        day1 = int(date1_group.group(2))
+                        day2 = int(date2_group.group(2))
+
+                        d1 = date(year1, month1, day1)  # start date
+                        d2 = date(year2, month2, day2)  # end date
+
+                        delta = d2 - d1         # timedelta
+
+                        for i in range(delta.days + 1):
+                            print(d1 + timedelta(i))
+                    else:
+                        print('it is a empty date')
 
         return result, 200
 
