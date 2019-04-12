@@ -1,5 +1,6 @@
 from datetime import datetime
 import re
+from datetime import timedelta, date, datetime, time
 
 
 #input date string of format
@@ -111,8 +112,17 @@ def align_date(pub_date, date_line):
     final_date = year + '-' + month + '-' + day + 'T' + hour + ':' + minute + ':' + second 
 
     return final_date
+
+def time_range():
+    d1 = date(2008, 8, 15)  # start date
+    d2 = date(2008, 9, 15)  # end date
+
+    delta = d2 - d1         # timedelta
+
+    for i in range(delta.days + 1):
+        print(d1 + timedelta(i))
 #for testing
-# def main():
+def main():
 #     # result = check_date('2019-01-01T12:00:00 to 2019-01-01T13:00:00')
 #     # print(result)
 #     # date = swap_date('2019-01-01T12:00:00 to 2018-01-01T13:00:00')
@@ -121,5 +131,6 @@ def align_date(pub_date, date_line):
 #     # print(result1)
 #     # result = align_date('2019-xx-xxTxx:10:xx', '2018-10-13T12:23:15')
 #     # print(result)
-# if __name__ == '__main__':
-#     main()
+    time_range()
+if __name__ == '__main__':
+    main()
