@@ -11,5 +11,28 @@ shenghan.gao@student.unsw.edu.au
 z5093599@student.unsw.edu.au
 ## [Team	API	Documentation	URL](https://epiproapp.appspot.com/api/v1/doc/)
 
+## Set Up Local Development
+ - Install Development software
+   - mongodb [Installation 
+   manual](https://docs.mongodb.com/v3.4/installation/#mongodb-community-edition)
+   - python3 & pip3 [Installation 
+   manual](https://cloud.google.com/python/setup)
 
-
+  - Seed sample data to the local mongodb
+  ```
+  python3 setup-database.py
+  ```
+  - Install dependent modules
+  ```
+  pip3 install -r PHASE_1/API_SourceCode/requirements.txt
+  ```
+  - Create config file
+  Copy the config.sample.py and rename the copy of config.sample.py as `config.py`
+  ```
+  cp config.sample.py config.py
+  ```
+  - Run the application
+  ```
+  cd PHASE_1/API_SourceCode/
+  FLASK_DEBUG=True FLASK_APP=main.py flask run --port 8080
+  ```
