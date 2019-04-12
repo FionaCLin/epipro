@@ -1,0 +1,206 @@
+[
+  {
+    "name": "legionares"
+  },
+  {
+    "name": "marburg virus disease"
+  },
+  {
+    "name": "tuberculosis"
+  },
+  {
+    "name": "anthrax cutaneous"
+  },
+  {
+    "name": "listeriosis"
+  },
+  {
+    "name": "influenza a/h1n2"
+  },
+  {
+    "name": "poliomyelitis"
+  },
+  {
+    "name": "mumps"
+  },
+  {
+    "name": "cryptococcosis"
+  },
+  {
+    "name": "crimean-congo haemorrhagic fever"
+  },
+  {
+    "name": "vaccinia and cowpox"
+  },
+  {
+    "name": "shigellosis"
+  },
+  {
+    "name": "chikungunya"
+  },
+  {
+    "name": "influenza a/h3n5"
+  },
+  {
+    "name": "hand, foot and mouth disease"
+  },
+  {
+    "name": "measles"
+  },
+  {
+    "name": "nipah virus"
+  },
+  {
+    "name": "sars"
+  },
+  {
+    "name": "unknown"
+  },
+  {
+    "name": "botulism"
+  },
+  {
+    "name": "mers-cov"
+  },
+  {
+    "name": "rift valley fever"
+  },
+  {
+    "name": "hepatitis d"
+  },
+  {
+    "name": "influenza a/h9n2"
+  },
+  {
+    "name": "hepatitis e"
+  },
+  {
+    "name": "varicella"
+  },
+  {
+    "name": "rubella"
+  },
+  {
+    "name": "dengue"
+  },
+  {
+    "name": "hiv/aids"
+  },
+  {
+    "name": "cryptosporidiosis"
+  },
+  {
+    "name": "hepatitis a"
+  },
+  {
+    "name": "lassa fever"
+  },
+  {
+    "name": "rotavirus infection"
+  },
+  {
+    "name": "yellow fever"
+  },
+  {
+    "name": "anthrax gastrointestinous"
+  },
+  {
+    "name": "norovirus infection"
+  },
+  {
+    "name": "thypoid fever"
+  },
+  {
+    "name": "hepatitis c"
+  },
+  {
+    "name": "influenza a/h2n2"
+  },
+  {
+    "name": "staphylococcal enterotoxin b"
+  },
+  {
+    "name": "hepatitis b"
+  },
+  {
+    "name": "other"
+  },
+  {
+    "name": "ebola haemorrhagic fever"
+  },
+  {
+    "name": "plague"
+  },
+  {
+    "name": "ehec (e.coli)"
+  },
+  {
+    "name": "influenza a/h3n2"
+  },
+  {
+    "name": "pertussis"
+  },
+  {
+    "name": "q fever"
+  },
+  {
+    "name": "brucellosis"
+  },
+  {
+    "name": "anthrax inhalation"
+  },
+  {
+    "name": "rabies"
+  },
+  {
+    "name": "salmonellosis"
+  },
+  {
+    "name": "smallpox"
+  },
+  {
+    "name": "zika"
+  },
+  {
+    "name": "enterovirus 71 infection"
+  },
+  {
+    "name": "diphteria"
+  },
+  {
+    "name": "west nile virus"
+  },
+  {
+    "name": "pneumococcus pneumonia"
+  },
+  {
+    "name": "histoplasmosis"
+  },
+  {
+    "name": "influenza a/h7n9"
+  },
+  {
+    "name": "tularemia"
+  },
+  {
+    "name": "monkeypox"
+  },
+  {
+    "name": "influenza a/h1n1"
+  },
+  {
+    "name": "malaria"
+  },
+  {
+    "name": "yersiniosis"
+  },
+  {
+    "name": "influenza a/h5n1"
+  },
+  {
+    "name": "hantavirus"
+  },
+  {
+    "name": "cholera"
+  }
+]

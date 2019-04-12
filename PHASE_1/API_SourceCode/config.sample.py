@@ -32,14 +32,13 @@ PROJECT_ID = 'epiproapp'
 
 if re.match(r'.*test.*', sys.argv[0]):
     # update this and save as config.py
-    MONGO_URI = \
-        'mongodb://user:password@host:27017/database'
     MONGO_PORT = 27017
-    MONGO_DB = ''
     PORT = 5000
+    MONGO_DB = 'epipro_test'
+    MONGO_URI ='mongodb://localhost:{}/{}'.format(MONGO_PORT, MONGO_DB)
 else:
-    MONGO_URI = \
-        'mongodb://user:password@host:27017/database'
     MONGO_PORT = 27017
-    MONGO_DB = ''
     PORT = 8080
+    MONGO_DB = 'epipro_dev'
+    MONGO_URI = 'mongodb://localhost:{}/{}'.format(MONGO_PORT, MONGO_DB)
+MONGO_DBS = ['epipro_test', 'epipro_dev']
