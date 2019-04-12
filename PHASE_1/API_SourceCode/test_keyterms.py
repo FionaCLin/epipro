@@ -64,8 +64,8 @@ def test_general_key_terms():
 def test_invalid_param():
     r = client.get('/api/v1/reports/key-terms/xxx')
     assert r.status_code == 400
-    r = client.get('/api/v1/reports/key-terms/')
-    assert r.status_code == 404
+    r = client.get('/api/v1/reports/key-terms/0')
+    assert r.status_code == 400
     r = client.get('/api/v1/reports/key-terms/specific?category=ccc')
     assert r.status_code == 404
 

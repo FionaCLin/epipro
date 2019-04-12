@@ -13,7 +13,7 @@
 # limitations under the License.
 
 #### DON'T KNOW WHAT THIS FOR #####
-# from lib import *
+from lib import *
 
 # [START gae_python37_app]
 from flask import Flask, Blueprint
@@ -156,11 +156,6 @@ disease_report_model = api.model(
 
 #####################################################################################################
 
-
-@app.errorhandler(404)
-def page_not_found(e):
-    return render_template('index.html', token=api.base_url + 'doc')
-
 # default index page render to REST api doc
 @app.route('/')
 def index():
@@ -204,7 +199,7 @@ def doc_url():
 # GET /api/reports/diseases
 # -- Index diseases
 #   Response an array of diseases
-@api.route('/reports/diseases/all')
+@app.route('/reports/diseases/all')
 class diseases(Resource):
 
     @api.response(200, 'Data fetched successfully')
@@ -612,6 +607,10 @@ class data_analytics(Resource):
                         print('it is a empty date')
 
         return result, 200
+
+@app.errorhandler(404)
+def page_not_found(e=None):
+    return render_template('index.html', token=api.base_url + 'doc')
 
 
 #######################################################################################################

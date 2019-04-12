@@ -19,19 +19,19 @@ else
   
   if [[ $# == 0 ]];
   then
-    test=`ls $DIR/../API_SourceCode | grep -e '[tT]est'| sed 's/.py//'`
+    test=`ls $DIR/../API_SourceCode | grep -e '[tT]est'|  sed 's/[tT]est_//' | sed 's/.py//'`
   else
     test=$@
   fi
-
+  echo $test
   for i in $test;
   do
-    if [[ -f $DIR/../API_SourceCode/$i.py ]];
+    if [[ -f $DIR/../API_SourceCode/test_$i.py ]];
     then
       echo "************ test $i ************"
-      py.test $DIR/../API_SourceCode/$i.py -p no:warnings
+      py.test $DIR/../API_SourceCode/test_$i.py -p no:warnings
     else
-      echo $DIR/../API_SourceCode/$i.py is not found
+      echo $DIR/../API_SourceCode/test_$i.py is not found
     fi
   done
 fi
