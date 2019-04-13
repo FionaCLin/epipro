@@ -172,25 +172,25 @@ def doc_url():
 
 @app.route('/api/v1/api_log')
 def log_file():
-    isContent = request.args.get('content')
-    t1 = datetime.today().isoformat(timespec='milliseconds')
-    t0 = (datetime.today() - timedelta(hours=1)).isoformat(timespec='milliseconds')
-    PROJECT_IDS = ["epiproapp"]
-    FILTER = \
-        "resource.type=\"gae_app\"\nresource.labels.module_id=\"default\"\nresource.labels.version_id=\"demo\"\nlogName=\"projects/epiproapp/logs/appengine.googleapis.com%2Frequest_log\"\n\n (timestamp<\"{}Z\" OR (timestamp=\"{}Z\" insertId<\"5ca9ddaf0003ac4a395f805f\")) timestamp<\"{}Z\" timestamp<=\"{}Z\"".format(
-            t1, t0, t1, t0)
+	isContent = request.args.get('content')
+	t1 = datetime.today().isoformat(timespec='milliseconds')
+	t0 = (datetime.today() - timedelta(hours=1)).isoformat(timespec='milliseconds')
+	PROJECT_IDS = ["epiproapp"]
+	FILTER = \
+		"resource.type=\"gae_app\"\nresource.labels.module_id=\"default\"\nresource.labels.version_id=\"demo\"\nlogName=\"projects/epiproapp/logs/appengine.googleapis.com%2Frequest_log\"\n\n (timestamp<\"{}Z\" OR (timestamp=\"{}Z\" insertId<\"5ca9ddaf0003ac4a395f805f\")) timestamp<\"{}Z\" timestamp<=\"{}Z\"".format(
+			t1, t0, t1, t0)
 
-    client = logging.Client.from_service_account_json('./EpiProApp-log.json')
-    # List all projects you have access to
-    content = list([])
-    for entry in client.list_entries(projects=PROJECT_IDS, filter_=FILTER, order_by="timestamp desc"):
-        content.append(json.dumps(entry.payload_json))
+	client = logging.Client.from_service_account_json('./EpiProApp-log.json')
+	# List all projects you have access to
+	content = list([])
+	for entry in client.list_entries(projects=PROJECT_IDS, filter_=FILTER, order_by="timestamp desc"):
+		content.append(json.dumps(entry.payload_json))
 
-    if isContent == None:
-        return render_template("log.html", content=content)
-    else:
-        content = '\n'.join(content)
-    return content
+	if isContent == None:
+		return render_template("log.html", content=content)
+	else:
+		content = '\n'.join(content)
+	return content
 
 
 
