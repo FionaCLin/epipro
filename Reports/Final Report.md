@@ -200,6 +200,7 @@ The backend server uses Python3 and Flask on the REST framework. The backend ser
 The scraper uses Selenium and Scrapy in order to do webscraping. It performs on a monthly basis to search and filter through the WHO website as its source. When the scraper finishes accessing and extracting the data, the cleaned data is then stored in our database.
 
 Lastly, the data storage uses MongoDB to operate for our API. This is where our disease report data is updated and cached. It interacts with the backend server in order to handle calls from the frontend and stores the results of the scrapper.
+
 For more information on the details on the API endpoints and the justification of our software architecture, please refer to our [Design Details report](https://github.com/unsw-se3011/SENG3011_EpiPro/blob/master/Reports/Design%20Details.md). If you would like to see how we did our testing in parallel to our software architecture, please refer to our [Testing Documentation report](https://github.com/unsw-se3011/SENG3011_EpiPro/blob/master/Reports/Testing%20Documentation.md).
 
 ### Other External APIs used in Analytics Platform
