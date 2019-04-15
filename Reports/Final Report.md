@@ -42,7 +42,7 @@
 
 ## Use Cases
 ### API
-API Use Case 1: Search with keyterms
+**API Use Case 1:** Search with keyterms
 <table>
     <tbody>
         <tr>
@@ -70,7 +70,7 @@ API Use Case 1: Search with keyterms
     </tbody>
 </table>
 
-API Use Case 2: Search with location
+**API Use Case 2:** Search with location
 <table>
     <tbody>
         <tr>
@@ -98,7 +98,7 @@ API Use Case 2: Search with location
     </tbody>
 </table>
 
-API Use Case 3: Search with period of interest
+**API Use Case 3:** Search with period of interest
 <table>
     <tbody>
         <tr>
@@ -128,7 +128,7 @@ API Use Case 3: Search with period of interest
 </table>
 
 ### Analytics Platform
-Analytics Use Case 1: Produce analytics report
+**Analytics Use Case 1:** Produce analytics report
 <table>
     <tbody>
         <tr>
@@ -158,7 +158,7 @@ Analytics Use Case 1: Produce analytics report
     </tbody>
 </table>
 
-Analytics Use Case 2: Produce media coverage frequency graph
+**Analytics Use Case 2:** Produce media coverage frequency graph
 <table>
     <tbody>
         <tr>
@@ -248,6 +248,7 @@ In general, our team utilized each team members unique strengths and skills.
 * Chris and Han had their strength in backend development
 * Ines had her strength in UX design and frontend UI
 * Fiona had experience in full stack development and deployment
+
 This allowed our team’s workflow to run seamlessly, with no pressing issues when it came to time management. If we were to wish which skills we had before the workshop occurred, each of us would wish that we were more well-rounded in the skills that our other team members were more accomplished in.
 
 
