@@ -11,8 +11,10 @@ import FrequencyGraph from './FrequencyGraph';
 import HistogramGraph from './HistogramGraph';
 import MediaCoverage from './MediaCoverage';
 import Header from './Header';
+import TwitterAPI from '../Twitter';
 
 let newsAPI = new GoogleAPI();
+let tweetAPI = new TwitterAPI();
 
 export default class Analytics extends React.Component<IAnalyticsProps, IAnalyticsState> {
   constructor(props: IAnalyticsProps) {
@@ -43,6 +45,7 @@ export default class Analytics extends React.Component<IAnalyticsProps, IAnalyti
         }
         console.log(response);
     });
+    tweetAPI.getFilteredMedia(apiFilterState, (error: any, response: any) => {});
   }
 
     private createApiFilterState() {
