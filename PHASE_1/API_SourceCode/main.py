@@ -202,7 +202,7 @@ def log_file():
 # GET /api/reports/diseases
 # -- Index diseases
 #   Response an array of diseases
-@api.route('/reports/diseases/all')
+@api.route('/reports/diseases/all', doc=False)
 class diseases(Resource):
 
     @api.response(200, 'Data fetched successfully')
