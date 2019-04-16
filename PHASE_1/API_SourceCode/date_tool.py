@@ -1,5 +1,6 @@
 from datetime import datetime
 import re
+from datetime import timedelta, date, datetime, time
 
 
 #input date string of format
@@ -54,7 +55,7 @@ def check_date(date_line):
     #SEC1 >SEC2
     sec1 = date1_group.group(5)
     sec2 = date2_group.group(5)
-    if sec1 > sec2: 
+    if sec1 > sec2:
         return False
     if sec1 < sec2:
         return True
@@ -69,7 +70,7 @@ def swap_date(date_line):
     dateTime2 = date_line_format.search(date_line).group(2)
 
     correct_date = dateTime2 + " to " + dateTime1
-    
+
     return correct_date
 
 # two dates are of format
@@ -77,7 +78,7 @@ def swap_date(date_line):
 # check date 1 is before date2
 def is_before(date1, date2):
     date_line = date1 + " to " + date2
-    
+
     return check_date(date_line)
 
 
@@ -85,7 +86,7 @@ def is_before(date1, date2):
 # date of publication:^(\d{4})-(\d\d|xx)-(\d\d|xx)T(\d\d|xx):(\d\d|xx):(\d\d|xx)$
 # start date:^(\d{4})-(\d\d|xx)-(\d\d|xx)T(\d\d|xx):(\d\d|xx):(\d\d|xx)$
 def align_date(pub_date, date_line):
-    
+
     date_format = re.compile(r'^(\d{4})-(\d\d|xx)-(\d\d|xx)T(\d\d|xx):(\d\d|xx):(\d\d|xx)')
     date_line_group = date_format.search(date_line)
     pub_date_group = date_format.search(pub_date)
@@ -107,12 +108,21 @@ def align_date(pub_date, date_line):
         minute = date_line_group.group(5)
     if second == 'xx':
         second = date_line_group.group(6)
-    
-    final_date = year + '-' + month + '-' + day + 'T' + hour + ':' + minute + ':' + second 
+
+    final_date = year + '-' + month + '-' + day + 'T' + hour + ':' + minute + ':' + second
 
     return final_date
+
+def time_range():
+    d1 = date(2008, 8, 15)  # start date
+    d2 = date(2008, 9, 15)  # end date
+
+    delta = d2 - d1         # timedelta
+
+    for i in range(delta.days + 1):
+        print(d1 + timedelta(i))
 #for testing
-# def main():
+def main():
 #     # result = check_date('2019-01-01T12:00:00 to 2019-01-01T13:00:00')
 #     # print(result)
 #     # date = swap_date('2019-01-01T12:00:00 to 2018-01-01T13:00:00')
@@ -121,5 +131,6 @@ def align_date(pub_date, date_line):
 #     # print(result1)
 #     # result = align_date('2019-xx-xxTxx:10:xx', '2018-10-13T12:23:15')
 #     # print(result)
-# if __name__ == '__main__':
-#     main()
+    time_range()
+if __name__ == '__main__':
+    main()

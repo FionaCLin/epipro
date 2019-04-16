@@ -31,11 +31,13 @@ from pymongo import MongoClient
 import enum
 import re
 import sys
+import requests
 import json as json
 import os
 from google.cloud import logging
 from datetime import timedelta, date, datetime, time
 import date_tool as DT
+from pprint import pprint
 
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app
 # called `app` in `main.py`.
@@ -84,6 +86,7 @@ parser = reqparse.RequestParser()
 LOCATION = 'location'
 KEY_TERMS = 'key_terms'
 REPORTS = 'reports'
+DISEASES = 'diseases'
 #############################################################################################
 #   MODEL   #
 #####  REPSONSE for /api/reports/locations/<:id> #####
@@ -124,7 +127,6 @@ reported_event = api.model(
     'report-event',
     {
         'type': fields.String,
-        # TO DO: choose the right format
         'date': fields.DateTime,
         'location': fields.Nested(location_detail),
         'number-affected': fields.Integer
@@ -143,7 +145,6 @@ disease_report_model = api.model(
     'disease-report',
     {
         'url': fields.String,
-        # TO DO: more look on the date format
         'date_of_publication': fields.DateTime,
         'headline': fields.String,
         'main_text': fields.String,
@@ -190,6 +191,35 @@ def log_file():
     else:
         content = '\n'.join(content)
     return content
+
+
+
+
+######################
+##      CLOSED      ##
+######################
+# # diseases
+# GET /api/reports/diseases
+# -- Index diseases
+#   Response an array of diseases
+@api.route('/reports/diseases/all', doc=False)
+class diseases(Resource):
+
+    @api.response(200, 'Data fetched successfully')
+    @api.response(400, 'Bad request')
+    @api.response(404, 'No data found')
+    @api.doc(description="Get all the disease occured in all disease reports we have.")
+    def get(self):
+        collection = db[DISEASES]
+        result = []
+
+        cursor = collection.find({},{"_id": 0})
+        for disease in cursor:
+            result.append(disease)
+
+        return result, 200
+
+
 
 ######################
 ##      CLOSED      ##
@@ -412,7 +442,7 @@ class disease_reports_with_filter(Resource):
             'START DATE': start_date.strip(),
             'END DATE': end_date.strip()
         }
-        print(dates)
+
         date_format = re.compile(
             r'^(201[7-9])-((0[1-9]|1[012]))-((0[1-9]|[12][0-9]|3[01]))T([01]?[0-9]|2[0-3]|xx):([0-5][0-9]|xx):([0-5][0-9]|xx)$')
         # make sure the format is right(both dates)
@@ -439,8 +469,8 @@ class disease_reports_with_filter(Resource):
         if location:
             location = location.strip()
             # make sure location is more than a whole world
-            count = location_dictionary.count_documents(
-                {"$text": {"$search": location}})
+            count = location_dictionary.count_documents({"$text": {"$search": location}})
+
             if count <= 0:
                 return {'message': 'LOCATION name is invaild or no related reports in database, please enter a correct location name, or enter another location'}, 400
             search_string += '\"' + location + '\" '
@@ -450,8 +480,7 @@ class disease_reports_with_filter(Resource):
         if search_string == "''":
             cursor = collection.find({}, {"_id": 0}).skip(start).limit(limit)
         else:
-            cursor = collection.find({"$text": {"$search": search_string}}, {
-                                     "_id": 0}).skip(start).limit(limit)
+            cursor = collection.find({"$text": {"$search": search_string}}, {"_id": 0}).skip(start).limit(limit)
 
         for entry in cursor:
             without_date.append(entry)
@@ -473,6 +502,169 @@ class disease_reports_with_filter(Resource):
 
             if start_date_com <= pub_date_com and pub_date_com <= end_date_com:
                 result.append(entry)
+
+        return result, 200
+
+######################
+##      CLOSED      ##
+######################
+@api.route('/analytics', doc=False)
+class data_analytics(Resource):
+
+    @api.response(200, 'Specific location info fetched successfully')
+    @api.response(400, 'Bad request')
+    @api.response(404, 'Page found')
+    @api.param('Location', 'A location(city/country/state etc.) that user is interested in')
+    @api.param('Disease', 'The key terms user want to search')
+    @api.param('End-date', 'End date of period of interest, FORMAT: YYYY-MM-DDTHH:MM:SS')
+    @api.param('Start-date', 'Start date of period of interest, FORMAT: YYYY-MM-DDTHH:MM:SS')
+    def get(self):
+
+        result = {}
+        single_date_format = re.compile(r'^(\d{4})-(\d\d|xx)-(\d\d|xx)T(\d\d|xx):(\d\d|xx):(\d\d|xx)$')
+        range_date_format = re.compile(r'^(\d{4})-(\d\d|xx)-(\d\d|xx)T(\d\d|xx):(\d\d|xx):(\d\d|xx) to (\d{4})-(\d\d|xx)-(\d\d|xx)T(\d\d|xx):(\d\d|xx):(\d\d|xx)$')
+
+        start_date = request.args.get('Start-date')
+        end_date = request.args.get('End-date')
+        disease = request.args.get('Disease')
+        location = request.args.get('Location')
+
+
+        result['disease'] = disease
+        result['location'] = location
+        result['start_date'] = start_date
+        result['end_date'] = end_date
+
+        try:
+            r = requests.get("http://localhost:8080/api/v1/reports/filter?\
+                Start-date=" + str(start_date) + "&End-date=" + str(end_date) +\
+                "&Key-terms=" + str(disease) + "&Location=" + str(location))
+            content = r.json()
+            r.raise_for_status()
+        except requests.exceptions.HTTPError as e:
+            error_message = 'All the parameters are required'
+            if 'message' in content:
+                error_message = content['message']
+            return {'message': error_message}, e.response.status_code
+
+        ## ============================  FREQUENCY ========================
+        result['frequency_graph'] = {}
+        result['frequency_graph']['frequency'] = []
+
+        record = {}
+
+        for rec in content:
+            date_pub, _ = rec['date_of_publication'].split('T')
+            if date_pub in record:
+                record[date_pub] += 1
+            else:
+                record[date_pub] = 1
+
+        for key in record:
+            e = {}
+            e['date'] = key
+            e['count'] = record[key]
+            result['frequency_graph']['frequency'].append(e)
+
+        ## ================================ HEAT MAP ====================================
+        result['heat_map'] = {}
+        result['heat_map']['locations'] = []
+        record = {}
+
+        for rec in content:
+            reports = rec['reports']
+            for reported in reports:
+                reported_event = reported['reported_events']
+                for event in reported_event:
+                    event_location = event['location']['location']
+                    city_locations = event_location.split(';')
+                    for city_state in city_locations:
+                        if city_state != '':
+                            try:
+                                city, _ = city_state.split(',')
+                            except ValueError:
+                                city = city_state
+                            if city != '':
+                                if city in record:
+                                    record[city] += 1
+                                else:
+                                    record[city] = 1
+        for key in record:
+            e = {}
+            e['location'] = key
+            e['article_count'] = record[key]
+            result['heat_map']['locations'].append(e)
+
+
+        ## ================================ EVENT GRAPH =================================
+        result['event_graph'] = []
+        record = {}
+
+        for rec in content:
+            reports = rec['reports']
+            for reported in reports:
+                reported_event = reported['reported_events']
+                for event in reported_event:
+                    event_date = event['date']
+                    disease_type = event['type']
+                    if single_date_format.match(event_date):
+                        date_time, _ = event_date.split('T')
+                        if disease_type != '':
+                            if date_time in record:
+                                record[date_time][disease_type] += 1
+                            else:
+                                record[date_time] = {}
+                                record[date_time]['recovered'] = 0
+                                record[date_time]['hospitalised'] = 0
+                                record[date_time]['infected'] = 0
+                                record[date_time]['death'] = 0
+                                record[date_time]['presence'] = 0
+                                record[date_time][disease_type] = 1
+
+                    elif range_date_format.match(event_date):
+                        date_line_format = re.compile('^([^to ]*) to (.*)$')
+                        date_format = re.compile(r'^(\d{4})-(\d\d|xx)-(\d\d|xx)T(\d\d|xx):(\d\d|xx):(\d\d|xx)$')
+                        dateTime1 = date_line_format.search(event_date).group(1)
+                        dateTime2 = date_line_format.search(event_date).group(2)
+                        date1_group = date_format.search(dateTime1)
+                        date2_group = date_format.search(dateTime2)
+
+                        year1 = int(date1_group.group(1))
+                        year2 = int(date2_group.group(1))
+                        month1 = int(date1_group.group(2))
+                        month2 = int(date2_group.group(2))
+                        day1 = int(date1_group.group(3))
+                        day2 = int(date2_group.group(3))
+
+                        d1 = date(year1, month1, day1)  # start date
+                        d2 = date(year2, month2, day2)  # end date
+
+                        delta = d2 - d1         # timedelta
+
+                        for i in range(delta.days + 1):
+                            date_time = str(d1 + timedelta(i))
+                            if disease_type != '':
+                                if date_time in record:
+                                    record[date_time][disease_type] += 1
+                                else:
+                                    record[date_time] = {}
+                                    record[date_time]['recovered'] = 0
+                                    record[date_time]['hospitalised'] = 0
+                                    record[date_time]['infected'] = 0
+                                    record[date_time]['death'] = 0
+                                    record[date_time]['presence'] = 0
+                                    record[date_time][disease_type] = 1
+                    else:
+                        print('it is a empty date')
+        for key in record:
+            e = {}
+            e['date'] = key
+            e['recovered'] = record[key]['recovered']
+            e['hospitalised'] = record[key]['hospitalised']
+            e['infected'] = record[key]['infected']
+            e['death'] = record[key]['death']
+            e['presence'] = record[key]['presence']
+            result['event_graph'].append(e)
 
         return result, 200
 
