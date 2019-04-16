@@ -47,13 +47,6 @@ export default class DiseaseSearch extends React.Component<IDiseaseSearchProps, 
             <div className="Filter-element">
                 <b>Diseases</b>
                 <div className='Keyterm-flex'>
-                    {/* <div className='Keyterm-left'>
-                        <Select
-                            value={filterTypes.filter(type => type.value == this.state.filterType)}
-                            options={filterTypes}
-                            onChange={(e: any) => this.changeType(e)}
-                        />
-                    </div> */}
                     <div className='Keyterm-right'>
                         <Select
                             options={this.state.filterOptions.filter((option: any) => option.type == filterTypes[this.state.filterType].type)}

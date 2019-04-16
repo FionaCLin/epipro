@@ -43,17 +43,17 @@ export default class FrequencyGraph extends React.Component<IFrequencyGraphProps
                 let end_date= new Date(data[data.length - 1].date.replace(/x/g, '0'));
 
                 let newFrequency: Array<Frequency> = [];
-                let k = new Date(start_date.getFullYear(), start_date.getMonth(), 1);
-                while(k <= end_date) {
-                    let j = new Date(k.getTime() - k.getTimezoneOffset() * 60000).toISOString();
+                let counterDate = new Date(start_date.getFullYear(), start_date.getMonth(), 1);
+                while(counterDate <= end_date) {
+                    let countStr = new Date(counterDate.getTime() - counterDate.getTimezoneOffset() * 60000).toISOString();
                     data.forEach((date: Frequency, i: number) => {
-                        let a = (interval == 'month') ? j.indexOf('-', j.indexOf('-') + 1) : j.indexOf('-');
-                        let p = j.substring(0, a);
-                        if (date.date.indexOf(p) !== -1) {
-                            let found = newFrequency.filter(e => e.date == p);
+                        let countInd = (interval == 'month') ? countStr.indexOf('-', countStr.indexOf('-') + 1) : countStr.indexOf('-');
+                        let countInterval = countStr.substring(0, countInd);
+                        if (date.date.indexOf(countInterval) !== -1) {
+                            let found = newFrequency.filter(e => e.date == countInterval);
                             if (found.length == 0) {
                                 newFrequency.push({
-                                    date: p,
+                                    date: countInterval,
                                     WHO: date.WHO,
                                     Twitter: date.Twitter,
                                     Google: date.Google
@@ -69,8 +69,8 @@ export default class FrequencyGraph extends React.Component<IFrequencyGraphProps
                             }
                         }
                     });
-                    if (interval == 'month') k.setMonth(k.getMonth() + 1);
-                    else k.setFullYear(k.getFullYear() + 1);
+                    if (interval == 'month') counterDate.setMonth(counterDate.getMonth() + 1);
+                    else counterDate.setFullYear(counterDate.getFullYear() + 1);
                 }
 
                 this.setState({frequencyData: newFrequency, frequencyFilter: interval});

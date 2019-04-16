@@ -75,12 +75,19 @@ export default class Search extends React.Component<ISearchProps, ISearchState> 
         return ({
             keyterms: this.stringifyKeyterms(),
             locations: this.state.locations.join(','),
-            startDate: this.stringifyDates(this.state.startDate),
-            endDate: this.stringifyDates(this.state.endDate),
+            startDate: this.stringifyDates(this.state.startDate, 'startDate'),
+            endDate: this.stringifyDates(this.state.endDate, 'endDate'),
         });
     }
 
-    private stringifyDates(date: Date | null) {
+    private stringifyDates(date: Date | null, dateType: string) {
+        if (!isNull(date)) {
+            if (dateType == 'endDate') {
+                date.setSeconds(date.getSeconds() - 1);
+                date.setDate(date.getDate() + 1);
+            }
+            date = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
+        }
         return (!isNull(date) ? date.toISOString().slice(0, -5) : '');
     }
 

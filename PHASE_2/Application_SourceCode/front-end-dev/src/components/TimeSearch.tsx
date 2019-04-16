@@ -13,16 +13,14 @@ export default class TimeSearch extends React.Component<ITimeSearchProps, ITimeS
       minDate: null
     }
     if (!isNull(this.state.startDate)) this.changeMinMaxDate(this.state.startDate, 'startDate');
-    if (!isNull(this.state.startDate)) this.changeMinMaxDate(this.state.endDate, 'endDate');
+    if (!isNull(this.state.endDate)) this.changeMinMaxDate(this.state.endDate, 'endDate');
   }
   
   private handleChange(event: Date | null, dateType: string) {
     let timeState: any = {};
-  
     timeState[dateType] = event;
     this.setState(timeState);
     this.changeMinMaxDate(event, dateType);
-
     this.props.updateTime(timeState);
   }
 

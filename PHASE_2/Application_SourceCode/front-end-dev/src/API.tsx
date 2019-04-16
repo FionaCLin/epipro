@@ -8,6 +8,13 @@ export interface IFilterOptions {
     endDate: string;
 }
 
+export interface IAnalyticOptions {
+    disease: string,
+    location: string,
+    startDate: string,
+    endDate: string
+}
+
 export class BackendAPI {
   baseURL: string = 'https://epiproapp.appspot.com/'
   getKeyTerms(type: string, cb: (err: any, res: any) => any) {
@@ -85,6 +92,38 @@ export class BackendAPI {
     axios.get(url)
       .then((response: AxiosResponse) => {
         cb(null, response.data)
+      })
+      .catch((error: AxiosError) => {
+        cb(error, null)
+      });
+  }
+
+  getAnalyticReport(analytic: IAnalyticOptions, cb:(err: any, res: any) => any) {
+    let q :string[] = [];
+    if (analytic.location) {
+      q.push(`Location=${analytic.location}`)
+    }
+    if (analytic.disease) {
+      q.push(`Disease=${analytic.disease}`)
+    }
+    if (analytic.startDate) {
+      q.push(`Start-date=${analytic.startDate}`)
+    }
+    if(analytic.endDate){
+      q.push(`End-date=${analytic.endDate}`)
+    }
+
+    let url = '';
+
+    let query = q.join('&')
+    url = `https://beta-dot-epiproapp.appspot.com/api/v1/analytics?${query}`
+
+    console.log(url);
+ 
+    axios.get(url)
+      .then((response: AxiosResponse) => {
+        console.log(response.data);
+        cb(null, response.data);
       })
       .catch((error: AxiosError) => {
         cb(error, null)

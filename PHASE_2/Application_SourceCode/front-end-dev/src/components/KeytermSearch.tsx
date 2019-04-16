@@ -1,7 +1,7 @@
 import React from 'react';
 import '../css/Home.css';
 import Select from 'react-select';
-import CreatableSelect from 'react-select';
+import CreatableSelect from 'react-select/lib/Creatable';
 import { BackendAPI } from '../API'
 
 let api = new BackendAPI();
@@ -79,6 +79,7 @@ export default class KeytermSearch extends React.Component<IKeytermSearchProps, 
                     <div className='Keyterm-right'>
                         <CreatableSelect
                             isMulti
+                            isClearable
                             options={this.state.filterOptions}
                             className="basic-multi-select"
                             classNamePrefix="select"

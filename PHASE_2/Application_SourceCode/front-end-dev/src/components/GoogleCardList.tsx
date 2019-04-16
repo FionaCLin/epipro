@@ -9,7 +9,7 @@ export default class GoogleCardList extends React.Component<IGoogleCardListProps
     }
 
   render() {
-      console.log(this.props.data);
+      //console.log(this.props.data);
     return (
         <div style={{float: "left", height: '450px', width: '50%'}}>
             <Card style={{height:"100%"}}>

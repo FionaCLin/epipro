@@ -52,7 +52,7 @@ export default class TwitterAPI {
                 },
                 params: q
             }
-            let url =  `${this.baseURL}search/30day/development.json`;
+            let url =  `/search/30day/development.json`;
             axios.get(url, config)
                 .then((response: AxiosResponse) => {
                     console.log(response.data);

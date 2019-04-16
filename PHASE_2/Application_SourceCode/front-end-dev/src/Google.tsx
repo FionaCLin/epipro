@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from 'axios'
 
+
 export interface IFilterOptions {
     disease: string;
     location: string;
@@ -9,7 +10,7 @@ export interface IFilterOptions {
 
 export default class GoogleAPI {
     baseURL: string = 'https://newsapi.org/';
-    apiKey: string = '93ab589956f84076963dac0eb76d6a41';
+    apiKey: string = '112874d7eb274abf8417934c83a1ba07';
 
     getFilteredMedia(filter: IFilterOptions, cb:(err: any, res: any) => any) {
         let q :string[] = [];
@@ -26,12 +27,13 @@ export default class GoogleAPI {
         if (filter.endDate){
             q.push(`to=${filter.endDate}`);
         }
+        q.push('pageSize=100');
 
         if (q.length != 0) {
             q.push(`apiKey=${this.apiKey}`);
             let query = q.join('&');
             let url = `${this.baseURL}v2/everything?${query}`
-            console.log(url);
+            //console.log(url);
     
             axios.get(url)
                 .then((response: AxiosResponse) => {
@@ -42,4 +44,4 @@ export default class GoogleAPI {
             });
         }
     }
-} 
+}

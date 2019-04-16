@@ -37,6 +37,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
+  "proxy":"https://api.twitter.com/1.1",
   "eslintConfig": {
     "extends": "react-app"
   },
