@@ -442,7 +442,7 @@ class disease_reports_with_filter(Resource):
 			'START DATE': start_date.strip(),
 			'END DATE': end_date.strip()
 		}
-		print(dates)
+		# print(dates)
 		date_format = re.compile(
 			r'^(201[7-9])-((0[1-9]|1[012]))-((0[1-9]|[12][0-9]|3[01]))T([01]?[0-9]|2[0-3]|xx):([0-5][0-9]|xx):([0-5][0-9]|xx)$')
 		# make sure the format is right(both dates)
@@ -535,10 +535,14 @@ class data_analytics(Resource):
 		result['start_date'] = start_date
 		result['end_date'] = end_date 
 
-		r = requests.get("http://localhost:8080/api/v1/reports/filter?\
-			Start-date=" + str(start_date) + "&End-date=" + str(end_date) +\
-			"&Key-terms=" + str(disease) + "&Location=" + str(location))
-		content = r.json()
+		try:
+			r = requests.get("http://localhost:8080/api/v1/reports/filter?\
+				Start-date=" + str(start_date) + "&End-date=" + str(end_date) +\
+				"&Key-terms=" + str(disease) + "&Location=" + str(location))
+			content = r.json()
+			r.raise_for_status()
+		except requests.exceptions.HTTPError as e:
+			return { 'message': 'All the parameters are required' }, 400	
 
 		## ============================  FREQUENCY ========================
 		result['frequency_graph'] = {}
