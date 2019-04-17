@@ -34,7 +34,7 @@ import sys
 import requests
 import json as json
 import os
-# from google.cloud import logging
+from google.cloud import logging
 from datetime import timedelta, date, datetime, time
 import date_tool as DT
 from pprint import pprint
@@ -191,34 +191,6 @@ def log_file():
     else:
         content = '\n'.join(content)
     return content
-
-
-
-
-######################
-##      CLOSED      ##
-######################
-# # diseases
-# GET /api/reports/diseases
-# -- Index diseases
-#   Response an array of diseases
-@api.route('/reports/diseases/all', doc=False)
-class diseases(Resource):
-
-    @api.response(200, 'Data fetched successfully')
-    @api.response(400, 'Bad request')
-    @api.response(404, 'No data found')
-    @api.doc(description="Get all the disease occured in all disease reports we have.")
-    def get(self):
-        collection = db[DISEASES]
-        result = []
-
-        cursor = collection.find({},{"_id": 0})
-        for disease in cursor:
-            result.append(disease)
-
-        return result, 200
-
 
 
 ######################
@@ -560,7 +532,7 @@ class headline(Resource):
 ######################
 ##      CLOSED      ##
 ######################
-@api.route('/analytics')
+@api.route('/analytics', doc=False)
 class data_analytics(Resource):
 
     @api.response(200, 'Specific location info fetched successfully')
@@ -587,14 +559,14 @@ class data_analytics(Resource):
         result['end_date'] = end_date
 
         try:
+            filter_url = "https://epiproapp.appspot.com/api/v1/reports/filter?\
+                    Start-date=" + str(start_date) + "&End-date=" + str(end_date) +\
+                    "&Key-terms=" + str(disease)
+                    
             if location is not None:
-                r = requests.get("https://epiproapp.appspot.com/api/v1/reports/filter?\
-                    Start-date=" + str(start_date) + "&End-date=" + str(end_date) +\
-                    "&Key-terms=" + str(disease) + "&Location=" + str(location))
-            else:
-                r = requests.get("https://epiproapp.appspot.com/api/v1/reports/filter?\
-                    Start-date=" + str(start_date) + "&End-date=" + str(end_date) +\
-                    "&Key-terms=" + str(disease))                
+                filter_url += "&Location=" + str(location)
+        
+            r = requests.get(filter_url)                
             content = r.json()
             r.raise_for_status()
         except requests.exceptions.HTTPError as e:
