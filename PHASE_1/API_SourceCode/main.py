@@ -34,7 +34,7 @@ import sys
 import requests
 import json as json
 import os
-from google.cloud import logging
+# from google.cloud import logging
 from datetime import timedelta, date, datetime, time
 import date_tool as DT
 from pprint import pprint
@@ -560,7 +560,7 @@ class headline(Resource):
 ######################
 ##      CLOSED      ##
 ######################
-@api.route('/analytics', doc=False)
+@api.route('/analytics')
 class data_analytics(Resource):
 
     @api.response(200, 'Specific location info fetched successfully')
@@ -581,16 +581,20 @@ class data_analytics(Resource):
         disease = request.args.get('Disease')
         location = request.args.get('Location')
 
-
         result['disease'] = disease
         result['location'] = location
         result['start_date'] = start_date
         result['end_date'] = end_date
 
         try:
-            r = requests.get("https://epiproapp.appspot.com/api/v1/reports/filter?\
-                Start-date=" + str(start_date) + "&End-date=" + str(end_date) +\
-                "&Key-terms=" + str(disease) + "&Location=" + str(location))
+            if location is not None:
+                r = requests.get("https://epiproapp.appspot.com/api/v1/reports/filter?\
+                    Start-date=" + str(start_date) + "&End-date=" + str(end_date) +\
+                    "&Key-terms=" + str(disease) + "&Location=" + str(location))
+            else:
+                r = requests.get("https://epiproapp.appspot.com/api/v1/reports/filter?\
+                    Start-date=" + str(start_date) + "&End-date=" + str(end_date) +\
+                    "&Key-terms=" + str(disease))                
             content = r.json()
             r.raise_for_status()
         except requests.exceptions.HTTPError as e:
