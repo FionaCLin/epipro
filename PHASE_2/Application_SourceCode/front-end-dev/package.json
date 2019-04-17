@@ -24,12 +24,14 @@
     "react-datepicker": "^2.2.0",
     "react-dom": "^16.8.4",
     "react-router-dom": "^5.0.0",
+    "react-script-tag": "^1.1.2",
     "react-scripts": "2.1.8",
     "react-select": "^2.4.2",
     "react-tweet-embed": "^1.2.2",
     "recharts": "^1.5.0",
     "twitter": "^1.7.1",
-    "typescript": "^3.3.4000"
+    "typescript": "^3.3.4000",
+    "widget-google-trends": "0.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -37,7 +39,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "proxy":"https://api.twitter.com/1.1",
+  "proxy": "https://api.twitter.com/1.1",
   "eslintConfig": {
     "extends": "react-app"
   },
