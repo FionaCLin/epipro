@@ -17,6 +17,7 @@ import { BackendAPI, IAnalyticOptions } from '../API';
 let newsAPI = new GoogleAPI();
 let tweetAPI = new TwitterAPI();
 let epiAPI = new BackendAPI();
+declare var trends: any;
 
 export default class Analytics extends React.Component<IAnalyticsProps, IAnalyticsState> {
   constructor(props: IAnalyticsProps) {
@@ -41,6 +42,14 @@ export default class Analytics extends React.Component<IAnalyticsProps, IAnalyti
       console.log(event);
       this.setState(event);
   }
+
+  next_fun(){
+        console.log("LINE 47");
+        var divElem = document.getElementById('sampDiv');
+        if (!isNull(divElem)) divElem.innerHTML = '';
+        trends.embed.renderExploreWidgetTo(divElem,"TIMESERIES", {"comparisonItem":[{"keyword":"dbs bank","geo":"","time":"today 12-m"}],"category":0,"property":""}, {"exploreQuery":"q=dbs%20bank&date=today 12-m","guestPath":"https://trends.google.com:443/trends/embed/"}); 
+        console.log("HERE"); 
+    }
 
   createDateArray(startDate: string, endDate: string, type: string) {
         let count: Date = new Date(startDate);
@@ -118,13 +127,11 @@ export default class Analytics extends React.Component<IAnalyticsProps, IAnalyti
   }
 
   private onAnalyze() {
-    let endDate = (!isNull(this.state.endDate)) ? new Date(this.state.endDate) : null;
     let apiFilterState = this.createApiFilterState(this.state.startDate, this.state.endDate);
-    this.getGoogleData();
+    this.next_fun();
+    //this.getGoogleData();
     // tweetAPI.getFilteredMedia(apiFilterState, (error: any, response: any) => {});
-    epiAPI.getAnalyticReport(apiFilterState, (error: any, response: any) => {});
-    this.setState({endDate: endDate});
-
+    //epiAPI.getAnalyticReport(apiFilterState, (error: any, response: any) => {});
   }
 
     private createApiFilterState(startDate: Date | null, endDate: Date | null) {
@@ -139,18 +146,28 @@ export default class Analytics extends React.Component<IAnalyticsProps, IAnalyti
     }
 
     private stringifyDates(date: Date | null, dateType: string) {
-        if (!isNull(date)) {
+        let temp = (!isNull(date)) ? new Date(date) : date;
+        if (!isNull(temp)) {
             if (dateType == 'endDate') {
-                date.setSeconds(date.getSeconds() - 1);
-                date.setDate(date.getDate() + 1);
+                temp.setSeconds(temp.getSeconds() - 1);
+                temp.setDate(temp.getDate() + 1);
             }
-            date = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
+            temp = new Date(temp.getTime() - (temp.getTimezoneOffset() * 60000));
         }
-        return (!isNull(date) ? date.toISOString().slice(0, -5) : '');
+        return (!isNull(temp) ? temp.toISOString().slice(0, -5) : '');
+    }
+
+    checkInputs() {
+        if (this.state.disease.length == 0 || this.state.locations.length == 0 ||
+            isNull(this.state.startDate) || isNull(this.state.endDate)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     render() {
-        console.log(this.state.endDate);
+        console.log(this.state.googleArticles);
         return (
             <div className="bg">
                 <Header />
@@ -162,14 +179,15 @@ export default class Analytics extends React.Component<IAnalyticsProps, IAnalyti
                         <LocationSearch locations={this.state.locations} updateLocation={this.handleChange}/>
                         <TimeSearch startDate={this.state.startDate} endDate={this.state.endDate} updateTime={this.handleChange}/>
                         <div className="Filter-button">
-                            <Button onClick={this.onAnalyze}>Create Analytics</Button>
+                            <Button disabled={this.checkInputs()} onClick={this.onAnalyze}>Create Analytics</Button>
                         </div>
                     </div>
                     <div className='ArticleList-division' />
                         <FrequencyGraph />
                         <HeatMap />
                         <HistogramGraph title='Histogram of events related to Zika'/>
-                        <MediaCoverage />
+                        <MediaCoverage googleData={this.state.googleArticles}/>
+                        <div id="sampDiv"></div>
                     </div>
                 </body>
             </div>
