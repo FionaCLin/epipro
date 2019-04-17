@@ -215,33 +215,6 @@ class twitter_api_search(Resource):
         return json.dumps(results['results']), 200
 
 
-
-######################
-##      CLOSED      ##
-######################
-# # diseases
-# GET /api/reports/diseases
-# -- Index diseases
-#   Response an array of diseases
-@api.route('/reports/diseases/all')
-class diseases(Resource):
-
-    @api.response(200, 'Data fetched successfully')
-    @api.response(400, 'Bad request')
-    @api.response(404, 'No data found')
-    @api.doc(description="Get all the disease occured in all disease reports we have.")
-    def get(self):
-        collection = db[DISEASES]
-        result = []
-
-        cursor = collection.find({},{"_id": 0})
-        for disease in cursor:
-            result.append(disease)
-
-        return result, 200
-
-
-
 ######################
 ##      CLOSED      ##
 ######################
@@ -463,7 +436,7 @@ class disease_reports_with_filter(Resource):
             'START DATE': start_date.strip(),
             'END DATE': end_date.strip()
         }
-        print(dates)
+
         date_format = re.compile(
             r'^(201[7-9])-((0[1-9]|1[012]))-((0[1-9]|[12][0-9]|3[01]))T([01]?[0-9]|2[0-3]|xx):([0-5][0-9]|xx):([0-5][0-9]|xx)$')
         # make sure the format is right(both dates)
@@ -525,6 +498,58 @@ class disease_reports_with_filter(Resource):
                 result.append(entry)
 
         return result, 200
+        
+#####################################  INTERNAL USE ##########################################
+
+
+######################
+##      CLOSED      ##
+######################
+# # diseases
+# GET /api/reports/diseases
+# -- Index diseases
+#   Response an array of diseases
+@api.route('/reports/diseases/all', doc=False)
+class diseases(Resource):
+
+    @api.response(200, 'Data fetched successfully')
+    @api.response(400, 'Bad request')
+    @api.response(404, 'No data found')
+    @api.doc(description="Get all the disease occured in all disease reports we have.")
+    def get(self):
+        collection = db[DISEASES]
+        result = []
+
+        cursor = collection.find({},{"_id": 0})
+        for disease in cursor:
+            result.append(disease)
+
+        return result, 200
+
+
+
+@api.route('/reports/search/headline', doc=False)
+class headline(Resource):
+
+    @api.response(200, 'Data fetched successfully')
+    @api.response(400, 'Bad request')
+    @api.response(404, 'No data found')
+    @api.param('headline', 'headline for search')
+    @api.doc(description="Get related headline.")
+    def get(self):
+
+        result = []
+        collection = db[REPORTS]
+        headline = request.args.get('headline')
+        # headline = '/' + headline + '/'
+        print(headline)
+        headline = ".*" + str(headline) + ".*"
+
+        cursor = collection.find({ 'headline': { '$regex':headline } }, {"_id": 0})
+        for e in cursor:
+            result.append(e)
+
+        return result, 200
 
 ######################
 ##      CLOSED      ##
@@ -538,7 +563,7 @@ class data_analytics(Resource):
     @api.param('Location', 'A location(city/country/state etc.) that user is interested in')
     @api.param('Disease', 'The key terms user want to search')
     @api.param('End-date', 'End date of period of interest, FORMAT: YYYY-MM-DDTHH:MM:SS')
-    @api.param('Start-date', 'Start date of period of interest, FORMAT: YYYY-MM-DDTHH:MM:SS')    
+    @api.param('Start-date', 'Start date of period of interest, FORMAT: YYYY-MM-DDTHH:MM:SS')
     def get(self):
 
         result = {}
@@ -550,16 +575,27 @@ class data_analytics(Resource):
         disease = request.args.get('Disease')
         location = request.args.get('Location')
 
-
         result['disease'] = disease
         result['location'] = location
         result['start_date'] = start_date
-        result['end_date'] = end_date 
+        result['end_date'] = end_date
 
-        r = requests.get("http://localhost:8080/api/v1/reports/filter?\
-            Start-date=" + str(start_date) + "&End-date=" + str(end_date) +\
-            "&Key-terms=" + str(disease) + "&Location=" + str(location))
-        content = r.json()
+        try:
+            filter_url = "https://epiproapp.appspot.com/api/v1/reports/filter?\
+                    Start-date=" + str(start_date) + "&End-date=" + str(end_date) +\
+                    "&Key-terms=" + str(disease)
+                    
+            if location is not None:
+                filter_url += "&Location=" + str(location)
+        
+            r = requests.get(filter_url)                
+            content = r.json()
+            r.raise_for_status()
+        except requests.exceptions.HTTPError as e:
+            error_message = 'All the parameters are required'
+            if 'message' in content:
+                error_message = content['message']
+            return {'message': error_message}, e.response.status_code
 
         ## ============================  FREQUENCY ========================
         result['frequency_graph'] = {}
@@ -577,7 +613,7 @@ class data_analytics(Resource):
         for key in record:
             e = {}
             e['date'] = key
-            e['count'] = record[key] 
+            e['count'] = record[key]
             result['frequency_graph']['frequency'].append(e)
 
         ## ================================ HEAT MAP ====================================
@@ -590,6 +626,7 @@ class data_analytics(Resource):
             for reported in reports:
                 reported_event = reported['reported_events']
                 for event in reported_event:
+                    number_affected = int(event['number-affected'])
                     event_location = event['location']['location']
                     city_locations = event_location.split(';')
                     for city_state in city_locations:
@@ -600,13 +637,17 @@ class data_analytics(Resource):
                                 city = city_state
                             if city != '':
                                 if city in record:
-                                    record[city] += 1
+                                    record[city]['article'] += 1
+                                    record[city]['number'] += number_affected
                                 else:
-                                    record[city] = 1
+                                    record[city] = {}
+                                    record[city]['article'] = 1
+                                    record[city]['number'] = number_affected
         for key in record:
             e = {}
             e['location'] = key
-            e['article_count'] = record[key] 
+            e['article_count'] = record[key]['article']
+            e['number_affected'] = record[key]['number']
             result['heat_map']['locations'].append(e)
 
 
@@ -619,13 +660,14 @@ class data_analytics(Resource):
             for reported in reports:
                 reported_event = reported['reported_events']
                 for event in reported_event:
+                    number_affected = int(event['number-affected'])
                     event_date = event['date']
                     disease_type = event['type']
                     if single_date_format.match(event_date):
                         date_time, _ = event_date.split('T')
                         if disease_type != '':
                             if date_time in record:
-                                record[date_time][disease_type] += 1
+                                record[date_time][disease_type] += number_affected
                             else:
                                 record[date_time] = {}
                                 record[date_time]['recovered'] = 0
@@ -633,7 +675,7 @@ class data_analytics(Resource):
                                 record[date_time]['infected'] = 0
                                 record[date_time]['death'] = 0
                                 record[date_time]['presence'] = 0
-                                record[date_time][disease_type] = 1
+                                record[date_time][disease_type] = number_affected
 
                     elif range_date_format.match(event_date):
                         date_line_format = re.compile('^([^to ]*) to (.*)$')
@@ -659,7 +701,7 @@ class data_analytics(Resource):
                             date_time = str(d1 + timedelta(i))
                             if disease_type != '':
                                 if date_time in record:
-                                    record[date_time][disease_type] += 1
+                                    record[date_time][disease_type] += number_affected
                                 else:
                                     record[date_time] = {}
                                     record[date_time]['recovered'] = 0
@@ -667,7 +709,7 @@ class data_analytics(Resource):
                                     record[date_time]['infected'] = 0
                                     record[date_time]['death'] = 0
                                     record[date_time]['presence'] = 0
-                                    record[date_time][disease_type] = 1
+                                    record[date_time][disease_type] = number_affected
                     else:
                         print('it is a empty date')
         for key in record:
@@ -677,9 +719,9 @@ class data_analytics(Resource):
             e['hospitalised'] = record[key]['hospitalised']
             e['infected'] = record[key]['infected']
             e['death'] = record[key]['death']
-            e['presence'] = record[key]['presence']                            
+            e['presence'] = record[key]['presence']
             result['event_graph'].append(e)
-        
+
         return result, 200
 
 

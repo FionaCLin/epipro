@@ -55,7 +55,7 @@ def check_date(date_line):
     #SEC1 >SEC2
     sec1 = date1_group.group(5)
     sec2 = date2_group.group(5)
-    if sec1 > sec2: 
+    if sec1 > sec2:
         return False
     if sec1 < sec2:
         return True
@@ -70,7 +70,7 @@ def swap_date(date_line):
     dateTime2 = date_line_format.search(date_line).group(2)
 
     correct_date = dateTime2 + " to " + dateTime1
-    
+
     return correct_date
 
 # two dates are of format
@@ -78,7 +78,7 @@ def swap_date(date_line):
 # check date 1 is before date2
 def is_before(date1, date2):
     date_line = date1 + " to " + date2
-    
+
     return check_date(date_line)
 
 
@@ -86,7 +86,7 @@ def is_before(date1, date2):
 # date of publication:^(\d{4})-(\d\d|xx)-(\d\d|xx)T(\d\d|xx):(\d\d|xx):(\d\d|xx)$
 # start date:^(\d{4})-(\d\d|xx)-(\d\d|xx)T(\d\d|xx):(\d\d|xx):(\d\d|xx)$
 def align_date(pub_date, date_line):
-    
+
     date_format = re.compile(r'^(\d{4})-(\d\d|xx)-(\d\d|xx)T(\d\d|xx):(\d\d|xx):(\d\d|xx)')
     date_line_group = date_format.search(date_line)
     pub_date_group = date_format.search(pub_date)
@@ -108,8 +108,8 @@ def align_date(pub_date, date_line):
         minute = date_line_group.group(5)
     if second == 'xx':
         second = date_line_group.group(6)
-    
-    final_date = year + '-' + month + '-' + day + 'T' + hour + ':' + minute + ':' + second 
+
+    final_date = year + '-' + month + '-' + day + 'T' + hour + ':' + minute + ':' + second
 
     return final_date
 
