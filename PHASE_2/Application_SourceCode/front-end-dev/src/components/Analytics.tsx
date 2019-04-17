@@ -47,7 +47,7 @@ export default class Analytics extends React.Component<IAnalyticsProps, IAnalyti
         console.log("LINE 47");
         var divElem = document.getElementById('sampDiv');
         if (!isNull(divElem)) divElem.innerHTML = '';
-        trends.embed.renderExploreWidgetTo(divElem,"TIMESERIES", {"comparisonItem":[{"keyword":"dbs bank","geo":"","time":"today 12-m"}],"category":0,"property":""}, {"exploreQuery":"q=dbs%20bank&date=today 12-m","guestPath":"https://trends.google.com:443/trends/embed/"}); 
+        trends.embed.renderExploreWidgetTo(divElem,"TIMESERIES", {"comparisonItem":[{"keyword":"dbs bank","geo":"","time":"today 12-m"}],"category":0,"property":""}, {"exploreQuery":"q=dbs bank&date=today 12-m","guestPath":"https://trends.google.com:443/trends/embed/"}); 
         console.log("HERE"); 
     }
 
