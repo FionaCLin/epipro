@@ -505,6 +505,58 @@ class disease_reports_with_filter(Resource):
 
         return result, 200
 
+#####################################  INTERNAL USE ##########################################
+
+
+######################
+##      CLOSED      ##
+######################
+# # diseases
+# GET /api/reports/diseases
+# -- Index diseases
+#   Response an array of diseases
+@api.route('/reports/diseases/all', doc=False)
+class diseases(Resource):
+
+    @api.response(200, 'Data fetched successfully')
+    @api.response(400, 'Bad request')
+    @api.response(404, 'No data found')
+    @api.doc(description="Get all the disease occured in all disease reports we have.")
+    def get(self):
+        collection = db[DISEASES]
+        result = []
+
+        cursor = collection.find({},{"_id": 0})
+        for disease in cursor:
+            result.append(disease)
+
+        return result, 200
+
+
+
+@api.route('/reports/search/headline', doc=False)
+class headline(Resource):
+
+    @api.response(200, 'Data fetched successfully')
+    @api.response(400, 'Bad request')
+    @api.response(404, 'No data found')
+    @api.param('headline', 'headline for search')
+    @api.doc(description="Get related headline.")
+    def get(self):
+
+        result = []
+        collection = db[REPORTS]
+        headline = request.args.get('headline')
+        # headline = '/' + headline + '/'
+        print(headline)
+        headline = ".*" + str(headline) + ".*"
+
+        cursor = collection.find({ 'headline': { '$regex':headline } }, {"_id": 0})
+        for e in cursor:
+            result.append(e)
+
+        return result, 200
+
 ######################
 ##      CLOSED      ##
 ######################
@@ -536,7 +588,7 @@ class data_analytics(Resource):
         result['end_date'] = end_date
 
         try:
-            r = requests.get("http://localhost:8080/api/v1/reports/filter?\
+            r = requests.get("https://epiproapp.appspot.com/api/v1/reports/filter?\
                 Start-date=" + str(start_date) + "&End-date=" + str(end_date) +\
                 "&Key-terms=" + str(disease) + "&Location=" + str(location))
             content = r.json()
