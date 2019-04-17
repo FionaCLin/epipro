@@ -576,6 +576,7 @@ class data_analytics(Resource):
             for reported in reports:
                 reported_event = reported['reported_events']
                 for event in reported_event:
+                    number_affected = int(event['number-affected'])
                     event_location = event['location']['location']
                     city_locations = event_location.split(';')
                     for city_state in city_locations:
@@ -586,13 +587,17 @@ class data_analytics(Resource):
                                 city = city_state
                             if city != '':
                                 if city in record:
-                                    record[city] += 1
+                                    record[city]['article'] += 1
+                                    record[city]['number'] += number_affected
                                 else:
-                                    record[city] = 1
+                                    record[city] = {}
+                                    record[city]['article'] = 1
+                                    record[city]['number'] = number_affected
         for key in record:
             e = {}
             e['location'] = key
-            e['article_count'] = record[key]
+            e['article_count'] = record[key]['article']
+            e['number_affected'] = record[key]['number']
             result['heat_map']['locations'].append(e)
 
 
@@ -605,13 +610,14 @@ class data_analytics(Resource):
             for reported in reports:
                 reported_event = reported['reported_events']
                 for event in reported_event:
+                    number_affected = int(event['number-affected'])
                     event_date = event['date']
                     disease_type = event['type']
                     if single_date_format.match(event_date):
                         date_time, _ = event_date.split('T')
                         if disease_type != '':
                             if date_time in record:
-                                record[date_time][disease_type] += 1
+                                record[date_time][disease_type] += number_affected
                             else:
                                 record[date_time] = {}
                                 record[date_time]['recovered'] = 0
@@ -619,7 +625,7 @@ class data_analytics(Resource):
                                 record[date_time]['infected'] = 0
                                 record[date_time]['death'] = 0
                                 record[date_time]['presence'] = 0
-                                record[date_time][disease_type] = 1
+                                record[date_time][disease_type] = number_affected
 
                     elif range_date_format.match(event_date):
                         date_line_format = re.compile('^([^to ]*) to (.*)$')
@@ -645,7 +651,7 @@ class data_analytics(Resource):
                             date_time = str(d1 + timedelta(i))
                             if disease_type != '':
                                 if date_time in record:
-                                    record[date_time][disease_type] += 1
+                                    record[date_time][disease_type] += number_affected
                                 else:
                                     record[date_time] = {}
                                     record[date_time]['recovered'] = 0
@@ -653,7 +659,7 @@ class data_analytics(Resource):
                                     record[date_time]['infected'] = 0
                                     record[date_time]['death'] = 0
                                     record[date_time]['presence'] = 0
-                                    record[date_time][disease_type] = 1
+                                    record[date_time][disease_type] = number_affected
                     else:
                         print('it is a empty date')
         for key in record:
