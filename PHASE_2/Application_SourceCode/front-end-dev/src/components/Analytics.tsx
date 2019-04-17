@@ -11,8 +11,10 @@ import FrequencyGraph from './FrequencyGraph';
 import HistogramGraph from './HistogramGraph';
 import MediaCoverage from './MediaCoverage';
 import Header from './Header';
+import { BackendAPI } from '../API';
 
 let newsAPI = new GoogleAPI();
+let backendAPI = new BackendAPI();
 
 export default class Analytics extends React.Component<IAnalyticsProps, IAnalyticsState> {
   constructor(props: IAnalyticsProps) {
@@ -43,6 +45,16 @@ export default class Analytics extends React.Component<IAnalyticsProps, IAnalyti
         }
         console.log(response);
     });
+    backendAPI.getAnalytics(apiFilterState, (error: any, response: any) => {
+        if (error && error.response) {
+            let message = error.response.data.message
+            console.log('error message', message);
+        } else if (error) {
+            console.log('error message', error.message);
+        }
+        console.log(response);
+    });
+
   }
 
     private createApiFilterState() {
