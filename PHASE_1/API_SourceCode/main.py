@@ -194,7 +194,7 @@ def log_file():
     return content
 
 
-@api.route('/twitter')
+@api.route('/twitter', doc=False)
 class twitter_api_search(Resource):
 
     def post(self):
