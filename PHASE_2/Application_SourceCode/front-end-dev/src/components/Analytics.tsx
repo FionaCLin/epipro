@@ -19,7 +19,7 @@ export default class Analytics extends React.Component<IAnalyticsProps, IAnalyti
             locations: [],
             startDate: null,
             endDate: null,
-            apiState: undefined
+            frequencyData: null
         };
         this.handleChange = this.handleChange.bind(this);
         this.onAnalyze = this.onAnalyze.bind(this);
@@ -33,7 +33,6 @@ export default class Analytics extends React.Component<IAnalyticsProps, IAnalyti
     private onAnalyze() {
         console.log("ANALYZE");
         let apiFilterState = this.createApiFilterState(this.state.startDate, this.state.endDate);
-        this.setState({apiState: null});
         epiAPI.getAnalyticReport(apiFilterState, (error: any, response: any) => {
             console.log(response);
             if (error && error.response) {
@@ -42,10 +41,39 @@ export default class Analytics extends React.Component<IAnalyticsProps, IAnalyti
             } else if (error) {
                 console.log('error message', error.message);
             } else {
-                this.setState({apiState: response});
+                this.setState({frequencyData: this.createFrequencyData(response.frequency_graph.frequency)});
                 console.log("LINE 45", response);
             }
         });
+    }
+
+    private createFrequencyData(apiFrequency: Array<APIFrequency>) {
+        console.log("INSIDE", apiFrequency);
+        let count = (!isNull(this.state.startDate)) ? new Date(this.state.startDate) : new Date(2017, 0, 1);
+        let endDate = (!isNull(this.state.endDate)) ? new Date(this.state.endDate) : new Date();
+        endDate.setHours(0, 0, 0, 0);
+
+        let countStr: string = this.stringifyDates(count, 'startDate');
+        let endStr: string = this.stringifyDates(endDate, 'endDate');
+        countStr =  countStr.substring(0, countStr.indexOf('T'));
+        endStr = endStr.substring(0, endStr.indexOf('T'));
+
+        let dateArray: Array<Frequency> = [];
+        let temp: Frequency = { date: countStr, WHO: 0, Google: 0, Twitter: 0 };
+
+        while (count <= endDate) {
+            temp = { date: countStr, WHO: 0, Google: 0, Twitter: 0 };
+            dateArray.push(temp);
+            let sameDate = apiFrequency.filter(value => value.date == countStr);
+            if (sameDate.length != 0) temp.WHO = sameDate[0].count;
+            count.setDate(count.getDate() + 1);
+            count.setHours(0, 0, 0, 0);
+            console.log(count);
+            countStr =  this.stringifyDates(count, 'startDate').substring(0, countStr.length);
+        }
+        console.log(apiFrequency);
+        console.log('date', dateArray);
+        return dateArray;
     }
 
     private createApiFilterState(startDate: Date | null, endDate: Date | null) {
@@ -91,7 +119,7 @@ export default class Analytics extends React.Component<IAnalyticsProps, IAnalyti
                         </div>
                     </div>
                     <div className='ArticleList-division' />
-                        <AnalyticsReport startDate={this.state.startDate} endDate={this.state.endDate} apiState={this.state.apiState}/>
+                        <AnalyticsReport frequencyData={this.state.frequencyData}/>
                     </div>
                 </body>
             </div>
@@ -107,11 +135,23 @@ interface IAnalyticsState {
     locations: Array<string>;
     startDate: Date | null;
     endDate: Date | null;
-    apiState: undefined | null | IApiState;
+    frequencyData: any;
 }
 
 export interface IApiState {
     event_graph: any;
     frequency_graph: any;
     heat_map: any;
+}
+
+export interface Frequency {
+    date: string;
+    WHO: number;
+    Twitter: number;
+    Google: number;
+}
+
+interface APIFrequency {
+    date: string,
+    count: number
 }

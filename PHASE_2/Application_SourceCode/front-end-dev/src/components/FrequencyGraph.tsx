@@ -2,7 +2,7 @@ import React from 'react';
 import '../css/Home.css';
 import { Button, Collapse, InputGroup, ButtonGroup, ToggleButton } from 'react-bootstrap';
 import FrequencyFormat from './FrequencyFormat';
-import { isUndefined, isNull } from 'util';
+import { isUndefined, isNull, isNullOrUndefined } from 'util';
 import { Frequency } from './AnalyticsReport';
 
 const frequencyFilters: Array<string> = ['day', 'month', 'year'];
@@ -23,9 +23,16 @@ export default class FrequencyGraph extends React.Component<IFrequencyGraphProps
         });
     }
 
+    componentWillReceiveProps(newProps: any) {
+        if (!isNullOrUndefined(newProps.frequencyData) && newProps.frequencyData !== this.state.frequencyData) {
+            this.setState({frequencyData: newProps.frequencyData});
+        }
+    }
+
     private convertFrequency(interval: string) {
         let data = this.props.frequencyData;
         if (!isUndefined(data) && this.state.frequencyFilter != interval) {
+            console.log("HERE");
             if (interval == 'day') {
                 this.setState({frequencyData: data, frequencyFilter: interval});
             } else {
@@ -77,7 +84,7 @@ export default class FrequencyGraph extends React.Component<IFrequencyGraphProps
     }
 
     private cleanChartData(data?: Array<Frequency>) {
-        if (!isUndefined(data)) {
+        if (!isNullOrUndefined(data)) {
             return data.map((value: Frequency) => {
                 return {
                     WHO: value.WHO,
