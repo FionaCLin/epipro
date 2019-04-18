@@ -13,7 +13,7 @@
 # limitations under the License.
 
 #### DON'T KNOW WHAT THIS FOR #####
-# from lib import *
+from lib import *
 
 # [START gae_python37_app]
 from flask import Flask, Blueprint
@@ -34,7 +34,7 @@ import sys
 import requests
 import json as json
 import os
-# from google.cloud import logging
+from google.cloud import logging
 from datetime import timedelta, date, datetime, time
 import date_tool as DT
 from pprint import pprint
