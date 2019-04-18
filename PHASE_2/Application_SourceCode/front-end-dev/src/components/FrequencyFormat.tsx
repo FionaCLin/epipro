@@ -15,7 +15,7 @@ export default class FrequencyFormat extends React.Component<IFrequencyFormatPro
             <ResponsiveContainer width = '100%' height = '90%' >
                 <LineChart data={this.props.chartData}>
                     <XAxis label={{value: 'Dates', position: 'insideBottom', offset: 0}} dataKey="date"/>
-                    <YAxis label={{value: 'Mentions count', position: 'insideLeft', angle: -90, offset: 25}}/>
+                    <YAxis label={{value: 'Mentions count', position: 'insideLeft', angle: -90, offset: 0}}/>
                     <CartesianGrid strokeDasharray="3 3"/>
                     <Tooltip/>
                     <Legend />

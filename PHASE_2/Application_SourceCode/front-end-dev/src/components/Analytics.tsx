@@ -4,13 +4,14 @@ import TimeSearch from './TimeSearch';
 import LocationSearch from './LocationSearch';
 import { Button } from 'react-bootstrap';
 import DiseaseSearch from './DiseaseSearch';
-import { isNull } from 'util';
+import { isNull, isNullOrUndefined, isUndefined } from 'util';
 import Header from './Header';
 import { BackendAPI, IAnalyticOptions } from '../API';
 import FrequencyGraph from './FrequencyGraph';
 import HeatMap from './Heatmap';
 import { fitBounds } from 'google-map-react/utils';
 import HistogramGraph, { HistBar } from './HistogramGraph';
+import loading from '../imgs/loading1.gif';
 
 let epiAPI = new BackendAPI();
 declare var google: any;
@@ -24,9 +25,10 @@ export default class Analytics extends React.Component<IAnalyticsProps, IAnalyti
             locations: [],
             startDate: null,
             endDate: null,
-            frequencyData: null,
-            heatmapPositions: [],
-            histogramData: null
+            frequencyData: undefined,
+            heatmapPositions: undefined,
+            histogramData: undefined,
+            title: ''
         };
         this.handleChange = this.handleChange.bind(this);
         this.onAnalyze = this.onAnalyze.bind(this);
@@ -39,6 +41,11 @@ export default class Analytics extends React.Component<IAnalyticsProps, IAnalyti
 
     private onAnalyze() {
         console.log("ANALYZE");
+        this.setState({
+            heatmapPositions: null,
+            frequencyData: null,
+            histogramData: null
+        });
         let apiFilterState = this.createApiFilterState(this.state.startDate, this.state.endDate);
         epiAPI.getAnalyticReport(apiFilterState, (error: any, response: any) => {
             console.log(response);
@@ -51,11 +58,23 @@ export default class Analytics extends React.Component<IAnalyticsProps, IAnalyti
                 this.createHeatMapData(response.heat_map.locations);
                 this.setState({
                     frequencyData: this.createFrequencyData(response.frequency_graph.frequency),
-                    histogramData: this.createHistogramData(response.event_graph)
+                    histogramData: this.createHistogramData(response.event_graph),
+                    title: this.state.disease
                 });
                 console.log("LINE 45", response);
             }
         });
+    }
+
+    checkLoading() {
+        if (isNull(this.state.frequencyData) || isNull(this.state.frequencyData) ||
+            isNull(this.state.heatmapPositions)) {
+          return <img src={loading} className="loading" alt="loading" />;
+        } else if (isUndefined(this.state.frequencyData) && isUndefined(this.state.histogramData) &&
+            isUndefined(this.state.heatmapPositions)) {
+                return true;
+        }
+        return false;
     }
 
     private createHistogramData(apiEvent: any) {
@@ -208,9 +227,18 @@ export default class Analytics extends React.Component<IAnalyticsProps, IAnalyti
                         </div>
                     </div>
                     <div className='ArticleList-division' />
-                        <FrequencyGraph title={this.state.disease} frequencyData={this.state.frequencyData}/>
-                        <HeatMap title={this.state.disease} locations={this.state.heatmapPositions} bounds={this.calculateBounds()}/>
-                        <HistogramGraph title={this.state.disease} histogramData={this.state.histogramData}/>
+                        {this.checkLoading()}
+                        {this.checkLoading() == false ? (
+                        <div>
+                            <FrequencyGraph title={this.state.title} frequencyData={this.state.frequencyData}/>
+                            <HeatMap
+                                title={this.state.title}
+                                locations={isNullOrUndefined(this.state.heatmapPositions) ? [] : this.state.heatmapPositions}
+                                bounds={this.calculateBounds()}
+                            />
+                            <HistogramGraph title={this.state.title} histogramData={this.state.histogramData}/>
+                        </div>
+                        ) : (<div></div>)}
                     </div>
                 </body>
             </div>
@@ -229,6 +257,7 @@ interface IAnalyticsState {
     frequencyData: any;
     heatmapPositions: any;
     histogramData: any;
+    title: string;
 }
 
 export interface IApiState {

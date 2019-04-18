@@ -39,7 +39,7 @@ export default class HistogramGraph extends React.Component<IHistogramGraphProps
                         <BarChart data={!isNull(this.props.histogramData) ? this.props.histogramData.events : []}>
                         <CartesianGrid strokeDasharray="3 3"/>
                         <XAxis label={{value: 'Event types', position: 'insideBottom', offset: 0}} dataKey="event"/>
-                        <YAxis label={{value: 'Event type count', position: 'insideLeft', angle: -90, offset: 25}}/>
+                        <YAxis label={{value: 'Event type count', position: 'insideLeft', angle: -90, offset: 0}}/>
                         <Tooltip/>
                         <Bar dataKey="count" fill="#8884d8" />
                         </BarChart>
