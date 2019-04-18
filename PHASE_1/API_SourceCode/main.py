@@ -34,7 +34,7 @@ import sys
 import requests
 import json as json
 import os
-from google.cloud import logging
+# from google.cloud import logging
 from datetime import timedelta, date, datetime, time
 import date_tool as DT
 from pprint import pprint
@@ -532,7 +532,7 @@ class headline(Resource):
 ######################
 ##      CLOSED      ##
 ######################
-@api.route('/analytics', doc=False)
+@api.route('/analytics')
 class data_analytics(Resource):
 
     @api.response(200, 'Specific location info fetched successfully')
@@ -559,13 +559,17 @@ class data_analytics(Resource):
         result['end_date'] = end_date
 
         try:
-            filter_url = "https://epiproapp.appspot.com/api/v1/reports/filter?\
-                    Start-date=" + str(start_date) + "&End-date=" + str(end_date) +\
-                    "&Key-terms=" + str(disease)
-                    
+            filter_url = "https://epiproapp.appspot.com/api/v1/reports/filter?"
+            if start_date is not None:
+                filter_url += "Start-date=" + str(start_date) + "&"
+            if end_date is not None:
+                filter_url += "End-date=" + str(end_date) + "&"
+
+            filter_url += "Key-terms=" + str(disease) + "&"
             if location is not None:
-                filter_url += "&Location=" + str(location)
-        
+                filter_url += "Location=" + str(location) + "&"
+            filter_url = filter_url[:-1]
+
             r = requests.get(filter_url)                
             content = r.json()
             r.raise_for_status()
@@ -575,24 +579,6 @@ class data_analytics(Resource):
                 error_message = content['message']
             return {'message': error_message}, e.response.status_code
 
-        ## ============================  FREQUENCY ========================
-        result['frequency_graph'] = {}
-        result['frequency_graph']['frequency'] = []
-
-        record = {}
-
-        for rec in content:
-            date_pub, _ = rec['date_of_publication'].split('T')
-            if date_pub in record:
-                record[date_pub] += 1
-            else:
-                record[date_pub] = 1
-
-        for key in record:
-            e = {}
-            e['date'] = key
-            e['count'] = record[key]
-            result['frequency_graph']['frequency'].append(e)
 
         ## ================================ HEAT MAP ====================================
         result['heat_map'] = {}
@@ -605,22 +591,31 @@ class data_analytics(Resource):
                 reported_event = reported['reported_events']
                 for event in reported_event:
                     number_affected = int(event['number-affected'])
+                    event_country = event['location']['country']
                     event_location = event['location']['location']
                     city_locations = event_location.split(';')
                     for city_state in city_locations:
                         if city_state != '':
                             try:
-                                city, _ = city_state.split(',')
+                                city, state = city_state.split(',')
                             except ValueError:
                                 city = city_state
-                            if city != '':
-                                if city in record:
-                                    record[city]['article'] += 1
-                                    record[city]['number'] += number_affected
-                                else:
-                                    record[city] = {}
-                                    record[city]['article'] = 1
-                                    record[city]['number'] = number_affected
+                            if city != '' and city != 'the' and city != 'same':
+                                print('====================== city is ==='+ city)
+                                city_string = city + ', ' + event_country 
+                            if city == '' and state != '':
+                                city_string = state + ', ' + event_country
+                            if city == '' and state == '':
+                                city_string = event_country
+
+                            if city_string in record:
+                                record[city_string]['article'] += 1
+                                record[city_string]['number'] += number_affected
+                            else:
+                                record[city_string] = {}
+                                record[city_string]['article'] = 1
+                                record[city_string]['number'] = number_affected
+                                
         for key in record:
             e = {}
             e['location'] = key
@@ -630,8 +625,16 @@ class data_analytics(Resource):
 
 
         ## ================================ EVENT GRAPH =================================
-        result['event_graph'] = []
+        result['event_graph'] = {}
         record = {}
+        record['recovered'] = 0
+        record['hospitalised'] = 0
+        record['infected'] = 0
+        record['death'] = 0
+        record['presence'] = 0
+
+        record['start_date'] = date(2020, 12, 31)
+        record['end_date'] = date(1900, 12, 31)
 
         for rec in content:
             reports = rec['reports']
@@ -641,66 +644,106 @@ class data_analytics(Resource):
                     number_affected = int(event['number-affected'])
                     event_date = event['date']
                     disease_type = event['type']
-                    if single_date_format.match(event_date):
-                        date_time, _ = event_date.split('T')
-                        if disease_type != '':
-                            if date_time in record:
-                                record[date_time][disease_type] += number_affected
-                            else:
-                                record[date_time] = {}
-                                record[date_time]['recovered'] = 0
-                                record[date_time]['hospitalised'] = 0
-                                record[date_time]['infected'] = 0
-                                record[date_time]['death'] = 0
-                                record[date_time]['presence'] = 0
-                                record[date_time][disease_type] = number_affected
 
+                    if disease_type != '':
+                        if disease_type in record:
+                            record[disease_type] += number_affected
+
+                    if single_date_format.match(event_date):
+                        # print('==================== single date '+ event_date)
+                        # date_time, _ = event_date.split('T')
+                        # print('==================== date '+ date_time)
+
+                        date_group = DT.getDateInfo(event_date)
+                        compare_time = date(date_group[0], date_group[1], date_group[2])  
+
+                        if compare_time >= record['end_date']:
+                            record['end_date'] = compare_time
+                        elif compare_time <= record['start_date']:
+                            record['start_date'] = compare_time
+
+        
                     elif range_date_format.match(event_date):
                         date_line_format = re.compile('^([^to ]*) to (.*)$')
-                        date_format = re.compile(r'^(\d{4})-(\d\d|xx)-(\d\d|xx)T(\d\d|xx):(\d\d|xx):(\d\d|xx)$')
                         dateTime1 = date_line_format.search(event_date).group(1)
                         dateTime2 = date_line_format.search(event_date).group(2)
-                        date1_group = date_format.search(dateTime1)
-                        date2_group = date_format.search(dateTime2)
+                        date1_group = DT.getDateInfo(dateTime1)
+                        date2_group = DT.getDateInfo(dateTime2)
 
-                        year1 = int(date1_group.group(1))
-                        year2 = int(date2_group.group(1))
-                        month1 = int(date1_group.group(2))
-                        month2 = int(date2_group.group(2))
-                        day1 = int(date1_group.group(3))
-                        day2 = int(date2_group.group(3))
+                        compare_start = date(date1_group[0], date1_group[1], date1_group[2])  
+                        compare_end = date(date2_group[0], date2_group[1], date2_group[2])  
 
-                        d1 = date(year1, month1, day1)  # start date
-                        d2 = date(year2, month2, day2)  # end date
+                        if compare_end >= record['end_date']:
+                            record['end_date'] = compare_end
+                        elif compare_start <= record['start_date']:
+                            record['start_date'] = compare_start
+        
+        record['start_date'] = str(record['start_date'])
+        record['end_date'] = str(record['end_date'])
+        result['event_graph'] = record
 
-                        delta = d2 - d1         # timedelta
 
-                        for i in range(delta.days + 1):
-                            date_time = str(d1 + timedelta(i))
-                            if disease_type != '':
-                                if date_time in record:
-                                    record[date_time][disease_type] += number_affected
-                                else:
-                                    record[date_time] = {}
-                                    record[date_time]['recovered'] = 0
-                                    record[date_time]['hospitalised'] = 0
-                                    record[date_time]['infected'] = 0
-                                    record[date_time]['death'] = 0
-                                    record[date_time]['presence'] = 0
-                                    record[date_time][disease_type] = number_affected
-                    else:
-                        print('it is a empty date')
-        for key in record:
-            e = {}
-            e['date'] = key
-            e['recovered'] = record[key]['recovered']
-            e['hospitalised'] = record[key]['hospitalised']
-            e['infected'] = record[key]['infected']
-            e['death'] = record[key]['death']
-            e['presence'] = record[key]['presence']
-            result['event_graph'].append(e)
+        # for rec in content:
+        #     reports = rec['reports']
+        #     for reported in reports:
+        #         reported_event = reported['reported_events']
+        #         for event in reported_event:
+        #             number_affected = int(event['number-affected'])
+        #             event_date = event['date']
+        #             disease_type = event['type']
+        #             if single_date_format.match(event_date):
+        #                 date_time, _ = event_date.split('T')
+        #                 if disease_type != '':
+        #                     if date_time in record:
+        #                         record[date_time][disease_type] += number_affected
+        #                     else:
+        #                         record[date_time] = {}
+        #                         record[date_time]['recovered'] = 0
+        #                         record[date_time]['hospitalised'] = 0
+        #                         record[date_time]['infected'] = 0
+        #                         record[date_time]['death'] = 0
+        #                         record[date_time]['presence'] = 0
+        #                         record[date_time][disease_type] = number_affected
+
+        #             elif range_date_format.match(event_date):
+        #                 date_line_format = re.compile('^([^to ]*) to (.*)$')
+        #                 dateTime1 = date_line_format.search(event_date).group(1)
+        #                 dateTime2 = date_line_format.search(event_date).group(2)
+        #                 date1_group = DT.getDateInfo(dateTime1)
+        #                 date2_group = DT.getDateInfo(dateTime2)
+
+        #                 d1 = date(date1_group[0], date1_group[1], date1_group[2])  
+        #                 d2 = date(date2_group[0], date2_group[1], date2_group[2])  
+
+        #                 delta = d2 - d1         # timedelta
+
+        #                 for i in range(delta.days + 1):
+        #                     date_time = str(d1 + timedelta(i))
+        #                     if disease_type != '':
+        #                         if date_time in record:
+        #                             record[date_time][disease_type] += number_affected
+        #                         else:
+        #                             record[date_time] = {}
+        #                             record[date_time]['recovered'] = 0
+        #                             record[date_time]['hospitalised'] = 0
+        #                             record[date_time]['infected'] = 0
+        #                             record[date_time]['death'] = 0
+        #                             record[date_time]['presence'] = 0
+        #                             record[date_time][disease_type] = number_affected
+        #             else:
+        #                 print('it is a empty date')
+        # for key in record:
+        #     e = {}
+        #     e['date'] = key
+        #     e['recovered'] = record[key]['recovered']
+        #     e['hospitalised'] = record[key]['hospitalised']
+        #     e['infected'] = record[key]['infected']
+        #     e['death'] = record[key]['death']
+        #     e['presence'] = record[key]['presence']
+        #     result['event_graph'].append(e)
 
         return result, 200
+
 
 
 #######################################################################################################
