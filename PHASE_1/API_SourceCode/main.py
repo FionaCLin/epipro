@@ -532,7 +532,7 @@ class headline(Resource):
 ######################
 ##      CLOSED      ##
 ######################
-@api.route('/analytics')
+@api.route('/analytics', doc=False)
 class data_analytics(Resource):
 
     @api.response(200, 'Specific location info fetched successfully')
@@ -578,6 +578,25 @@ class data_analytics(Resource):
             if 'message' in content:
                 error_message = content['message']
             return {'message': error_message}, e.response.status_code
+
+        ## ============================  FREQUENCY ========================
+        result['frequency_graph'] = {}
+        result['frequency_graph']['frequency'] = []
+
+        record = {}
+
+        for rec in content:
+            date_pub, _ = rec['date_of_publication'].split('T')
+            if date_pub in record:
+                record[date_pub] += 1
+            else:
+                record[date_pub] = 1
+
+        for key in record:
+            e = {}
+            e['date'] = key
+            e['count'] = record[key]
+            result['frequency_graph']['frequency'].append(e)
 
 
         ## ================================ HEAT MAP ====================================
