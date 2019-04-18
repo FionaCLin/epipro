@@ -49,6 +49,16 @@
   color: white;
 }
 
+.Marker {
+    border-color: darkslateblue;
+    border-style: solid;
+    border-width: 1px;
+    width: 200px;
+    padding: 3px;
+    background-color: white;
+    font-size: small;
+}
+
 
 body {
     background-image: url("../imgs/bg.jpg");

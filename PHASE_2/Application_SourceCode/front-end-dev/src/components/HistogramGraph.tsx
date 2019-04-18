@@ -2,6 +2,7 @@ import React from 'react';
 import '../css/Home.css';
 import { Button, Collapse } from 'react-bootstrap';
 import { ResponsiveContainer, BarChart, CartesianGrid, XAxis, YAxis, Legend, Bar, Tooltip } from 'recharts';
+import { isNull } from 'util';
 
 export default class HistogramGraph extends React.Component<IHistogramGraphProps, IHistogramGraphState> {
   constructor(props: IHistogramGraphProps) {
@@ -10,16 +11,6 @@ export default class HistogramGraph extends React.Component<IHistogramGraphProps
       collapse: true
     };
   }
-
-  static defaultProps = {
-    histogramData: [
-      { event:'presence', count: 12 },
-      { event: 'death', count: 0 },
-      { event: 'infected', count: 30 },
-      { event: 'hospitalised', count: 43 },
-      { event: 'recovered', count: 21 }
-    ]
-  };
 
   private toggleCollapse() {
     this.setState({
@@ -43,9 +34,9 @@ export default class HistogramGraph extends React.Component<IHistogramGraphProps
         <div id="histogram">
             <div className="Analytics-collapse">
                 <div className="Histogram-chart">
-                    <b>{this.props.title}</b>
+                    <b>Event frequency across {this.props.title.charAt(0).toUpperCase() + this.props.title.slice(1)}</b>
                     <ResponsiveContainer width = '100%' height = '100%' >
-                        <BarChart data={this.props.histogramData}>
+                        <BarChart data={!isNull(this.props.histogramData) ? this.props.histogramData.events : []}>
                         <CartesianGrid strokeDasharray="3 3"/>
                         <XAxis label={{value: 'Event types', position: 'insideBottom', offset: 0}} dataKey="event"/>
                         <YAxis label={{value: 'Event type count', position: 'insideLeft', angle: -90, offset: 25}}/>
@@ -64,7 +55,7 @@ export default class HistogramGraph extends React.Component<IHistogramGraphProps
 }
 
 interface IHistogramGraphProps {
-  histogramData?: Array<HistBar>;
+  histogramData: any;
   title: string;
 }
 
@@ -72,7 +63,7 @@ interface IHistogramGraphState {
   collapse: boolean;
 }
 
-interface HistBar {
+export interface HistBar {
   event: string;
   count: number;
 }

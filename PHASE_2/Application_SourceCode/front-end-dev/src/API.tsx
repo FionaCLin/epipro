@@ -117,7 +117,7 @@ export class BackendAPI {
     let url = '';
 
     let query = q.join('&')
-    url = `https://demo-dot-epiproapp.appspot.com/api/v1/analytics?${query}`
+    url = `https://productionv1-dot-epiproapp.appspot.com/api/v1/analytics?${query}`
 
     console.log(url);
  

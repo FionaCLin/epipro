@@ -1,7 +1,7 @@
 import React from 'react';
 import '../css/Home.css';
 import { LineChart, ResponsiveContainer, XAxis, YAxis, Line, CartesianGrid, Tooltip, Legend } from 'recharts';
-import { Frequency } from './AnalyticsReport';
+import { Frequency } from './Analytics';
 
 export default class FrequencyFormat extends React.Component<IFrequencyFormatProps, IFrequencyFormatState> {
     constructor(props: IFrequencyFormatProps) {
