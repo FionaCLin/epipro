@@ -30,16 +30,7 @@ export default class DiseaseSearch extends React.Component<IDiseaseSearchProps, 
         let diseases: Array<Object> = DiseaseList.map((disease: any) => {
             return { label: disease.name, value: disease.name, type: 'disease' }
         });
-        let syndromes: Array<Object> = SyndromeList.map((syndrome: any) => {
-            return { label: syndrome.name, value: syndrome.name, type: 'syndrome' }
-        });
-        return diseases.concat(syndromes);
-    }
-
-    private changeType(event: any) {
-        this.setState({
-            filterType: event.value
-        });
+        return diseases;
     }
 
     render() {
@@ -49,7 +40,7 @@ export default class DiseaseSearch extends React.Component<IDiseaseSearchProps, 
                 <div className='Keyterm-flex'>
                     <div className='Keyterm-right'>
                         <Select
-                            options={this.state.filterOptions.filter((option: any) => option.type == filterTypes[this.state.filterType].type)}
+                            options={this.state.filterOptions.sort((a: any, b: any) => { return a.value.localeCompare(b.value) })}
                             classNamePrefix="select"
                             placeholder="Select disease..."
                             onChange={(e: any) => this.handleChange(e)}

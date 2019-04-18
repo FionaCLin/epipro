@@ -46,7 +46,8 @@ export default class Header extends React.Component<IHeaderProps, IHeaderState> 
                 </Link>
                 <Nav className="mr-auto">
                     <Nav.Link><Link to="/search" className="link">Search</Link></Nav.Link>
-                    <Nav.Link><Link to="/analyze" className="link" onClick={() => sessionStorage.removeItem('search')}>Analyze</Link></Nav.Link>
+                    <Nav.Link><Link to="/analyze" className="link">Analyze</Link></Nav.Link>
+                    <Nav.Link><Link to="/trends" className="link">Trends</Link></Nav.Link>
                     <Nav.Link href={this.state.api_doc_url} onClick={() => sessionStorage.removeItem('search')}>API Doc</Nav.Link>
                 </Nav>
             </Navbar>

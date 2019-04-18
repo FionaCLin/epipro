@@ -91,10 +91,11 @@ export class BackendAPI {
  
     axios.get(url)
       .then((response: AxiosResponse) => {
-        cb(null, response.data)
+        cb(null, response.data);
       })
       .catch((error: AxiosError) => {
-        cb(error, null)
+        cb(error, null);
+        console.log("CALL ERROR");
       });
   }
 
@@ -116,17 +117,17 @@ export class BackendAPI {
     let url = '';
 
     let query = q.join('&')
-    url = `https://beta-dot-epiproapp.appspot.com/api/v1/analytics?${query}`
+    url = `https://demo-dot-epiproapp.appspot.com/api/v1/analytics?${query}`
 
     console.log(url);
  
     axios.get(url)
       .then((response: AxiosResponse) => {
-        console.log(response.data);
         cb(null, response.data);
       })
       .catch((error: AxiosError) => {
-        cb(error, null)
+        cb(error, null);
+        console.log("CALL ERROR");
       });
   }
 }  

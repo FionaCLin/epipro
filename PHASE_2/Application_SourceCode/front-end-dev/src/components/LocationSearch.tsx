@@ -40,7 +40,7 @@ export default class LocationSearch extends React.Component<ILocationSearchProps
 
     return filteredLocations.map((location: string, index: number) => ({
       label: location,
-      value: index
+      value: location
     }));
   }
 
@@ -67,7 +67,7 @@ export default class LocationSearch extends React.Component<ILocationSearchProps
         <b>Locations</b>
         <Select
           isMulti
-          options={this.state.filterOptions}
+          options={this.state.filterOptions.sort((a: any, b: any) => { return a.value.localeCompare(b.value) })}
           className="basic-multi-select"
           classNamePrefix="select"
           placeholder="Select location..."

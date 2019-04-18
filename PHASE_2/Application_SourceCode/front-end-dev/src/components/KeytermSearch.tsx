@@ -80,7 +80,7 @@ export default class KeytermSearch extends React.Component<IKeytermSearchProps, 
                         <CreatableSelect
                             isMulti
                             isClearable
-                            options={this.state.filterOptions}
+                            options={this.state.filterOptions.sort((a: any, b: any) => { return a.value.localeCompare(b.value) })}
                             className="basic-multi-select"
                             classNamePrefix="select"
                             placeholder="Select keyterms..."

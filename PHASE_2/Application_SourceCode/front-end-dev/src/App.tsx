@@ -5,6 +5,7 @@ import Search from './components/Search';
 import Article from './components/Article';
 import { BackendAPI } from './API'
 import Analytics from './components/Analytics';
+import Trends from './components/Trends';
 
 export default class App extends Component<IAppProps, IAppState> {
   constructor(props: IAppProps) {
@@ -20,6 +21,7 @@ export default class App extends Component<IAppProps, IAppState> {
             <Route path="/search" component={Search} />
             <Route path="/article" component={Article} />
             <Route path="/analyze" component={Analytics} />
+            <Route path="/trends" component={Trends} />
             <Redirect to="/" />
           </Switch>
         </Router>

@@ -1,6 +1,7 @@
 import React from 'react';
 import '../css/Home.css';
 import { LineChart, ResponsiveContainer, XAxis, YAxis, Line, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { Frequency } from './AnalyticsReport';
 
 export default class FrequencyFormat extends React.Component<IFrequencyFormatProps, IFrequencyFormatState> {
     constructor(props: IFrequencyFormatProps) {
@@ -30,16 +31,9 @@ export default class FrequencyFormat extends React.Component<IFrequencyFormatPro
 
 interface IFrequencyFormatProps {
     title: string;
-    chartData?: Array<Plot>;
+    chartData?: Array<Frequency>;
     types: Array<string>;
 }
 
 interface IFrequencyFormatState {
-}
-
-interface Plot {
-    date: string;
-    WHO: number;
-    Twitter: number;
-    Google: number;
 }

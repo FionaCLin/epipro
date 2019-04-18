@@ -2,7 +2,8 @@ import React from 'react';
 import '../css/Home.css';
 import { Button, Collapse, InputGroup, ButtonGroup, ToggleButton } from 'react-bootstrap';
 import FrequencyFormat from './FrequencyFormat';
-import { isUndefined } from 'util';
+import { isUndefined, isNull } from 'util';
+import { Frequency } from './AnalyticsReport';
 
 const frequencyFilters: Array<string> = ['day', 'month', 'year'];
 
@@ -12,19 +13,8 @@ export default class FrequencyGraph extends React.Component<IFrequencyGraphProps
         this.state = {
             collapse: true,
             frequencyFilter: frequencyFilters[0],
-            frequencyData: (!isUndefined(this.props.chartData)) ? this.props.chartData : []
+            frequencyData: (!isUndefined(this.props.frequencyData)) ? this.props.frequencyData : []
         };
-    }
-
-    static defaultProps = {
-        chartData: [
-            { WHO: 1, Twitter: 2, Google: 3, date: "2017-02-25Txx:xx:xx" },
-            { WHO: 2, Twitter: 3, Google: 4, date: "2017-02-26Txx:xx:xx" },
-            { WHO: 3, Twitter: 4, Google: 5, date: "2017-02-27Txx:xx:xx" },
-            { WHO: 4, Twitter: 5, Google: 6, date: "2017-02-28Txx:xx:xx" },
-            { WHO: 5, Twitter: 6, Google: 7, date: "2017-03-01Txx:xx:xx" },
-            { WHO: 6, Twitter: 7, Google: 8, date: "2017-03-02Txx:xx:xx" }
-        ]
     }
 
     private toggleCollapse() {
@@ -34,7 +24,7 @@ export default class FrequencyGraph extends React.Component<IFrequencyGraphProps
     }
 
     private convertFrequency(interval: string) {
-        let data = this.props.chartData;
+        let data = this.props.frequencyData;
         if (!isUndefined(data) && this.state.frequencyFilter != interval) {
             if (interval == 'day') {
                 this.setState({frequencyData: data, frequencyFilter: interval});
@@ -79,7 +69,7 @@ export default class FrequencyGraph extends React.Component<IFrequencyGraphProps
         }
     }
 
-    formatXAxis(date: string) {
+    private formatXAxis(date: string) {
         let newDate: string = date;
         if (date.indexOf('T') != -1) newDate = newDate.substring(0, date.indexOf('T'));
         newDate = newDate.split('-').reverse().join('/');
@@ -115,7 +105,6 @@ export default class FrequencyGraph extends React.Component<IFrequencyGraphProps
                     <div id="frequency">
                         <div className="Analytics-collapse">
                             <FrequencyFormat title='Frequency of Zika mentions on articles at WHO' types={['WHO']} chartData={this.cleanChartData(this.state.frequencyData)}/>
-                            <FrequencyFormat title='Frequency of Zika mentions on different media coverage' types={['Twitter', 'Google']} chartData={this.cleanChartData(this.state.frequencyData)}/>
                             <div style={{float: 'left', marginRight: '10px'}}>Date frequency:</div>
                             <input type="radio" onClick={() => this.convertFrequency(frequencyFilters[0])} name="frequencyFilter" defaultChecked/>Day
                             <input style={{marginLeft: '10px'}} type="radio" onClick={() => this.convertFrequency(frequencyFilters[1])} name="frequencyFilter" />Month
@@ -130,18 +119,11 @@ export default class FrequencyGraph extends React.Component<IFrequencyGraphProps
 }
 
 interface IFrequencyGraphProps {
-    chartData?: Array<Frequency>;
+    frequencyData: any;
 }
 
 interface IFrequencyGraphState {
     collapse: boolean;
     frequencyFilter: string;
     frequencyData: Array<Frequency>;
-}
-
-interface Frequency {
-    date: string;
-    WHO: number;
-    Twitter: number;
-    Google: number;
 }
