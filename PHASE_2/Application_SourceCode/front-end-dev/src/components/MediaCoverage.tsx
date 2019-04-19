@@ -22,6 +22,7 @@ export default class MediaCoverage extends React.Component<IMediaCoverageProps, 
             '1114987459446812673',
             '1114951144638439425',
             '1114966369823592448',
+            '1117810618915000322'
         ]
     }
 
@@ -59,7 +60,7 @@ export default class MediaCoverage extends React.Component<IMediaCoverageProps, 
 
 interface IMediaCoverageProps {
     googleData: Array<GoogleCard>;
-    tweetData: Array<number>;
+    tweetData: Array<string>;
 }
 
 interface IMediaCoverageState {

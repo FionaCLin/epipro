@@ -159,12 +159,25 @@ export default class Analytics extends React.Component<IAnalyticsProps, IAnalyti
     private createApiFilterState(startDate: Date | null, endDate: Date | null) {
         let apiFilterState: IAnalyticOptions = {
             disease: this.state.disease,
-            location: this.state.locations[0],
+            location: this.cleanLocations(),
             startDate: this.stringifyDates(startDate, 'startDate'),
             endDate: this.stringifyDates(endDate, 'endDate'),
         };
         console.log(apiFilterState);
         return apiFilterState;
+    }
+
+    private cleanLocations() {
+        let cleanLocations = [];
+        for (let i = 0; i < this.state.locations.length; i++) {
+            let multiLocation = this.state.locations[i].indexOf(',');
+            let temp = this.state.locations[i];
+            if (!isUndefined(multiLocation)) {
+                temp = temp.substring(0, multiLocation);
+            }
+            cleanLocations.push(temp);
+        }
+        return cleanLocations.join(', ');
     }
 
     private stringifyDates(date: Date | null, dateType: string) {
@@ -230,12 +243,12 @@ export default class Analytics extends React.Component<IAnalyticsProps, IAnalyti
                         {this.checkLoading()}
                         {this.checkLoading() == false ? (
                         <div>
-                            <FrequencyGraph title={this.state.title} frequencyData={this.state.frequencyData}/>
+                            <FrequencyGraph title={this.state.title} titleType='articles at WHO' types={['WHO']} frequencyData={this.state.frequencyData}/>
                             <HeatMap
                                 title={this.state.title}
                                 locations={isNullOrUndefined(this.state.heatmapPositions) ? [] : this.state.heatmapPositions}
                                 bounds={this.calculateBounds()}
-                            />
+                            />}
                             <HistogramGraph title={this.state.title} histogramData={this.state.histogramData}/>
                         </div>
                         ) : (<div></div>)}

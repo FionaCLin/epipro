@@ -1,4 +1,7 @@
 import axios, { AxiosResponse, AxiosError } from "axios";
+import UNLOCodes from './dummydata/country-codes.json';
+import Twitter from './dummydata/twitter.json';
+import { isUndefined } from "util";
 
 
 export interface IFilterOptions {
@@ -129,5 +132,21 @@ export class BackendAPI {
         cb(error, null);
         console.log("CALL ERROR");
       });
+  }
+
+  getUNLOCode(country: string) {
+    let code = UNLOCodes.filter(value => country.indexOf(value.CountryName) != -1);
+    if (code.length == 0) {
+        return '';
+    } else {
+        return code[0].CountryCode;
+    }
+  }
+
+  getTwitterData(disease: string) {
+      console.log(Twitter);
+      let twitterData = Twitter.filter(value => value.disease == disease);
+      if (twitterData.length == 0) return [];
+      return twitterData[0].tweets;
   }
 }  

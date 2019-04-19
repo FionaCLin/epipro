@@ -1,8 +1,8 @@
 import React from 'react';
 import '../css/Home.css';
-import { Button, Collapse, InputGroup, ButtonGroup, ToggleButton } from 'react-bootstrap';
+import { Button, Collapse } from 'react-bootstrap';
 import FrequencyFormat from './FrequencyFormat';
-import { isUndefined, isNull, isNullOrUndefined } from 'util';
+import { isUndefined, isNullOrUndefined } from 'util';
 import { Frequency } from './Analytics';
 
 const frequencyFilters: Array<string> = ['day', 'month', 'year'];
@@ -113,8 +113,9 @@ export default class FrequencyGraph extends React.Component<IFrequencyGraphProps
                     <div id="frequency">
                         <div className="Analytics-collapse">
                             <FrequencyFormat
-                                title={'Frequency of ' + this.props.title.charAt(0).toUpperCase() + this.props.title.slice(1) + ' mentions on articles at WHO'}
-                                types={['WHO']} chartData={this.cleanChartData(this.state.frequencyData)}/>
+                                title={'Frequency of ' + this.props.title.charAt(0).toUpperCase() + this.props.title.slice(1) + ' mentions on ' + this.props.titleType}
+                                types={this.props.types}
+                                chartData={this.cleanChartData(this.state.frequencyData)}/>
                             <div style={{float: 'left', marginRight: '10px'}}>Date frequency:</div>
                             <input type="radio" onClick={() => this.convertFrequency(frequencyFilters[0])} name="frequencyFilter" defaultChecked/>Day
                             <input style={{marginLeft: '10px'}} type="radio" onClick={() => this.convertFrequency(frequencyFilters[1])} name="frequencyFilter" />Month
@@ -131,6 +132,8 @@ export default class FrequencyGraph extends React.Component<IFrequencyGraphProps
 interface IFrequencyGraphProps {
     frequencyData: any;
     title: string;
+    titleType: string;
+    types: Array<string>;
 }
 
 interface IFrequencyGraphState {

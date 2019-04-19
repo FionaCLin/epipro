@@ -7,7 +7,7 @@ import ArticleList from './ArticleList';
 import LocationSearch from './LocationSearch';
 import KeytermSearch from './KeytermSearch';
 import { BackendAPI, IFilterOptions } from '../API';
-import { isNull, isNullOrUndefined } from 'util';
+import { isNull, isNullOrUndefined, isUndefined } from 'util';
 import PaginateSearch from './PaginateSearch';
 import Header from './Header';
 
@@ -74,10 +74,23 @@ export default class Search extends React.Component<ISearchProps, ISearchState> 
     private createApiFilterState() {
         return ({
             keyterms: this.stringifyKeyterms(),
-            locations: this.state.locations.join(','),
+            locations: this.cleanLocations(),
             startDate: this.stringifyDates(this.state.startDate, 'startDate'),
             endDate: this.stringifyDates(this.state.endDate, 'endDate'),
         });
+    }
+
+    private cleanLocations() {
+        let cleanLocations = [];
+        for (let i = 0; i < this.state.locations.length; i++) {
+            let multiLocation = this.state.locations[i].indexOf(',');
+            let temp = this.state.locations[i];
+            if (!isUndefined(multiLocation)) {
+                temp = temp.substring(0, multiLocation);
+            }
+            cleanLocations.push(temp);
+        }
+        return cleanLocations.join(', ');
     }
 
     private stringifyDates(date: Date | null, dateType: string) {
