@@ -25,23 +25,27 @@ export default class ArticleList extends React.Component<IArticleListProps, IArt
 
   checkResults() {
     if (!isNullOrUndefined(this.props.articleList) && this.props.articleList.length == 0) {
-      return <p><br />No results found.</p>;
+      return <p>No results found.</p>;
     } else if (isUndefined(this.props.articleList)) {
       return <p></p>;
     }
+  }
+
+  showResultsLength() {
+      if (!isNullOrUndefined(this.props.articleList) && this.props.articleList.length != 0) {
+          return <p>{this.props.listLength} matching articles found.</p>;
+      }
   }
 
   render() {
     return (
 
     <div>
-    <ListGroup variant="flush">
-        <ListGroup.Item>
-          {this.showArticleList()}
-        </ListGroup.Item>
-      </ListGroup>
+        {this.showResultsLength()}
+        {this.showArticleList()}
       {this.checkLoading()}
       {this.checkResults()}
+      <br />
     </div>
     );
   }
@@ -49,6 +53,7 @@ export default class ArticleList extends React.Component<IArticleListProps, IArt
 
 interface IArticleListProps {
   articleList: Array<any> | null | undefined;
+  listLength: number;
 }
 
 interface IArticleListState {

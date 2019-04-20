@@ -1,31 +1,24 @@
 import React from 'react';
 import '../css/Home.css';
-import Select from 'react-select';
 import CreatableSelect from 'react-select/lib/Creatable';
 import { BackendAPI } from '../API'
 
 let api = new BackendAPI();
-const filterTypes: Array<any> = [
-    { label: 'General', value: 0, type: 'general' },
-    { label: 'Specific', value: 1, type: 'specific' }
-];
+const filterTypes: Array<any> = ['general', 'specific'];
 
 export default class KeytermSearch extends React.Component<IKeytermSearchProps, IKeytermSearchState> {
     constructor(props: IKeytermSearchProps) {
         super(props);
 
         this.state = {
-            filterType: 0,
             values: this.props.keyterms,
             filterOptions: [],
-            keyterms: []
         }
     }
 
     componentWillMount() {
         this.addFilterOptions(filterTypes[1]);
         this.addFilterOptions(filterTypes[0]);
-        this.changeType(filterTypes[0]);
     }
 
     private handleChange(event: Array<any>) {
@@ -36,7 +29,7 @@ export default class KeytermSearch extends React.Component<IKeytermSearchProps, 
     }
 
     private addFilterOptions(filterType: any) {
-        api.getKeyTerms(filterType.type, (error: any, response: any) => {
+        api.getKeyTerms(filterType, (error: any, response: any) => {
             if (error && error.response) {
                 let message = error.response.data.message
                 console.log('error message', message);
@@ -46,49 +39,37 @@ export default class KeytermSearch extends React.Component<IKeytermSearchProps, 
 
             let newKeyterms: Array<any> = response.map((keyterm: any) => ({
                 label: keyterm.name,
-                value: keyterm.name,
-                type: filterType.type
+                value: keyterm.name
             }));
 
             this.setState({
-                keyterms: this.state.keyterms.concat(newKeyterms),
-                filterOptions: newKeyterms
-            })
-        });
-    }
-
-    private changeType(event: any) {
-        this.setState({
-            filterType: event.value,
-            filterOptions: this.state.keyterms.filter((keyterm: any) => keyterm.type == event.type)
+                filterOptions: this.state.filterOptions.concat(newKeyterms)
+            });
         });
     }
 
     render() {
         return (
-            <div className="Filter-element">
-                <b>Keyterms</b>
-                <div className='Keyterm-flex'>
-                    <div className='Keyterm-left'>
-                        <Select
-                            value={filterTypes.filter(type => type.value == this.state.filterType)}
-                            options={filterTypes}
-                            onChange={(e: any) => this.changeType(e)}
-                        />
-                    </div>
-                    <div className='Keyterm-right'>
-                        <CreatableSelect
-                            isMulti
-                            isClearable
-                            options={this.state.filterOptions.sort((a: any, b: any) => { return a.value.localeCompare(b.value) })}
-                            className="basic-multi-select"
-                            classNamePrefix="select"
-                            placeholder="Select keyterms..."
-                            onChange={(e: any) => this.handleChange(e)}
-                            value={this.state.values.map((value: String) => { return { label: value, value }})}
-                        />
-                    </div>
-                </div>
+            <div className="search-element">
+                <CreatableSelect
+                    isMulti
+                    isClearable
+                    options={this.state.filterOptions.sort((a: any, b: any) => { return a.value.localeCompare(b.value) })}
+                    className="basic-multi-select select-menu"
+                    classNamePrefix="select"
+                    placeholder="Select keyterms..."
+                    onChange={(e: any) => this.handleChange(e)}
+                    value={this.state.values.map((value: String) => { return { label: value, value }})}
+                    theme={(theme) => ({
+                        ...theme,
+                        borderRadius: 3,
+                        colors: {
+                        ...theme.colors,
+                          primary25: 'rgb(162, 156, 194)',
+                          primary: 'rgb(162, 156, 194)',
+                        },
+                      })}
+                />
             </div>
         );
     }
@@ -100,8 +81,6 @@ interface IKeytermSearchProps {
 }
 
 interface IKeytermSearchState {
-    filterType: Number;
     values: Array<String>;
     filterOptions: Array<Object>;
-    keyterms: Array<Object>
 }

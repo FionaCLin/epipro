@@ -35,18 +35,22 @@ export default class DiseaseSearch extends React.Component<IDiseaseSearchProps, 
 
     render() {
         return (
-            <div className="Filter-element">
-                <b>Diseases</b>
-                <div className='Keyterm-flex'>
-                    <div className='Keyterm-right'>
-                        <Select
-                            options={this.state.filterOptions.sort((a: any, b: any) => { return a.value.localeCompare(b.value) })}
-                            classNamePrefix="select"
-                            placeholder="Select disease..."
-                            onChange={(e: any) => this.handleChange(e)}
-                        />
-                    </div>
-                </div>
+            <div className="search-element">
+                <Select
+                    options={this.state.filterOptions.sort((a: any, b: any) => { return a.value.localeCompare(b.value) })}
+                    classNamePrefix="select"
+                    placeholder="Select disease..."
+                    onChange={(e: any) => this.handleChange(e)}
+                    theme={(theme) => ({
+                        ...theme,
+                        borderRadius: 3,
+                        colors: {
+                        ...theme.colors,
+                            primary25: 'rgb(162, 156, 194)',
+                            primary: 'rgb(162, 156, 194)',
+                        },
+                    })}
+                />
             </div>
         );
     }

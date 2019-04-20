@@ -2,7 +2,7 @@ import React from 'react';
 import '../css/Home.css';
 import TimeSearch from './TimeSearch';
 import LocationSearch from './LocationSearch';
-import { Button } from 'react-bootstrap';
+import { Button, ButtonGroup } from 'react-bootstrap';
 import DiseaseSearch from './DiseaseSearch';
 import GoogleAPI, { IFilterOptions } from '../Google';
 import { isNull, isUndefined } from 'util';
@@ -15,6 +15,7 @@ import loading from '../imgs/loading1.gif';
 let newsAPI = new GoogleAPI();
 let epiAPI = new BackendAPI();
 declare var trends: any;
+const sections = ['frequency', 'media', 'gTrends'];
 
 export default class Trends extends React.Component<ITrendsProps, ITrendsState> {
   constructor(props: ITrendsProps) {
@@ -29,11 +30,12 @@ export default class Trends extends React.Component<ITrendsProps, ITrendsState> 
         frequencyData: undefined,
         tweets: [],
         googleCheck: 0,
-        twitterCheck: 0
+        twitterCheck: 0,
+        displaySection: 'frequency'
     };
 
         this.handleChange = this.handleChange.bind(this);
-        this.onAnalyze = this.onAnalyze.bind(this);
+        this.onTrends = this.onTrends.bind(this);
         this.getGoogleData = this.getGoogleData.bind(this);
         this.createDateArray = this.createDateArray.bind(this);
     }
@@ -55,19 +57,28 @@ export default class Trends extends React.Component<ITrendsProps, ITrendsState> 
             geo = epiAPI.getUNLOCode(country);
         }
         console.log(geo);
-        var timeDiv = document.getElementById('sampDiv');
+        let timeDiv = document.getElementById('gTrends');
+        let topicDiv = document.getElementById('gTopics');
+        let queryDiv = document.getElementById('gQueries');
         if (!isNull(timeDiv)) timeDiv.innerHTML = '';
+        let widgetCalls = [
+            {div: timeDiv, type: 'TIMESERIES'},
+            {div: topicDiv, type: 'RELATED_TOPICS'},
+            {div: queryDiv, type: 'RELATED_QUERIES'}
+        ];
 
-        trends.embed.renderExploreWidgetTo(timeDiv,"TIMESERIES", {
-            "comparisonItem":[{
-                "keyword":this.state.disease, "geo":geo, "time":`${startDate} ${endDate}`
-            }],
-            "category":0,
-            "property":""
-        }, {
-            "exploreQuery":`q=${this.state.disease}&geo=${geo}&time=${startDate} ${endDate}`,
-            "guestPath":"https://trends.google.com:443/trends/embed/"
-        });
+        for (let i = 0; i < widgetCalls.length; i++) {
+            trends.embed.renderExploreWidgetTo(widgetCalls[i].div, widgetCalls[i].type, {
+                "comparisonItem":[{
+                    "keyword":this.state.disease, "geo":geo, "time":`${startDate} ${endDate}`
+                }],
+                "category":0,
+                "property":""
+            }, {
+                "exploreQuery":`q=${this.state.disease}&geo=${geo}&time=${startDate} ${endDate}`,
+                "guestPath":"https://trends.google.com:443/trends/embed/"
+            });
+        }
     }
 
   createDateArray(startDate: string, endDate: string) {
@@ -115,7 +126,6 @@ export default class Trends extends React.Component<ITrendsProps, ITrendsState> 
 
         count.setDate(count.getDate() + 1);
         count.setHours(0,0,0,0);
-        //console.log('COUNTDATE', count);
     }
   }
 
@@ -153,7 +163,7 @@ export default class Trends extends React.Component<ITrendsProps, ITrendsState> 
         return filtered;
     }
 
-  private onAnalyze() {
+  private onTrends() {
     let startDate = this.stringifyDates(this.state.startDate, 'startDate');
     let endDate = this.stringifyDates(this.state.endDate, 'endDate');
     let dateArray = this.createDateArray(startDate, endDate);
@@ -205,6 +215,12 @@ export default class Trends extends React.Component<ITrendsProps, ITrendsState> 
         return false;
     }
 
+    changeSection(section: number) {
+        if (this.state.displaySection != sections[section]) {
+            this.setState({displaySection: sections[section]});
+        }
+    }
+
     render() {
         //console.log(this.state.googleArticles);
         let currentDate = new Date();
@@ -216,21 +232,40 @@ export default class Trends extends React.Component<ITrendsProps, ITrendsState> 
                 <Header />
                 <body id="top">
                     <div className="Main">
-                    <h1>TRENDS</h1>
-                    <div id="collapse-filters" className="Filter-panel">
-                        <DiseaseSearch disease={this.state.disease} updateDisease={this.handleChange}/>
-                        <LocationSearch locations={this.state.locations} updateLocation={this.handleChange}/>
-                        <TimeSearch startDate={this.state.startDate} endDate={this.state.endDate} minDate={monthBack} updateTime={this.handleChange}/>
-                        <div className="Filter-button">
-                            <Button disabled={this.checkInputs()} onClick={this.onAnalyze}>Create Trends</Button>
+                        <h1>TRENDS</h1>
+                        <div id="collapse-filters" className="Filter-panel">
+                            <DiseaseSearch disease={this.state.disease} updateDisease={this.handleChange}/>
+                            <LocationSearch locations={this.state.locations} updateLocation={this.handleChange}/>
+                            <TimeSearch startDate={this.state.startDate} endDate={this.state.endDate} minDate={monthBack} updateTime={this.handleChange}/>
+                            <Button disabled={this.checkInputs()} onClick={() => this.onTrends()}>Create Trends</Button>
                         </div>
-                    </div>
-                    <div className='ArticleList-division' />
+                        <hr />
                         {this.checkLoading()}
                         <div style={{display: display}}>
-                            <FrequencyGraph title={this.state.title} titleType={'Google News and Twitter'} types={['Google', 'Twitter']} frequencyData={this.state.frequencyData}/>
-                            <MediaCoverage googleData={this.state.googleArticles} tweetData={this.state.tweets}/>
-                            <div id="sampDiv"></div>
+                            <ButtonGroup vertical className="Report-menu">
+                                <Button size="lg" className="Report-title">{this.state.disease.charAt(0).toUpperCase() + this.state.disease.slice(1)} Trends</Button>
+                                <Button variant={this.state.displaySection == 'frequency' ? "primary" : "secondary"} onClick={() => this.changeSection(0)}>Frequency Mentions</Button>
+                                <Button variant={this.state.displaySection == 'media' ? "primary" : "secondary"} onClick={() => this.changeSection(1)}>Media Coverage</Button>
+                                <Button variant={this.state.displaySection == 'gTrends' ? "primary" : "secondary"} onClick={() => this.changeSection(2)}>Google Trends</Button>
+                            </ButtonGroup>
+                            <div className="Report-display">
+                                <div style={{display: this.state.displaySection == 'frequency' ? 'block' : 'none'}}>
+                                    <FrequencyGraph
+                                        title={this.state.title}
+                                        titleType={'Google News and Twitter'}
+                                        types={['Google', 'Twitter']}
+                                        frequencyData={this.state.frequencyData}/>
+                                </div>
+                                <div style={{display: this.state.displaySection == 'media' ? 'block' : 'none'}}>
+                                    <MediaCoverage googleData={this.state.googleArticles} tweetData={this.state.tweets}/>
+                                </div>
+                                <div style={{display: this.state.displaySection == 'gTrends' ? 'block' : 'none'}}>
+                                    <div id="gTrends"/>
+                                    <br></br>
+                                    <div id="gTopics" className="GTrends"/>
+                                    <div id="gQueries" className="GTrends"/>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </body>
@@ -253,6 +288,7 @@ interface ITrendsState {
     frequencyData: Array<IFrequencyData> | undefined;
     googleCheck: number;
     twitterCheck: number;
+    displaySection: string;
 }
 
 interface IFrequencyData {

@@ -18,7 +18,7 @@ export default class Marker extends React.Component<IMarkerProps, IMarkerState> 
                 <div>
                     <b>Location:</b> {this.props.location}<br/>
                     <b>Number affected:</b> {this.props.number_affected}<br/>
-                    <b>Article count:</b> {this.props.article_count}<br/>
+                    <b>Article mentions:</b> {this.props.article_count}<br/>
                 </div>
             </div>
             ) : (

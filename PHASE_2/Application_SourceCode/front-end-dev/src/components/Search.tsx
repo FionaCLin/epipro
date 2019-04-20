@@ -25,11 +25,11 @@ export default class Search extends React.Component<ISearchProps, ISearchState> 
                 locations: [],
                 startDate: null,
                 endDate: null,
-                advancedFilter: false,
                 articleList: undefined,
                 currentPage: 1,
                 showCount: 10,
-                articleCount: 0
+                articleCount: 0,
+                listLength: 0
             }
         } else {
             let sessionState = JSON.parse(sessionSearch);
@@ -51,7 +51,8 @@ export default class Search extends React.Component<ISearchProps, ISearchState> 
         
         this.setState({
             articleList: null,
-            articleCount: null
+            articleCount: null,
+            listLength: 0
         })
 
         api.getFilteredReports(apiFilterState, (error: any, response: any) => {
@@ -64,7 +65,8 @@ export default class Search extends React.Component<ISearchProps, ISearchState> 
             this.setState({
                 articleList: response,
                 articleCount: (!isNullOrUndefined(response)) ? response.length : 0,
-                currentPage: 1
+                currentPage: 1,
+                listLength: response.length
             });
             console.log(response.length);
             sessionStorage.setItem('search', JSON.stringify(this.state));
@@ -134,31 +136,14 @@ export default class Search extends React.Component<ISearchProps, ISearchState> 
                 <body id="top">
                     <div className="Main">
                             <h1>SEARCH</h1>
-                            <div>
-                                <TitleSearch title={this.state.title} onSearch={this.onSearch} updateTitle={this.handleChange} />
+                            <div id="collapse-filters" className="Filter-panel">
+                                <KeytermSearch keyterms={this.state.keyterms} updateKeyterm={this.handleChange}/>
+                                <LocationSearch locations={this.state.locations} updateLocation={this.handleChange}/>
+                                <TimeSearch startDate={this.state.startDate} endDate={this.state.endDate} updateTime={this.handleChange}/>
+                                <Button onClick={this.onSearch}>Search Articles</Button>
                             </div>
-                            <Button
-                                onClick={() => this.handleChange({advancedFilter: !this.state.advancedFilter})}
-                                aria-controls="collapse-filters"
-                                aria-expanded={this.state.advancedFilter}
-                                variant="secondary" size="sm"
-                                block
-                            >
-                                Advanced Filters
-                            </Button>
-                            <Collapse in={this.state.advancedFilter}>
-                                <div id="collapse-filters" className="Filter-panel">
-                                    <KeytermSearch keyterms={this.state.keyterms} updateKeyterm={this.handleChange}/>
-                                    <LocationSearch locations={this.state.locations} updateLocation={this.handleChange}/>
-                                    <TimeSearch startDate={this.state.startDate} endDate={this.state.endDate} updateTime={this.handleChange}/>
-                                    <div className="Filter-button">
-                                        <Button onClick={this.onSearch}>Advanced Search</Button>
-                                    </div>
-                                </div>
-                            </Collapse>
-                            <div className='ArticleList-division' />
-                            <ArticleList articleList={this.paginateArticleList()}/>
-                            <br></br>
+                            <hr />
+                            <ArticleList articleList={this.paginateArticleList()} listLength={this.state.listLength}/>
                             <PaginateSearch
                                 articleCount={this.state.articleCount}
                                 currentPage={this.state.currentPage}
@@ -177,7 +162,6 @@ interface ISearchProps {
 }
 
 interface ISearchState {
-    advancedFilter: boolean;
     title: string;
     keyterms: Array<string>;
     locations: Array<string>;
@@ -187,4 +171,5 @@ interface ISearchState {
     currentPage: number;
     showCount: number;
     articleCount: number | null;
+    listLength: number;
 }

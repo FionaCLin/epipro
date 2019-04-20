@@ -28,8 +28,8 @@ export default class ReportList extends React.Component<IReportListProps, IRepor
     });
 
     return (
-        <div className="ReportList-division">
-            <h3>Reports</h3>
+        <div>
+            <h3>Disease Reports</h3>
             <ListGroup>
                 {this.props.reports.map((report: any) => {
                     return <ListGroup.Item>

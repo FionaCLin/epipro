@@ -23,10 +23,11 @@ export default class LocationSearch extends React.Component<ILocationSearchProps
         console.log('error message', message);
       } else if (error) {
         console.log('error message', error.message);
-      }
-      let filterOptions: Array<Object> = this.createFilterOptions(response);
+      } else {
+        let filterOptions: Array<Object> = this.createFilterOptions(response);
 
-      this.setState({filterOptions})
+        this.setState({filterOptions});
+      }
     });
   }
 
@@ -63,8 +64,7 @@ export default class LocationSearch extends React.Component<ILocationSearchProps
 
   render() {
     return (
-      <div className="Filter-element">
-        <b>Locations</b>
+      <div className="search-element">
         <Select
           isMulti
           options={this.state.filterOptions.sort((a: any, b: any) => { return a.value.localeCompare(b.value) })}
@@ -73,6 +73,15 @@ export default class LocationSearch extends React.Component<ILocationSearchProps
           placeholder="Select location..."
           onChange={(e: any) => this.handleChange(e)}
           value={this.state.values.map((value: String) => { return { label: value, value }})}
+          theme={(theme) => ({
+            ...theme,
+            borderRadius: 3,
+            colors: {
+            ...theme.colors,
+              primary25: 'rgb(162, 156, 194)',
+              primary: 'rgb(162, 156, 194)',
+            },
+          })}
         />
       </div>
     );

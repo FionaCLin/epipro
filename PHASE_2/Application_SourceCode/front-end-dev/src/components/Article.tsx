@@ -16,14 +16,15 @@ export default class Article extends React.Component<IArticleProps, IArticleStat
   }
   
   render() {
+    const btnColor = {backgroundColor: '#483D8B', border: "1px solid #483D8B"}
+
     return (
         <div className="bg">
             <Header />
             <body id="top">
                 <div className="Main">
-                    <Link to='/search'><Button variant="outline-primary">Back to Search</Button></Link>
-                    <p></p>
-                    <br></br>
+                    <Link to='/search'><Button variant="secondary">Back to Search</Button></Link>
+                    <br /><br />
                     <h1>{this.state.headline}</h1>
                     <p><i>URL: <a href={this.state.url}>{this.state.url}</a></i></p>
                     <p><i>DOP: {this.state.date_of_publication}</i></p>

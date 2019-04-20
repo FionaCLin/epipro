@@ -2,7 +2,7 @@ import React from 'react';
 import '../css/Home.css';
 import TimeSearch from './TimeSearch';
 import LocationSearch from './LocationSearch';
-import { Button } from 'react-bootstrap';
+import { Button, ButtonGroup } from 'react-bootstrap';
 import DiseaseSearch from './DiseaseSearch';
 import { isNull, isNullOrUndefined, isUndefined } from 'util';
 import Header from './Header';
@@ -16,6 +16,7 @@ import loading from '../imgs/loading1.gif';
 let epiAPI = new BackendAPI();
 declare var google: any;
 let geoCoder = new google.maps.Geocoder();
+const sections = ['frequency', 'heatmap', 'event'];
 
 export default class Analytics extends React.Component<IAnalyticsProps, IAnalyticsState> {
     constructor(props: IAnalyticsProps) {
@@ -28,7 +29,8 @@ export default class Analytics extends React.Component<IAnalyticsProps, IAnalyti
             frequencyData: undefined,
             heatmapPositions: undefined,
             histogramData: undefined,
-            title: ''
+            title: '',
+            displaySection: sections[0]
         };
         this.handleChange = this.handleChange.bind(this);
         this.onAnalyze = this.onAnalyze.bind(this);
@@ -44,7 +46,8 @@ export default class Analytics extends React.Component<IAnalyticsProps, IAnalyti
         this.setState({
             heatmapPositions: null,
             frequencyData: null,
-            histogramData: null
+            histogramData: null,
+            displaySection: sections[0]
         });
         let apiFilterState = this.createApiFilterState(this.state.startDate, this.state.endDate);
         epiAPI.getAnalyticReport(apiFilterState, (error: any, response: any) => {
@@ -196,7 +199,8 @@ export default class Analytics extends React.Component<IAnalyticsProps, IAnalyti
         const bounds = new google.maps.LatLngBounds();
         let center = {lat: 0, lng: 0};
         let zoom = 1;
-        
+        console.log(this.state.heatmapPositions);
+        if (isNullOrUndefined(this.state.heatmapPositions)) return {center, zoom};
         if (this.state.heatmapPositions.length != 0) {
             this.state.heatmapPositions.forEach((marker: any) => {
                 bounds.extend(new google.maps.LatLng(marker.lat, marker.lng));
@@ -224,34 +228,59 @@ export default class Analytics extends React.Component<IAnalyticsProps, IAnalyti
         return (this.state.disease.length == 0);
     }
 
+    changeSection(section: number) {
+        if (this.state.displaySection != sections[section]) {
+            this.setState({displaySection: sections[section]});
+        }
+    }
+
     render() {
+        let display = (this.checkLoading() == false) ? 'block' : 'none';
         return (
             <div className="bg">
                 <Header />
                 <body id="top">
                     <div className="Main">
-                    <h1>ANALYZE</h1>
-                    <div id="collapse-filters" className="Filter-panel">
-                        <DiseaseSearch disease={this.state.disease} updateDisease={this.handleChange}/>
-                        <LocationSearch locations={this.state.locations} updateLocation={this.handleChange}/>
-                        <TimeSearch startDate={this.state.startDate} endDate={this.state.endDate} updateTime={this.handleChange}/>
-                        <div className="Filter-button">
+                        <h1>ANALYZE</h1>
+                        <div id="collapse-filters" className="Filter-panel">
+                            <DiseaseSearch disease={this.state.disease} updateDisease={this.handleChange}/>
+                            <LocationSearch locations={this.state.locations} updateLocation={this.handleChange}/>
+                            <TimeSearch startDate={this.state.startDate} endDate={this.state.endDate} updateTime={this.handleChange}/>
                             <Button disabled={this.checkInputs()} onClick={this.onAnalyze}>Create Analytics</Button>
                         </div>
-                    </div>
-                    <div className='ArticleList-division' />
+                        <hr />
                         {this.checkLoading()}
-                        {this.checkLoading() == false ? (
-                        <div>
-                            <FrequencyGraph title={this.state.title} titleType='articles at WHO' types={['WHO']} frequencyData={this.state.frequencyData}/>
-                            <HeatMap
-                                title={this.state.title}
-                                locations={isNullOrUndefined(this.state.heatmapPositions) ? [] : this.state.heatmapPositions}
-                                bounds={this.calculateBounds()}
-                            />}
-                            <HistogramGraph title={this.state.title} histogramData={this.state.histogramData}/>
+                        <div style={{display: display}}>
+                            <ButtonGroup vertical className="Report-menu">
+                                <Button size="lg" className="Report-title">{this.state.disease.charAt(0).toUpperCase() + this.state.disease.slice(1)} Analytics</Button>
+                                <Button variant={this.state.displaySection == 'frequency' ? "primary" : "secondary"} onClick={() => this.changeSection(0)}>Frequency Mentions</Button>
+                                <Button variant={this.state.displaySection == 'heatmap' ? "primary" : "secondary"} onClick={() => this.changeSection(1)}>Heatmap</Button>
+                                <Button variant={this.state.displaySection == 'event' ? "primary" : "secondary"} onClick={() => this.changeSection(2)}>Event Histogram</Button>
+                            </ButtonGroup>
+                            <div className="Report-display">
+                                <div style={{display: this.state.displaySection == 'frequency' ? 'block' : 'none'}}>
+                                    <FrequencyGraph
+                                        title={this.state.title}
+                                        titleType='articles at WHO'
+                                        types={['WHO']}
+                                        frequencyData={this.state.frequencyData}
+                                    />
+                                </div>
+                                <div style={{display: this.state.displaySection == 'heatmap' ? 'block' : 'none'}}>
+                                    <HeatMap
+                                        title={this.state.title}
+                                        locations={isNullOrUndefined(this.state.heatmapPositions) ? [] : this.state.heatmapPositions}
+                                        bounds={this.calculateBounds()}
+                                    />
+                                </div>
+                                <div style={{display: this.state.displaySection == 'event' ? 'block' : 'none'}}>
+                                    <HistogramGraph
+                                        title={this.state.title}
+                                        histogramData={this.state.histogramData}
+                                    />
+                                </div>
+                            </div>
                         </div>
-                        ) : (<div></div>)}
                     </div>
                 </body>
             </div>
@@ -271,6 +300,7 @@ interface IAnalyticsState {
     heatmapPositions: any;
     histogramData: any;
     title: string;
+    displaySection: string;
 }
 
 export interface IApiState {

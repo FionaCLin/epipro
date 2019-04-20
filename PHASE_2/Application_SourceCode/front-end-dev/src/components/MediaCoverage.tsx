@@ -14,45 +14,11 @@ export default class MediaCoverage extends React.Component<IMediaCoverageProps, 
         }
     }
 
-    static defaultProps = {
-        googleData: GoogleData.articles,
-        tweetData: [
-            '1113518650747695106',
-            '1115011387921707009',
-            '1114987459446812673',
-            '1114951144638439425',
-            '1114966369823592448',
-            '1117810618915000322'
-        ]
-    }
-
-    private toggleCollapse() {
-      this.setState({
-          collapse: !this.state.collapse
-      });
-    }
-
     render() {
       return (
             <div>
-                <Button
-                    onClick={() => this.toggleCollapse()}
-                    aria-controls="media"
-                    aria-expanded={this.state.collapse}
-                    variant="secondary"
-                    block
-                >
-                    Media Coverage
-                </Button>
-                <Collapse in={this.state.collapse}>
-                    <div id="media">
-                        <div className="Analytics-collapse">
-                            <GoogleCardList data={this.props.googleData}/>
-                            <TweetList data={this.props.tweetData}/>
-                        </div>
-                    </div>
-                </Collapse>
-                <br></br>
+                <GoogleCardList data={this.props.googleData}/>
+                <TweetList data={this.props.tweetData}/>
             </div>
       );
     }
@@ -64,5 +30,4 @@ interface IMediaCoverageProps {
 }
 
 interface IMediaCoverageState {
-    collapse: boolean;
 }

@@ -44,9 +44,8 @@ export default class TimeSearch extends React.Component<ITimeSearchProps, ITimeS
 
   render() {
     return (
-      <div className="Filter-element">
-        <div><b>Date Range</b></div>
-          <div className="Filter-inline-1">
+      <div style={{float: 'left'}}>
+          <div className="Date-picker">
             <DatePicker
               selected={this.state.startDate}
               selectsStart
@@ -59,8 +58,7 @@ export default class TimeSearch extends React.Component<ITimeSearchProps, ITimeS
               placeholderText='Start Date'
             />
           </div>
-          <div className='Time-between'>to</div>
-          <div className="Filter-inline-2">
+          <div className="Date-picker">
           <DatePicker
             selected={this.state.endDate}
             selectsEnd

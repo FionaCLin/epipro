@@ -10,17 +10,19 @@ export default class Report extends React.Component<IReportProps, IReportState> 
     super(props);
   }
   
-  private ListCheck(check: Array<string>, type:string) {
-    let listProp: any = null;
-    if (!isNull(check) && check.length != 0) {
-        listProp = check.map((item: string) =>
-        {
-            return <Badge className="Badge-division" variant="secondary">{item}</Badge>
-        })
-        listProp = (<p><b>{type}:</b> {listProp}</p>);
+    private ListCheck(check: Array<string>, type:string) {
+      console.log(check);
+        let listProp: any = null;
+        if (!isNull(check) && check.length != 0) {
+            if (!Array.isArray(check)) check = [check];
+            listProp = check.map((item: string) =>
+            {
+                return <Badge className="Badge-division" variant="secondary">{item}</Badge>
+            })
+            listProp = (<p><b>{type}:</b> {listProp}</p>);
+        }
+        return listProp;
     }
-    return listProp;
-  }
 
   private CommentCheck(check: string) {
       return (

@@ -11,16 +11,9 @@ export default class FrequencyGraph extends React.Component<IFrequencyGraphProps
     constructor(props: IFrequencyGraphProps) {
         super(props);
         this.state = {
-            collapse: true,
             frequencyFilter: frequencyFilters[0],
             frequencyData: (!isUndefined(this.props.frequencyData)) ? this.props.frequencyData : []
         };
-    }
-
-    private toggleCollapse() {
-        this.setState({
-            collapse: !this.state.collapse
-        });
     }
 
     componentWillReceiveProps(newProps: any) {
@@ -99,31 +92,19 @@ export default class FrequencyGraph extends React.Component<IFrequencyGraphProps
 
     render() {
         return (
-            <div>
-                <Button
-                    onClick={() => this.toggleCollapse()}
-                    aria-controls="frequency"
-                    aria-expanded={this.state.collapse}
-                    variant="secondary"
-                    block
-                >
-                    Frequency Mentions
-                </Button>
-                <Collapse in={this.state.collapse}>
-                    <div id="frequency">
-                        <div className="Analytics-collapse">
-                            <FrequencyFormat
-                                title={'Frequency of ' + this.props.title.charAt(0).toUpperCase() + this.props.title.slice(1) + ' mentions on ' + this.props.titleType}
-                                types={this.props.types}
-                                chartData={this.cleanChartData(this.state.frequencyData)}/>
-                            <div style={{float: 'left', marginRight: '10px'}}>Date frequency:</div>
-                            <input type="radio" onClick={() => this.convertFrequency(frequencyFilters[0])} name="frequencyFilter" defaultChecked/>Day
-                            <input style={{marginLeft: '10px'}} type="radio" onClick={() => this.convertFrequency(frequencyFilters[1])} name="frequencyFilter" />Month
-                            <input style={{marginLeft: '10px'}} type="radio" onClick={() => this.convertFrequency(frequencyFilters[2])} name="frequencyFilter" />Year
-                        </div>
-                    </div>
-                </Collapse>
+            <div id="frequency">
+                <FrequencyFormat
+                    title={'Frequency of ' + this.props.title.charAt(0).toUpperCase() + this.props.title.slice(1) + ' mentions on ' + this.props.titleType}
+                    types={this.props.types}
+                    chartData={this.cleanChartData(this.state.frequencyData)}/>
                 <br></br>
+                <br></br>
+                <div>
+                    <div style={{float: 'left', marginRight: '10px'}}>Date frequency:</div>
+                    <input type="radio" onClick={() => this.convertFrequency(frequencyFilters[0])} name="frequencyFilter" defaultChecked/>Day
+                    <input style={{marginLeft: '10px'}} type="radio" onClick={() => this.convertFrequency(frequencyFilters[1])} name="frequencyFilter" />Month
+                    <input style={{marginLeft: '10px'}} type="radio" onClick={() => this.convertFrequency(frequencyFilters[2])} name="frequencyFilter" />Year
+                </div>
             </div>
         );
     }
@@ -137,7 +118,6 @@ interface IFrequencyGraphProps {
 }
 
 interface IFrequencyGraphState {
-    collapse: boolean;
     frequencyFilter: string;
     frequencyData: Array<Frequency>;
 }
