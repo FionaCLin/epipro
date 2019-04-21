@@ -2,21 +2,21 @@ import React from 'react';
 import '../css/Home.css';
 import TimeSearch from './TimeSearch';
 import LocationSearch from './LocationSearch';
-import { Button, ButtonGroup } from 'react-bootstrap';
+import { Button, ButtonGroup, Form } from 'react-bootstrap';
 import DiseaseSearch from './DiseaseSearch';
 import { isNull, isNullOrUndefined, isUndefined } from 'util';
 import Header from './Header';
-import { BackendAPI, IAnalyticOptions } from '../API';
-import FrequencyGraph from './FrequencyGraph';
-import HeatMap from './Heatmap';
-import { fitBounds } from 'google-map-react/utils';
-import HistogramGraph, { HistBar } from './HistogramGraph';
+import { BackendAPI } from '../API';
+import FrequencyGraph, { Frequency } from './FrequencyGraph';
+import HeatMap, { APIHeatmap, GeoPosition, assignWeight } from './Heatmap';
+import HistogramGraph, { HistBar, APIEvent, HistogramData } from './HistogramGraph';
 import loading from '../imgs/loading1.gif';
+import { parseDates, stringifyDates, createApiFilterState, shortenDate, capitalize } from './util';
 
-let epiAPI = new BackendAPI();
 declare var google: any;
-let geoCoder = new google.maps.Geocoder();
+let epiAPI = new BackendAPI();
 const sections = ['frequency', 'heatmap', 'event'];
+let geoCoder = new google.maps.Geocoder();
 
 export default class Analytics extends React.Component<IAnalyticsProps, IAnalyticsState> {
     constructor(props: IAnalyticsProps) {
@@ -36,22 +36,13 @@ export default class Analytics extends React.Component<IAnalyticsProps, IAnalyti
             };
         } else {
             let sessionState = JSON.parse(sessionAnalyze);
-            sessionState.startDate = this.parseDates(sessionState.startDate);
-            sessionState.endDate = this.parseDates(sessionState.endDate);
+            sessionState.startDate = parseDates(sessionState.startDate);
+            sessionState.endDate = parseDates(sessionState.endDate);
             this.state = sessionState;
             console.log(sessionState);
         }
         this.handleChange = this.handleChange.bind(this);
         this.onAnalyze = this.onAnalyze.bind(this);
-    }
-
-    private parseDates(date: string | null) {
-        return (!isNull(date) ? new Date(date) : date);
-    }
-
-    private handleChange(event: any) {
-        // console.log(event);
-        this.setState(event);
     }
 
     private onAnalyze() {
@@ -62,7 +53,7 @@ export default class Analytics extends React.Component<IAnalyticsProps, IAnalyti
             histogramData: null,
             displaySection: sections[0]
         });
-        let apiFilterState = this.createApiFilterState(this.state.startDate, this.state.endDate);
+        let apiFilterState = createApiFilterState(this.state);
         epiAPI.getAnalyticReport(apiFilterState, (error: any, response: any) => {
             console.log(response);
             if (error && error.response) {
@@ -82,25 +73,13 @@ export default class Analytics extends React.Component<IAnalyticsProps, IAnalyti
         });
     }
 
-    checkLoading() {
-        if (isNull(this.state.frequencyData) || isNull(this.state.frequencyData) ||
-            isNull(this.state.heatmapPositions)) {
-          return <img src={loading} className="loading" alt="loading" />;
-        } else if (isUndefined(this.state.frequencyData) && isUndefined(this.state.histogramData) &&
-            isUndefined(this.state.heatmapPositions)) {
-                return true;
-        }
-        sessionStorage.setItem('analyze', JSON.stringify(this.state));
-        return false;
-    }
-
-    private createHistogramData(apiEvent: any) {
+    private createHistogramData(apiEvent: APIEvent) {
         const histogramEvents: Array<HistBar> = [];
         const events = ['death', 'hospitalised', 'infected', 'presence', 'recovered'];
         for (let i = 0; i < events.length; i++) {
             histogramEvents.push({
                 event: events[i],
-                count: apiEvent[events[i]]
+                count: apiEvent[events[i]] as number
             });
         }
         return {
@@ -114,47 +93,34 @@ export default class Analytics extends React.Component<IAnalyticsProps, IAnalyti
         let heatmapData: Array<GeoPosition> = [];
         this.setState({heatmapPositions: []})
         for (let i = 0; i < apiHeatmap.length; i++) {
-            this.geocodeAddress(apiHeatmap[i]);
+            geoCoder.geocode({address: apiHeatmap[i].location}, (results: any, status: any) => {
+                let temp = {lat: 0, lng: 0, weight: 0, data: apiHeatmap[i]};
+                if (status === google.maps.GeocoderStatus.OK) {
+                    temp = {
+                        lat: results[0].geometry.location.lat(),
+                        lng: results[0].geometry.location.lng(),
+                        weight: assignWeight(apiHeatmap[i].number_affected),
+                        data: apiHeatmap[i]
+    
+                    };
+                }
+                if (!isNullOrUndefined(this.state.heatmapPositions)) {
+                    this.setState({heatmapPositions: this.state.heatmapPositions.concat([temp])});
+                }
+            });
         }
         return heatmapData;
     }
 
-    private geocodeAddress(location: APIHeatmap) {
-        geoCoder.geocode({address: location.location}, (results: any, status: any) => {
-            let temp = {lat: 0, lng: 0, weight: 0, data: location};
-            if (status === google.maps.GeocoderStatus.OK) {
-                temp = {
-                    lat: results[0].geometry.location.lat(),
-                    lng: results[0].geometry.location.lng(),
-                    weight: this.assignWeight(location.number_affected),
-                    data: location
-
-                };
-            }
-            //console.log(temp);
-            this.setState({heatmapPositions: this.state.heatmapPositions.concat([temp])});
-            //console.log(this.state.heatmapPositions);
-        });
-    }
-
-    private assignWeight(numberAffected: number) {
-        const weightValues = [0, 10, 100, 250, 500, 750, 1000]
-        for (let i = weightValues.length; i != 0; i--) {
-            if (numberAffected > weightValues[i - 1]) return i;
-        }
-        return 0;
-    }
-
     private createFrequencyData(apiFrequency: Array<APIFrequency>) {
-        console.log("INSIDE", apiFrequency);
         let count = (!isNull(this.state.startDate)) ? new Date(this.state.startDate) : new Date(2017, 0, 1);
         let endDate = (!isNull(this.state.endDate)) ? new Date(this.state.endDate) : new Date();
         endDate.setHours(0, 0, 0, 0);
 
-        let countStr: string = this.stringifyDates(count, 'startDate');
-        let endStr: string = this.stringifyDates(endDate, 'endDate');
-        countStr =  countStr.substring(0, countStr.indexOf('T'));
-        endStr = endStr.substring(0, endStr.indexOf('T'));
+        let countStr: string = stringifyDates(count, 'startDate');
+        let endStr: string = stringifyDates(endDate, 'endDate');
+        countStr =  shortenDate(countStr);
+        endStr = shortenDate(endStr);
 
         let freqArray: Array<Frequency> = [];
         let temp: Frequency = { date: countStr, WHO: 0, Google: 0, Twitter: 0 };
@@ -166,86 +132,35 @@ export default class Analytics extends React.Component<IAnalyticsProps, IAnalyti
             if (sameDate.length != 0) temp.WHO = sameDate[0].count;
             count.setDate(count.getDate() + 1);
             count.setHours(0, 0, 0, 0);
-            countStr =  this.stringifyDates(count, 'startDate').substring(0, countStr.length);
+            countStr =  stringifyDates(count, 'startDate').substring(0, countStr.length);
         }
-        console.log(apiFrequency);
-        console.log('date', freqArray);
         return freqArray;
     }
 
-    private createApiFilterState(startDate: Date | null, endDate: Date | null) {
-        let apiFilterState: IAnalyticOptions = {
-            disease: this.state.disease,
-            location: this.cleanLocations(),
-            startDate: this.stringifyDates(startDate, 'startDate'),
-            endDate: this.stringifyDates(endDate, 'endDate'),
-        };
-        console.log(apiFilterState);
-        return apiFilterState;
+    private handleChange(event: any) {
+        this.setState(event);
     }
 
-    private cleanLocations() {
-        let cleanLocations = [];
-        for (let i = 0; i < this.state.locations.length; i++) {
-            let multiLocation = this.state.locations[i].indexOf(',');
-            let temp = this.state.locations[i];
-            if (!isUndefined(multiLocation)) {
-                temp = temp.substring(0, multiLocation);
-            }
-            cleanLocations.push(temp);
-        }
-        return cleanLocations.join(', ');
-    }
-
-    private stringifyDates(date: Date | null, dateType: string) {
-        let temp = (!isNull(date)) ? new Date(date) : date;
-        if (!isNull(temp)) {
-            if (dateType == 'endDate') {
-                temp.setSeconds(temp.getSeconds() - 1);
-                temp.setDate(temp.getDate() + 1);
-            }
-            temp = new Date(temp.getTime() - (temp.getTimezoneOffset() * 60000));
-        }
-        return (!isNull(temp) ? temp.toISOString().slice(0, -5) : '');
-    }
-
-    private calculateBounds() {
-        const bounds = new google.maps.LatLngBounds();
-        let center = {lat: 0, lng: 0};
-        let zoom = 1;
-        console.log(this.state.heatmapPositions);
-        if (isNullOrUndefined(this.state.heatmapPositions)) return {center, zoom};
-        if (this.state.heatmapPositions.length != 0) {
-            this.state.heatmapPositions.forEach((marker: any) => {
-                bounds.extend(new google.maps.LatLng(marker.lat, marker.lng));
-            });
-
-            let newBounds = {
-                ne: {
-                    lat: bounds.getNorthEast().lat(),
-                    lng: bounds.getNorthEast().lng()
-                },
-                sw: {
-                    lat: bounds.getSouthWest().lat(),
-                    lng: bounds.getSouthWest().lng()
-                }
-            }
-            let size = { width: 1000, height: 450 };
-            let {center, zoom} = fitBounds(newBounds, size);
-            return {center, zoom};
-        }
-
-        return {center, zoom};
-    }
-
-    checkInputs() {
+    private checkInputs() {
         return (this.state.disease.length == 0);
     }
 
-    changeSection(section: number) {
+    private changeSection(section: number) {
         if (this.state.displaySection != sections[section]) {
             this.setState({displaySection: sections[section]});
         }
+    }
+    
+    private checkLoading() {
+        if (isNull(this.state.frequencyData) || isNull(this.state.frequencyData) ||
+            isNull(this.state.heatmapPositions)) {
+          return <img src={loading} className="loading" alt="loading" />;
+        } else if (isUndefined(this.state.frequencyData) && isUndefined(this.state.histogramData) &&
+            isUndefined(this.state.heatmapPositions)) {
+                return true;
+        }
+        sessionStorage.setItem('analyze', JSON.stringify(this.state));
+        return false;
     }
 
     render() {
@@ -262,11 +177,14 @@ export default class Analytics extends React.Component<IAnalyticsProps, IAnalyti
                             <TimeSearch startDate={this.state.startDate} endDate={this.state.endDate} updateTime={this.handleChange}/>
                             <Button disabled={this.checkInputs()} onClick={this.onAnalyze}>Create Analytics</Button>
                         </div>
+                        <Form.Text className="text-muted">
+                                * Disease filter is required. Other filters are optional.
+                        </Form.Text>
                         <hr />
                         {this.checkLoading()}
                         <div style={{display: display}}>
                             <ButtonGroup vertical className="Report-menu">
-                                <Button size="lg" className="Report-title">{this.state.title.charAt(0).toUpperCase() + this.state.title.slice(1)} Analytics</Button>
+                                <Button size="lg" className="Report-title">{capitalize(this.state.title)} Analytics</Button>
                                 <Button variant={this.state.displaySection == 'frequency' ? "primary" : "secondary"} onClick={() => this.changeSection(0)}>Frequency Mentions</Button>
                                 <Button variant={this.state.displaySection == 'heatmap' ? "primary" : "secondary"} onClick={() => this.changeSection(1)}>Heatmap</Button>
                                 <Button variant={this.state.displaySection == 'event' ? "primary" : "secondary"} onClick={() => this.changeSection(2)}>Event Histogram</Button>
@@ -284,7 +202,6 @@ export default class Analytics extends React.Component<IAnalyticsProps, IAnalyti
                                     <HeatMap
                                         title={this.state.title}
                                         locations={isNullOrUndefined(this.state.heatmapPositions) ? [] : this.state.heatmapPositions}
-                                        bounds={this.calculateBounds()}
                                     />
                                 </div>
                                 <div style={{display: this.state.displaySection == 'event' ? 'block' : 'none'}}>
@@ -310,40 +227,14 @@ interface IAnalyticsState {
     locations: Array<string>;
     startDate: Date | null;
     endDate: Date | null;
-    frequencyData: any;
-    heatmapPositions: any;
-    histogramData: any;
+    frequencyData: Array<Frequency> | null | undefined;
+    heatmapPositions: Array<GeoPosition> | null | undefined;
+    histogramData: HistogramData | null | undefined;
     title: string;
     displaySection: string;
-}
-
-export interface IApiState {
-    event_graph: any;
-    frequency_graph: any;
-    heat_map: any;
-}
-
-export interface Frequency {
-    date: string;
-    WHO: number;
-    Twitter: number;
-    Google: number;
 }
 
 interface APIFrequency {
     date: string;
     count: number;
-}
-
-export interface APIHeatmap {
-    location: string;
-    article_count: number;
-    number_affected: number;
-}
-
-export interface GeoPosition {
-    lat: number;
-    lng: number;
-    weight?: number;
-    data?: APIHeatmap;
 }

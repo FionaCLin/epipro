@@ -28,6 +28,23 @@ html {
   height: 700px;
 }
 
+.Section-title {
+    text-align: center;
+    width: 100%;
+}
+
+.btn-outline-secondary {
+    width: 20px !important;
+    height: 20px !important;
+    padding: 3px 0px !important;
+    border-radius: 15px !important;
+    text-align: center !important;
+    font-size: 12px !important;
+    line-height: 1.12857 !important;
+    margin-left: 10px !important;
+    margin-bottom: 3.5px !important;
+}
+
 .Histogram-chart {
   text-align: center;
   float: left;
@@ -53,6 +70,7 @@ html {
 .Report-menu {
     float: left;
     min-width: 300px;
+    max-width: 300px;
     margin-right: 10px;
 }
 

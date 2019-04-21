@@ -2,12 +2,6 @@ import React from 'react';
 import '../css/Home.css';
 import Select from 'react-select';
 import DiseaseList from '../dummydata/disease_list.json';
-import SyndromeList from '../dummydata/syndrome_list.json';
-
-const filterTypes: Array<any> = [
-    { label: 'Disease', value: 0, type: 'disease' },
-    { label: 'Syndrome', value: 1, type: 'syndrome' }
-];
 
 export default class DiseaseSearch extends React.Component<IDiseaseSearchProps, IDiseaseSearchState> {
     constructor(props: IDiseaseSearchProps) {
@@ -27,7 +21,7 @@ export default class DiseaseSearch extends React.Component<IDiseaseSearchProps, 
     }
 
     private addFilterOptions() {
-        let diseases: Array<Object> = DiseaseList.map((disease: any) => {
+        let diseases: Array<Object> = DiseaseList.map((disease: {name: string}) => {
             return { label: disease.name, value: disease.name, type: 'disease' }
         });
         return diseases;
@@ -41,7 +35,7 @@ export default class DiseaseSearch extends React.Component<IDiseaseSearchProps, 
                     classNamePrefix="select"
                     placeholder="Select disease..."
                     onChange={(e: any) => this.handleChange(e)}
-                    value={{ label: this.state.value, value: this.state.value }}
+                    value={(this.state.value != '') ? { label: this.state.value, value: this.state.value } : null}
                     theme={(theme) => ({
                         ...theme,
                         borderRadius: 3,

@@ -8,7 +8,7 @@ export default class GoogleCard extends React.Component<IGoogleCardProps, IGoogl
         super(props);
     }
 
-    trimText(main_text: string, minCut: number) {
+    private trimText(main_text: string, minCut: number) {
         if (isNull(main_text)) return 'No description found.';
         let cutCount: number = main_text.length;
     

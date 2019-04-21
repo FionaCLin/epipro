@@ -1,7 +1,8 @@
 import React from 'react';
 import '../css/Home.css';
 import { LineChart, ResponsiveContainer, XAxis, YAxis, Line, CartesianGrid, Tooltip, Legend } from 'recharts';
-import { Frequency } from './Analytics';
+import { Tooltip as ChartTooltip } from './Tooltip';
+import { Frequency } from './FrequencyGraph';
 
 const types: {[key: string]: string} = {
     WHO: "#19a022",
@@ -16,7 +17,10 @@ export default class FrequencyFormat extends React.Component<IFrequencyFormatPro
   render() {
     return (
         <div className='Frequency-chart'>
-            <b>{this.props.title}</b>
+            <p>
+                <b>{this.props.title}</b>
+                <ChartTooltip description={'Frequency of mentions of disease within time range.'} />
+            </p>
             <ResponsiveContainer height="95%">
                 <LineChart data={this.props.chartData}>
                     <XAxis label={{value: 'Dates', position: 'insideBottom', offset: -15}} dataKey="date"/>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
+import { Switch, Route, Redirect, HashRouter } from 'react-router-dom';
 import Home from './components/Home';
 import Search from './components/Search';
 import Article from './components/Article';
@@ -14,7 +14,7 @@ export default class App extends Component<IAppProps, IAppState> {
   render() {
     return (
       <main>
-        <Router>
+        <HashRouter>
           <Switch>
             <Route exact path="/" component={Home} />
             <Route path="/search" component={Search} />
@@ -23,7 +23,7 @@ export default class App extends Component<IAppProps, IAppState> {
             <Route path="/trends" component={Trends} />
             <Redirect to="/" />
           </Switch>
-        </Router>
+        </HashRouter>
       </main>
     );
   }

@@ -1,59 +1,60 @@
 import React from 'react';
 import '../css/Home.css';
-import { ListGroup } from 'react-bootstrap';
 import ArticleCard from './ArticleCard';
 import { isNullOrUndefined, isNull, isUndefined } from 'util';
 import loading from '../imgs/loading1.gif';
+import { cleanDate } from './util';
+import { IArticleState } from './Article';
 
 export default class ArticleList extends React.Component<IArticleListProps, IArticleListState> {
-  constructor(props: IArticleListProps) {
-    super(props);
-  }
-
-  showArticleList() {
-    if (!isNullOrUndefined(this.props.articleList))
-    return this.props.articleList.map((articleData: any) => {
-      return <ArticleCard {...articleData}/>;
-    });
-  }
-
-  checkLoading() {
-    if (isNull(this.props.articleList)) {
-      return <img src={loading} className="loading" alt="loading" />;
+    constructor(props: IArticleListProps) {
+        super(props);
     }
-  }
 
-  checkResults() {
-    if (!isNullOrUndefined(this.props.articleList) && this.props.articleList.length == 0) {
-      return <p>No results found.</p>;
-    } else if (isUndefined(this.props.articleList)) {
-      return <p></p>;
+    private showArticleList() {
+        if (!isNullOrUndefined(this.props.articleList)) {
+            return this.props.articleList.map((articleData: IArticleState) => {
+                articleData.date_of_publication = cleanDate(articleData.date_of_publication);
+                return <ArticleCard {...articleData}/>;
+            });
+        }
     }
-  }
 
-  showResultsLength() {
-      if (!isNullOrUndefined(this.props.articleList) && this.props.articleList.length != 0) {
-          return <p>{this.props.listLength} matching articles found.</p>;
-      }
-  }
+    private checkLoading() {
+        if (isNull(this.props.articleList)) return <img src={loading} className="loading" alt="loading" />;
+    }
 
-  render() {
-    return (
+    private checkResults() {
+        if (!isNullOrUndefined(this.props.articleList) && this.props.articleList.length == 0) {
+            return <p>No results found.</p>;
+        } else if (isUndefined(this.props.articleList)) {
+            return <p></p>;
+        }
+    }
 
-    <div>
-        {this.showResultsLength()}
-        {this.showArticleList()}
-      {this.checkLoading()}
-      {this.checkResults()}
-      <br />
-    </div>
-    );
-  }
+    private showResultsLength() {
+        if (!isNullOrUndefined(this.props.articleList) && this.props.articleList.length != 0) {
+            return <p>{this.props.listLength} matching articles found.</p>;
+        }
+    }
+
+    render() {
+        return (
+
+        <div>
+            {this.showResultsLength()}
+            {this.showArticleList()}
+            {this.checkLoading()}
+            {this.checkResults()}
+            <br />
+        </div>
+        );
+    }
 }
 
 interface IArticleListProps {
-  articleList: Array<any> | null | undefined;
-  listLength: number;
+    articleList: Array<IArticleState> | null | undefined;
+    listLength: number;
 }
 
 interface IArticleListState {

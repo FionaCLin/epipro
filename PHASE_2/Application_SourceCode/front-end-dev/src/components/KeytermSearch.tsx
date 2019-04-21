@@ -28,7 +28,7 @@ export default class KeytermSearch extends React.Component<IKeytermSearchProps, 
         this.props.updateKeyterm(({ keyterms: values }));
     }
 
-    private addFilterOptions(filterType: any) {
+    private addFilterOptions(filterType: string) {
         api.getKeyTerms(filterType, (error: any, response: any) => {
             if (error && error.response) {
                 let message = error.response.data.message

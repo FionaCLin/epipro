@@ -1,9 +1,8 @@
 import React from 'react';
 import '../css/Home.css';
-import { Button, Collapse } from 'react-bootstrap';
 import FrequencyFormat from './FrequencyFormat';
 import { isUndefined, isNullOrUndefined } from 'util';
-import { Frequency } from './Analytics';
+import { shortenDate, capitalize } from './util';
 
 const frequencyFilters: Array<string> = ['day', 'month', 'year'];
 
@@ -12,7 +11,7 @@ export default class FrequencyGraph extends React.Component<IFrequencyGraphProps
         super(props);
         this.state = {
             frequencyFilter: frequencyFilters[0],
-            frequencyData: (!isUndefined(this.props.frequencyData)) ? this.props.frequencyData : []
+            frequencyData: (!isNullOrUndefined(this.props.frequencyData)) ? this.props.frequencyData : []
         };
     }
 
@@ -24,7 +23,7 @@ export default class FrequencyGraph extends React.Component<IFrequencyGraphProps
 
     private convertFrequency(interval: string) {
         let data = this.props.frequencyData;
-        if (!isUndefined(data) && this.state.frequencyFilter != interval) {
+        if (!isNullOrUndefined(data) && this.state.frequencyFilter != interval) {
             console.log("HERE");
             if (interval == 'day') {
                 this.setState({frequencyData: data, frequencyFilter: interval});
@@ -51,11 +50,13 @@ export default class FrequencyGraph extends React.Component<IFrequencyGraphProps
                                 });
                             } else {
                                 let num = newFrequency.indexOf(found[0]);
-                                newFrequency[num] = {
-                                    date: newFrequency[num].date,
-                                    WHO: newFrequency[num].WHO + date.WHO,
-                                    Google: newFrequency[num].Google + date.Google,
-                                    Twitter: newFrequency[num].Twitter + date.Twitter
+                                newFrequency[num].date = newFrequency[num].date;
+                                for (let i = 0; i < this.props.types.length; i++) {
+                                    let freqType = newFrequency[num][this.props.types[i]] as number;
+                                    let dateType = date[this.props.types[i]] as number;
+                                    if (!isUndefined(freqType) && !isUndefined(dateType)) {
+                                        newFrequency[num][this.props.types[i]] = freqType + dateType;
+                                    }
                                 }
                             }
                         }
@@ -72,7 +73,7 @@ export default class FrequencyGraph extends React.Component<IFrequencyGraphProps
 
     private formatXAxis(date: string) {
         let newDate: string = date;
-        if (date.indexOf('T') != -1) newDate = newDate.substring(0, date.indexOf('T'));
+        if (date.indexOf('T') != -1) newDate = shortenDate(newDate);
         newDate = newDate.split('-').reverse().join('/');
         return newDate;
     }
@@ -94,7 +95,7 @@ export default class FrequencyGraph extends React.Component<IFrequencyGraphProps
         return (
             <div id="frequency">
                 <FrequencyFormat
-                    title={'Frequency of ' + this.props.title.charAt(0).toUpperCase() + this.props.title.slice(1) + ' mentions on ' + this.props.titleType}
+                    title={'Frequency of ' + capitalize(this.props.title) + ' mentions on ' + this.props.titleType}
                     types={this.props.types}
                     chartData={this.cleanChartData(this.state.frequencyData)}/>
                 <br></br>
@@ -111,7 +112,7 @@ export default class FrequencyGraph extends React.Component<IFrequencyGraphProps
 }
 
 interface IFrequencyGraphProps {
-    frequencyData: any;
+    frequencyData: Array<Frequency> | null | undefined;
     title: string;
     titleType: string;
     types: Array<string>;
@@ -120,4 +121,12 @@ interface IFrequencyGraphProps {
 interface IFrequencyGraphState {
     frequencyFilter: string;
     frequencyData: Array<Frequency>;
+}
+
+export interface Frequency {
+    date: string;
+    WHO?: number;
+    Google?: number;
+    Twitter?: number;
+    [key: string]: number | string | undefined;
 }

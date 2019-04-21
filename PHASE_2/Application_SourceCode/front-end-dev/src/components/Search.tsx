@@ -1,6 +1,6 @@
 import React from 'react';
 import '../css/Home.css';
-import { Button } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 import TimeSearch from './TimeSearch';
 import ArticleList from './ArticleList';
 import LocationSearch from './LocationSearch';
@@ -9,6 +9,8 @@ import { BackendAPI, IFilterOptions } from '../API';
 import { isNull, isNullOrUndefined, isUndefined } from 'util';
 import PaginateSearch from './PaginateSearch';
 import Header from './Header';
+import { createApiFilterState, parseDates } from './util';
+import { IArticleState } from './Article';
 
 let api = new BackendAPI();
 
@@ -32,8 +34,8 @@ export default class Search extends React.Component<ISearchProps, ISearchState> 
             }
         } else {
             let sessionState = JSON.parse(sessionSearch);
-            sessionState.startDate = this.parseDates(sessionState.startDate);
-            sessionState.endDate = this.parseDates(sessionState.endDate);
+            sessionState.startDate = parseDates(sessionState.startDate);
+            sessionState.endDate = parseDates(sessionState.endDate);
             this.state = sessionState;
         }
 
@@ -46,12 +48,8 @@ export default class Search extends React.Component<ISearchProps, ISearchState> 
         if (isNull(sessionSearch)) this.onSearch();
     }
 
-    private parseDates(date: string | null) {
-        return (!isNull(date) ? new Date(date) : date);
-    }
-
     private onSearch() {
-        let apiFilterState: IFilterOptions = this.createApiFilterState();
+        let apiFilterState: IFilterOptions = createApiFilterState(this.state);
         
         this.setState({
             articleList: null,
@@ -65,57 +63,17 @@ export default class Search extends React.Component<ISearchProps, ISearchState> 
                 console.log('error message', message);
             } else if (error) {
                 console.log('error message', error.message);
+            } else {
+                this.setState({
+                    articleList: response,
+                    articleCount: (!isNullOrUndefined(response)) ? response.length : 0,
+                    currentPage: 1,
+                    listLength: response.length
+                });
+                console.log(response.length);
+                sessionStorage.setItem('search', JSON.stringify(this.state));
             }
-            this.setState({
-                articleList: response,
-                articleCount: (!isNullOrUndefined(response)) ? response.length : 0,
-                currentPage: 1,
-                listLength: response.length
-            });
-            console.log(response.length);
-            sessionStorage.setItem('search', JSON.stringify(this.state));
         });
-    }
-
-    private createApiFilterState() {
-        return ({
-            keyterms: this.stringifyKeyterms(),
-            locations: this.cleanLocations(),
-            startDate: this.stringifyDates(this.state.startDate, 'startDate'),
-            endDate: this.stringifyDates(this.state.endDate, 'endDate'),
-        });
-    }
-
-    private cleanLocations() {
-        let cleanLocations = [];
-        for (let i = 0; i < this.state.locations.length; i++) {
-            let multiLocation = this.state.locations[i].indexOf(',');
-            let temp = this.state.locations[i];
-            if (!isUndefined(multiLocation)) {
-                temp = temp.substring(0, multiLocation);
-            }
-            cleanLocations.push(temp);
-        }
-        return cleanLocations.join(', ');
-    }
-
-    private stringifyDates(date: Date | null, dateType: string) {
-        if (!isNull(date)) {
-            if (dateType == 'endDate') {
-                date.setSeconds(date.getSeconds() - 1);
-                date.setDate(date.getDate() + 1);
-            }
-            date = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
-        }
-        return (!isNull(date) ? date.toISOString().slice(0, -5) : '');
-    }
-
-    private stringifyKeyterms() {
-        let keytermString: string = this.state.keyterms.join(',');
-        if (this.state.title.length != 0) {
-            keytermString += ','  + this.state.title;
-        }
-        return keytermString;
     }
 
     private handleChange(event: any) {
@@ -153,6 +111,9 @@ export default class Search extends React.Component<ISearchProps, ISearchState> 
                                 <TimeSearch startDate={this.state.startDate} endDate={this.state.endDate} updateTime={this.handleChange}/>
                                 <Button onClick={this.onSearch}>Search Articles</Button>
                             </div>
+                            <Form.Text className="text-muted">
+                                * All filters are optional.
+                            </Form.Text>
                             <hr />
                             <ArticleList articleList={this.paginateArticleList()} listLength={this.state.listLength}/>
                             <PaginateSearch
@@ -177,7 +138,7 @@ interface ISearchState {
     locations: Array<string>;
     startDate: Date | null;
     endDate: Date | null;
-    articleList: Array<any> | null | undefined;
+    articleList: Array<IArticleState> | null | undefined;
     currentPage: number;
     showCount: number;
     articleCount: number | null;
