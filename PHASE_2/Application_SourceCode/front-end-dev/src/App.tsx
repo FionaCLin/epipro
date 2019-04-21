@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-d
 import Home from './components/Home';
 import Search from './components/Search';
 import Article from './components/Article';
-import { BackendAPI } from './API'
 import Analytics from './components/Analytics';
 import Trends from './components/Trends';
 

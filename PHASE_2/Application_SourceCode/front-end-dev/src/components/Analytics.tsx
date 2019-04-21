@@ -21,19 +21,32 @@ const sections = ['frequency', 'heatmap', 'event'];
 export default class Analytics extends React.Component<IAnalyticsProps, IAnalyticsState> {
     constructor(props: IAnalyticsProps) {
         super(props);
-        this.state = {
-            disease: '',
-            locations: [],
-            startDate: null,
-            endDate: null,
-            frequencyData: undefined,
-            heatmapPositions: undefined,
-            histogramData: undefined,
-            title: '',
-            displaySection: sections[0]
-        };
+        let sessionAnalyze = sessionStorage.getItem('analyze');
+        if (isNull(sessionAnalyze)) {
+            this.state = {
+                disease: '',
+                locations: [],
+                startDate: null,
+                endDate: null,
+                frequencyData: undefined,
+                heatmapPositions: undefined,
+                histogramData: undefined,
+                title: '',
+                displaySection: sections[0]
+            };
+        } else {
+            let sessionState = JSON.parse(sessionAnalyze);
+            sessionState.startDate = this.parseDates(sessionState.startDate);
+            sessionState.endDate = this.parseDates(sessionState.endDate);
+            this.state = sessionState;
+            console.log(sessionState);
+        }
         this.handleChange = this.handleChange.bind(this);
         this.onAnalyze = this.onAnalyze.bind(this);
+    }
+
+    private parseDates(date: string | null) {
+        return (!isNull(date) ? new Date(date) : date);
     }
 
     private handleChange(event: any) {
@@ -77,6 +90,7 @@ export default class Analytics extends React.Component<IAnalyticsProps, IAnalyti
             isUndefined(this.state.heatmapPositions)) {
                 return true;
         }
+        sessionStorage.setItem('analyze', JSON.stringify(this.state));
         return false;
     }
 
@@ -252,7 +266,7 @@ export default class Analytics extends React.Component<IAnalyticsProps, IAnalyti
                         {this.checkLoading()}
                         <div style={{display: display}}>
                             <ButtonGroup vertical className="Report-menu">
-                                <Button size="lg" className="Report-title">{this.state.disease.charAt(0).toUpperCase() + this.state.disease.slice(1)} Analytics</Button>
+                                <Button size="lg" className="Report-title">{this.state.title.charAt(0).toUpperCase() + this.state.title.slice(1)} Analytics</Button>
                                 <Button variant={this.state.displaySection == 'frequency' ? "primary" : "secondary"} onClick={() => this.changeSection(0)}>Frequency Mentions</Button>
                                 <Button variant={this.state.displaySection == 'heatmap' ? "primary" : "secondary"} onClick={() => this.changeSection(1)}>Heatmap</Button>
                                 <Button variant={this.state.displaySection == 'event' ? "primary" : "secondary"} onClick={() => this.changeSection(2)}>Event Histogram</Button>

@@ -1,7 +1,6 @@
 import React from 'react';
 import '../css/Home.css';
-import { Button, Collapse } from 'react-bootstrap';
-import TitleSearch from './TitleSearch';
+import { Button } from 'react-bootstrap';
 import TimeSearch from './TimeSearch';
 import ArticleList from './ArticleList';
 import LocationSearch from './LocationSearch';
@@ -40,6 +39,11 @@ export default class Search extends React.Component<ISearchProps, ISearchState> 
 
         this.handleChange = this.handleChange.bind(this);
         this.onSearch = this.onSearch.bind(this);
+    }
+
+    componentWillMount() {
+        let sessionSearch = sessionStorage.getItem('search');
+        if (isNull(sessionSearch)) this.onSearch();
     }
 
     private parseDates(date: string | null) {
@@ -123,6 +127,13 @@ export default class Search extends React.Component<ISearchProps, ISearchState> 
         if (!isNullOrUndefined(this.state.articleList)) {
             let end: number = this.state.currentPage * this.state.showCount;
             let start: number = end - this.state.showCount;
+            let sessionSearch = sessionStorage.getItem('search');
+            if (!isNull(sessionSearch)) {
+                let sessionState = JSON.parse(sessionSearch);
+                sessionState.currentPage = this.state.currentPage;
+                sessionState.showCount = this.state.showCount;
+                sessionStorage.setItem('search', JSON.stringify(sessionState));
+            }
             return this.state.articleList.slice(start, end);
         } else {
             return this.state.articleList;
@@ -156,9 +167,8 @@ export default class Search extends React.Component<ISearchProps, ISearchState> 
         );
     }
 }
-//TODO write Search function fetch backend report data.
-interface ISearchProps {
 
+interface ISearchProps {
 }
 
 interface ISearchState {

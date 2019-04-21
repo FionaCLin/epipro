@@ -41,6 +41,7 @@ export default class DiseaseSearch extends React.Component<IDiseaseSearchProps, 
                     classNamePrefix="select"
                     placeholder="Select disease..."
                     onChange={(e: any) => this.handleChange(e)}
+                    value={{ label: this.state.value, value: this.state.value }}
                     theme={(theme) => ({
                         ...theme,
                         borderRadius: 3,

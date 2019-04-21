@@ -16,7 +16,6 @@ export default class Header extends React.Component<IHeaderProps, IHeaderState> 
         };
     }
 
-
     componentWillMount() {
         let doc_url:string='';
         api.getAPIdocURL((error: any, response: any) => {

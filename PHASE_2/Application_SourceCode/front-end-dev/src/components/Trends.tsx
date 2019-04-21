@@ -16,24 +16,37 @@ let newsAPI = new GoogleAPI();
 let epiAPI = new BackendAPI();
 declare var trends: any;
 const sections = ['frequency', 'media', 'gTrends'];
+const gSections = [
+    {div: 'gTrends', widget: 'TIMESERIES'},
+    {div: 'gTopics', widget: 'RELATED_TOPICS'},
+    {div: 'gQueries', widget: 'RELATED_QUERIES'}
+];
 
 export default class Trends extends React.Component<ITrendsProps, ITrendsState> {
-  constructor(props: ITrendsProps) {
-    super(props);
-    this.state = {
-        title: '',
-        disease: '',
-        locations: [],
-        startDate: null,
-        endDate: null,
-        googleArticles: [],
-        frequencyData: undefined,
-        tweets: [],
-        googleCheck: 0,
-        twitterCheck: 0,
-        displaySection: 'frequency'
-    };
-
+    constructor(props: ITrendsProps) {
+        super(props);
+        let sessionTrends = sessionStorage.getItem('trends');
+        if (isNull(sessionTrends)) {
+            this.state = {
+                title: '',
+                disease: '',
+                locations: [],
+                startDate: null,
+                endDate: null,
+                googleArticles: [],
+                frequencyData: undefined,
+                tweets: [],
+                googleCheck: 0,
+                twitterCheck: 0,
+                displaySection: 'frequency'
+            };
+        } else {
+            let sessionState = JSON.parse(sessionTrends);
+            sessionState.startDate = this.parseDates(sessionState.startDate);
+            sessionState.endDate = this.parseDates(sessionState.endDate);
+            this.state = sessionState;
+            console.log(sessionState);
+        }
         this.handleChange = this.handleChange.bind(this);
         this.onTrends = this.onTrends.bind(this);
         this.getGoogleData = this.getGoogleData.bind(this);
@@ -43,6 +56,14 @@ export default class Trends extends React.Component<ITrendsProps, ITrendsState> 
     private handleChange(event: any) {
         console.log(event);
         this.setState(event);
+    }
+
+    private parseDates(date: string | null) {
+        return (!isNull(date) ? new Date(date) : date);
+    }
+
+    componentDidMount() {
+        if (!isNull(sessionStorage.getItem('trends'))) this.getGoogleTrends();
     }
 
   getGoogleTrends(){
@@ -57,15 +78,13 @@ export default class Trends extends React.Component<ITrendsProps, ITrendsState> 
             geo = epiAPI.getUNLOCode(country);
         }
         console.log(geo);
-        let timeDiv = document.getElementById('gTrends');
-        let topicDiv = document.getElementById('gTopics');
-        let queryDiv = document.getElementById('gQueries');
-        if (!isNull(timeDiv)) timeDiv.innerHTML = '';
-        let widgetCalls = [
-            {div: timeDiv, type: 'TIMESERIES'},
-            {div: topicDiv, type: 'RELATED_TOPICS'},
-            {div: queryDiv, type: 'RELATED_QUERIES'}
-        ];
+
+        let widgetCalls = [];
+        for (let i = 0; i < gSections.length; i++) {
+            let div = document.getElementById(gSections[i].div);
+            if (!isNull(div)) div.innerHTML = '';
+            widgetCalls.push({div: div, type: gSections[i].widget});
+        }
 
         for (let i = 0; i < widgetCalls.length; i++) {
             trends.embed.renderExploreWidgetTo(widgetCalls[i].div, widgetCalls[i].type, {
@@ -163,16 +182,16 @@ export default class Trends extends React.Component<ITrendsProps, ITrendsState> 
         return filtered;
     }
 
-  private onTrends() {
-    let startDate = this.stringifyDates(this.state.startDate, 'startDate');
-    let endDate = this.stringifyDates(this.state.endDate, 'endDate');
-    let dateArray = this.createDateArray(startDate, endDate);
-    this.setState({frequencyData: dateArray});
-    this.getGoogleTrends();
-    this.getGoogleData(dateArray);
-    this.getTwitterData(dateArray);
-    this.setState({frequencyData: dateArray});
-  }
+    private onTrends() {
+        let startDate = this.stringifyDates(this.state.startDate, 'startDate');
+        let endDate = this.stringifyDates(this.state.endDate, 'endDate');
+        let dateArray = this.createDateArray(startDate, endDate);
+        this.setState({frequencyData: dateArray});
+        this.getGoogleTrends();
+        this.getGoogleData(dateArray);
+        this.getTwitterData(dateArray);
+        this.setState({frequencyData: dateArray});
+    }
 
     private createApiFilterState(startDate: Date | null, endDate: Date | null) {
         let apiFilterState: IFilterOptions = {
@@ -212,6 +231,7 @@ export default class Trends extends React.Component<ITrendsProps, ITrendsState> 
                     this.state.twitterCheck != this.state.frequencyData.length) {
             return <img src={loading} className="loading" alt="loading" />;
         }
+        sessionStorage.setItem('trends', JSON.stringify(this.state));
         return false;
     }
 
@@ -222,7 +242,6 @@ export default class Trends extends React.Component<ITrendsProps, ITrendsState> 
     }
 
     render() {
-        //console.log(this.state.googleArticles);
         let currentDate = new Date();
         let monthBack = new Date(new Date().setDate(currentDate.getDate() - 30));
         console.log(this.state.googleCheck, this.state.frequencyData, this.state.twitterCheck);
@@ -243,7 +262,7 @@ export default class Trends extends React.Component<ITrendsProps, ITrendsState> 
                         {this.checkLoading()}
                         <div style={{display: display}}>
                             <ButtonGroup vertical className="Report-menu">
-                                <Button size="lg" className="Report-title">{this.state.disease.charAt(0).toUpperCase() + this.state.disease.slice(1)} Trends</Button>
+                                <Button size="lg" className="Report-title">{this.state.title.charAt(0).toUpperCase() + this.state.title.slice(1)} Trends</Button>
                                 <Button variant={this.state.displaySection == 'frequency' ? "primary" : "secondary"} onClick={() => this.changeSection(0)}>Frequency Mentions</Button>
                                 <Button variant={this.state.displaySection == 'media' ? "primary" : "secondary"} onClick={() => this.changeSection(1)}>Media Coverage</Button>
                                 <Button variant={this.state.displaySection == 'gTrends' ? "primary" : "secondary"} onClick={() => this.changeSection(2)}>Google Trends</Button>
