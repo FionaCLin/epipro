@@ -30,7 +30,6 @@ export default class DiseaseSearch extends React.Component<IDiseaseSearchProps, 
     }
 
     private handleChange(event: any) {
-        console.log(event);
         this.setState({ value: event.label });
         this.props.updateDisease({ disease: event.label });
     }

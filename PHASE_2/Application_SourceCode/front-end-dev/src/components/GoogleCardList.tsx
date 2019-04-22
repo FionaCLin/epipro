@@ -11,7 +11,6 @@ export default class GoogleCardList extends React.Component<IGoogleCardListProps
     render() {
         let reverseSortData: Array<GoogleCard> = [];
         for (let i = this.props.data.length; i > 0; i--) reverseSortData.push(this.props.data[i - 1]);
-        console.log(reverseSortData);
         return (
             <div className="Media-list">
                 <Card style={{height:"100%"}}>

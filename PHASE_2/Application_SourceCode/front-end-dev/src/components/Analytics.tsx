@@ -42,14 +42,12 @@ export default class Analytics extends React.Component<IAnalyticsProps, IAnalyti
             sessionState.startDate = parseDates(sessionState.startDate);
             sessionState.endDate = parseDates(sessionState.endDate);
             this.state = sessionState;
-            console.log(sessionState);
         }
         this.handleChange = this.handleChange.bind(this);
         this.onAnalyze = this.onAnalyze.bind(this);
     }
 
     private onAnalyze() {
-        console.log("ANALYZE");
         this.setState({
             heatmapPositions: null,
             frequencyData: null,
@@ -58,7 +56,6 @@ export default class Analytics extends React.Component<IAnalyticsProps, IAnalyti
         });
         let apiFilterState = createApiFilterState(this.state);
         epiAPI.getAnalyticReport(apiFilterState, (error: any, response: any) => {
-            console.log(response);
             if (error && error.response) {
                 let message = error.response.data.message
                 console.log('error message', message);
@@ -71,7 +68,6 @@ export default class Analytics extends React.Component<IAnalyticsProps, IAnalyti
                     histogramData: this.createHistogramData(response.event_graph),
                     title: this.state.disease
                 });
-                console.log("LINE 45", response);
             }
         });
     }

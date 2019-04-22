@@ -23,7 +23,6 @@ export default class KeytermSearch extends React.Component<IKeytermSearchProps, 
     }
 
     private handleChange(event: Array<any>) {
-        console.log(event);
         let values: Array<String> = event.map(option => (option.label));
         this.setState({ values });
         this.props.updateKeyterm(({ keyterms: values }));

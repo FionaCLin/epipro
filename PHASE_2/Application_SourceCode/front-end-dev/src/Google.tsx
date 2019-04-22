@@ -10,9 +10,9 @@ export interface IFilterOptions {
 
 export default class GoogleAPI {
     baseURL: string = 'https://newsapi.org/';
-    // apiKey: string = '112874d7eb274abf8417934c83a1ba07';
+    apiKey: string = '112874d7eb274abf8417934c83a1ba07';
     // apiKey: string = '93ab589956f84076963dac0eb76d6a41';
-    apiKey: string = 'eda37975a50a479cb28a43249df18ae2';
+    // apiKey: string = 'eda37975a50a479cb28a43249df18ae2';
 
     getFilteredMedia(filter: IFilterOptions, cb:(err: any, res: any) => any) {
         let q :string[] = [];
@@ -35,7 +35,6 @@ export default class GoogleAPI {
             q.push(`apiKey=${this.apiKey}`);
             let query = q.join('&');
             let url = `${this.baseURL}v2/everything?${query}`
-            //console.log(url);
     
             axios.get(url)
                 .then((response: AxiosResponse) => {

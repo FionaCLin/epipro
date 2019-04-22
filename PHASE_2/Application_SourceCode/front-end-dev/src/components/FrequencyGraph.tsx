@@ -24,7 +24,6 @@ export default class FrequencyGraph extends React.Component<IFrequencyGraphProps
     private convertFrequency(interval: string) {
         let data = this.props.frequencyData;
         if (!isNullOrUndefined(data) && this.state.frequencyFilter != interval) {
-            console.log("HERE");
             if (interval == 'day') {
                 this.setState({frequencyData: data, frequencyFilter: interval});
             } else {
@@ -66,7 +65,6 @@ export default class FrequencyGraph extends React.Component<IFrequencyGraphProps
                 }
 
                 this.setState({frequencyData: newFrequency, frequencyFilter: interval});
-                console.log(newFrequency);
             }
         }
     }
