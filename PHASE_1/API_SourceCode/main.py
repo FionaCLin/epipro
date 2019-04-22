@@ -161,11 +161,15 @@ def page_not_found(e):
     return render_template('index.html', token=api.base_url + 'doc')
 
 # default index page render to REST api doc
+
+
 @app.route('/')
 def index():
     return render_template("index.html", token=api.base_url + 'doc')
 
 # default index page render to REST api doc
+
+
 @app.route('/api/v1/doc-url')
 def doc_url():
     return '{}doc'.format(api.base_url)
@@ -175,7 +179,8 @@ def doc_url():
 def log_file():
     isContent = request.args.get('content')
     t1 = datetime.today().isoformat(timespec='milliseconds')
-    t0 = (datetime.today() - timedelta(hours=1)).isoformat(timespec='milliseconds')
+    t0 = (datetime.today() - timedelta(hours=1)
+          ).isoformat(timespec='milliseconds')
     PROJECT_IDS = ["epiproapp"]
     FILTER = \
         "resource.type=\"gae_app\"\nresource.labels.module_id=\"default\"\nresource.labels.version_id=\"demo\"\nlogName=\"projects/epiproapp/logs/appengine.googleapis.com%2Frequest_log\"\n\n (timestamp<\"{}Z\" OR (timestamp=\"{}Z\" insertId<\"5ca9ddaf0003ac4a395f805f\")) timestamp<\"{}Z\" timestamp<=\"{}Z\"".format(
@@ -463,7 +468,8 @@ class disease_reports_with_filter(Resource):
         if location:
             location = location.strip()
             # make sure location is more than a whole world
-            count = location_dictionary.count_documents({"$text": {"$search": location}})
+            count = location_dictionary.count_documents(
+                {"$text": {"$search": location}})
 
             if count <= 0:
                 return {'message': 'LOCATION name is invaild or no related reports in database, please enter a correct location name, or enter another location'}, 400
@@ -474,7 +480,8 @@ class disease_reports_with_filter(Resource):
         if search_string == "''":
             cursor = collection.find({}, {"_id": 0}).skip(start).limit(limit)
         else:
-            cursor = collection.find({"$text": {"$search": search_string}}, {"_id": 0}).skip(start).limit(limit)
+            cursor = collection.find({"$text": {"$search": search_string}}, {
+                                     "_id": 0}).skip(start).limit(limit)
 
         for entry in cursor:
             without_date.append(entry)
@@ -520,12 +527,11 @@ class diseases(Resource):
         collection = db[DISEASES]
         result = []
 
-        cursor = collection.find({},{"_id": 0})
+        cursor = collection.find({}, {"_id": 0})
         for disease in cursor:
             result.append(disease)
 
         return result, 200
-
 
 
 @api.route('/reports/search/headline', doc=False)
@@ -545,7 +551,8 @@ class headline(Resource):
         print(headline)
         headline = ".*" + str(headline) + ".*"
 
-        cursor = collection.find({ 'headline': { '$regex':headline } }, {"_id": 0})
+        cursor = collection.find(
+            {'headline': {'$regex': headline}}, {"_id": 0})
         for e in cursor:
             result.append(e)
 
@@ -554,6 +561,8 @@ class headline(Resource):
 ######################
 ##      CLOSED      ##
 ######################
+
+
 @api.route('/analytics', doc=False)
 class data_analytics(Resource):
 
@@ -567,8 +576,10 @@ class data_analytics(Resource):
     def get(self):
 
         result = {}
-        single_date_format = re.compile(r'^(\d{4})-(\d\d|xx)-(\d\d|xx)T(\d\d|xx):(\d\d|xx):(\d\d|xx)$')
-        range_date_format = re.compile(r'^(\d{4})-(\d\d|xx)-(\d\d|xx)T(\d\d|xx):(\d\d|xx):(\d\d|xx) to (\d{4})-(\d\d|xx)-(\d\d|xx)T(\d\d|xx):(\d\d|xx):(\d\d|xx)$')
+        single_date_format = re.compile(
+            r'^(\d{4})-(\d\d|xx)-(\d\d|xx)T(\d\d|xx):(\d\d|xx):(\d\d|xx)$')
+        range_date_format = re.compile(
+            r'^(\d{4})-(\d\d|xx)-(\d\d|xx)T(\d\d|xx):(\d\d|xx):(\d\d|xx) to (\d{4})-(\d\d|xx)-(\d\d|xx)T(\d\d|xx):(\d\d|xx):(\d\d|xx)$')
 
         start_date = request.args.get('Start-date')
         end_date = request.args.get('End-date')
@@ -581,14 +592,18 @@ class data_analytics(Resource):
         result['end_date'] = end_date
 
         try:
-            filter_url = "https://epiproapp.appspot.com/api/v1/reports/filter?\
-                    Start-date=" + str(start_date) + "&End-date=" + str(end_date) +\
-                    "&Key-terms=" + str(disease)
-                    
+            filter_url = "https://epiproapp.appspot.com/api/v1/reports/filter?"
+            if start_date is not None:
+                filter_url += "Start-date=" + str(start_date) + "&"
+            if end_date is not None:
+                filter_url += "End-date=" + str(end_date) + "&"
+
+            filter_url += "Key-terms=" + str(disease) + "&"
             if location is not None:
-                filter_url += "&Location=" + str(location)
-        
-            r = requests.get(filter_url)                
+                filter_url += "Location=" + str(location) + "&"
+            filter_url = filter_url[:-1]
+
+            r = requests.get(filter_url)
             content = r.json()
             r.raise_for_status()
         except requests.exceptions.HTTPError as e:
@@ -597,7 +612,7 @@ class data_analytics(Resource):
                 error_message = content['message']
             return {'message': error_message}, e.response.status_code
 
-        ## ============================  FREQUENCY ========================
+        # ============================  FREQUENCY ========================
         result['frequency_graph'] = {}
         result['frequency_graph']['frequency'] = []
 
@@ -616,7 +631,7 @@ class data_analytics(Resource):
             e['count'] = record[key]
             result['frequency_graph']['frequency'].append(e)
 
-        ## ================================ HEAT MAP ====================================
+        # ================================ HEAT MAP ====================================
         result['heat_map'] = {}
         result['heat_map']['locations'] = []
         record = {}
@@ -627,22 +642,31 @@ class data_analytics(Resource):
                 reported_event = reported['reported_events']
                 for event in reported_event:
                     number_affected = int(event['number-affected'])
+                    event_country = event['location']['country']
                     event_location = event['location']['location']
                     city_locations = event_location.split(';')
                     for city_state in city_locations:
                         if city_state != '':
                             try:
-                                city, _ = city_state.split(',')
+                                city, state = city_state.split(',')
                             except ValueError:
                                 city = city_state
-                            if city != '':
-                                if city in record:
-                                    record[city]['article'] += 1
-                                    record[city]['number'] += number_affected
-                                else:
-                                    record[city] = {}
-                                    record[city]['article'] = 1
-                                    record[city]['number'] = number_affected
+                            if city != '' and city != 'the' and city != 'same':
+                                print('====================== city is ===' + city)
+                                city_string = city + ', ' + event_country
+                            if city == '' and state != '':
+                                city_string = state + ', ' + event_country
+                            if city == '' and state == '':
+                                city_string = event_country
+
+                            if city_string in record:
+                                record[city_string]['article'] += 1
+                                record[city_string]['number'] += number_affected
+                            else:
+                                record[city_string] = {}
+                                record[city_string]['article'] = 1
+                                record[city_string]['number'] = number_affected
+
         for key in record:
             e = {}
             e['location'] = key
@@ -650,10 +674,17 @@ class data_analytics(Resource):
             e['number_affected'] = record[key]['number']
             result['heat_map']['locations'].append(e)
 
-
-        ## ================================ EVENT GRAPH =================================
-        result['event_graph'] = []
+        # ================================ EVENT GRAPH =================================
+        result['event_graph'] = {}
         record = {}
+        record['recovered'] = 0
+        record['hospitalised'] = 0
+        record['infected'] = 0
+        record['death'] = 0
+        record['presence'] = 0
+
+        record['start_date'] = date(2020, 12, 31)
+        record['end_date'] = date(1900, 12, 31)
 
         for rec in content:
             reports = rec['reports']
@@ -663,64 +694,47 @@ class data_analytics(Resource):
                     number_affected = int(event['number-affected'])
                     event_date = event['date']
                     disease_type = event['type']
+
+                    if disease_type != '':
+                        if disease_type in record:
+                            record[disease_type] += number_affected
+
                     if single_date_format.match(event_date):
-                        date_time, _ = event_date.split('T')
-                        if disease_type != '':
-                            if date_time in record:
-                                record[date_time][disease_type] += number_affected
-                            else:
-                                record[date_time] = {}
-                                record[date_time]['recovered'] = 0
-                                record[date_time]['hospitalised'] = 0
-                                record[date_time]['infected'] = 0
-                                record[date_time]['death'] = 0
-                                record[date_time]['presence'] = 0
-                                record[date_time][disease_type] = number_affected
+                        # print('==================== single date '+ event_date)
+                        # date_time, _ = event_date.split('T')
+                        # print('==================== date '+ date_time)
+
+                        date_group = DT.getDateInfo(event_date)
+                        compare_time = date(
+                            date_group[0], date_group[1], date_group[2])
+
+                        if compare_time >= record['end_date']:
+                            record['end_date'] = compare_time
+                        elif compare_time <= record['start_date']:
+                            record['start_date'] = compare_time
 
                     elif range_date_format.match(event_date):
                         date_line_format = re.compile('^([^to ]*) to (.*)$')
-                        date_format = re.compile(r'^(\d{4})-(\d\d|xx)-(\d\d|xx)T(\d\d|xx):(\d\d|xx):(\d\d|xx)$')
-                        dateTime1 = date_line_format.search(event_date).group(1)
-                        dateTime2 = date_line_format.search(event_date).group(2)
-                        date1_group = date_format.search(dateTime1)
-                        date2_group = date_format.search(dateTime2)
+                        dateTime1 = date_line_format.search(
+                            event_date).group(1)
+                        dateTime2 = date_line_format.search(
+                            event_date).group(2)
+                        date1_group = DT.getDateInfo(dateTime1)
+                        date2_group = DT.getDateInfo(dateTime2)
 
-                        year1 = int(date1_group.group(1))
-                        year2 = int(date2_group.group(1))
-                        month1 = int(date1_group.group(2))
-                        month2 = int(date2_group.group(2))
-                        day1 = int(date1_group.group(3))
-                        day2 = int(date2_group.group(3))
+                        compare_start = date(
+                            date1_group[0], date1_group[1], date1_group[2])
+                        compare_end = date(
+                            date2_group[0], date2_group[1], date2_group[2])
 
-                        d1 = date(year1, month1, day1)  # start date
-                        d2 = date(year2, month2, day2)  # end date
+                        if compare_end >= record['end_date']:
+                            record['end_date'] = compare_end
+                        elif compare_start <= record['start_date']:
+                            record['start_date'] = compare_start
 
-                        delta = d2 - d1         # timedelta
-
-                        for i in range(delta.days + 1):
-                            date_time = str(d1 + timedelta(i))
-                            if disease_type != '':
-                                if date_time in record:
-                                    record[date_time][disease_type] += number_affected
-                                else:
-                                    record[date_time] = {}
-                                    record[date_time]['recovered'] = 0
-                                    record[date_time]['hospitalised'] = 0
-                                    record[date_time]['infected'] = 0
-                                    record[date_time]['death'] = 0
-                                    record[date_time]['presence'] = 0
-                                    record[date_time][disease_type] = number_affected
-                    else:
-                        print('it is a empty date')
-        for key in record:
-            e = {}
-            e['date'] = key
-            e['recovered'] = record[key]['recovered']
-            e['hospitalised'] = record[key]['hospitalised']
-            e['infected'] = record[key]['infected']
-            e['death'] = record[key]['death']
-            e['presence'] = record[key]['presence']
-            result['event_graph'].append(e)
+        record['start_date'] = str(record['start_date'])
+        record['end_date'] = str(record['end_date'])
+        result['event_graph'] = record
 
         return result, 200
 

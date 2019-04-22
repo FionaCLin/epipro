@@ -121,6 +121,23 @@ def time_range():
 
     for i in range(delta.days + 1):
         print(d1 + timedelta(i))
+
+def getDateInfo(dateTime):
+    date_format = re.compile(r'^(\d{4})-(\d\d|xx)-(\d\d|xx)T(\d\d|xx):(\d\d|xx):(\d\d|xx)$')
+    date_group = date_format.search(dateTime)
+
+    info = []
+
+    year = int(date_group.group(1))
+    month = int(date_group.group(2))
+    day = int(date_group.group(3))
+
+    info.append(year)
+    info.append(month)
+    info.append(day)
+
+    return info
+
 #for testing
 def main():
 #     # result = check_date('2019-01-01T12:00:00 to 2019-01-01T13:00:00')
