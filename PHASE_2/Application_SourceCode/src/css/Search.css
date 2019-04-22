@@ -1,0 +1,25 @@
+.select-menu {
+    max-height: 38px;
+}
+
+.EventReport-division {
+    margin-bottom: 5px;
+}
+
+.EventReport-card {
+    background-color: lightgrey;
+}
+
+.Card-title {
+    text-decoration: underline;
+}
+
+.Badge-division {
+    margin: 0px 3px 0px 3px;
+}
+  
+.pagination {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}

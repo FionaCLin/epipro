@@ -2,46 +2,9 @@
   text-align: center;
 }
 
-.App-theme {
-    background-color: darkslateblue;
-}
-
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
   pointer-events: none;
-}
-
-.Frequency-chart {
-  text-align: center;
-  float: left;
-  height: 450px;
-  width: 50%;
-}
-
-.Histogram-chart {
-  text-align: center;
-  float: left;
-  height: 450px;
-  width: 100%;
-}
-
-.Analytics-collapse {
-    height: 450px;
-    min-height: 450px;
-    margin: 10px;
-}
-
-.loading {
-  height: 350px;
-  width: 350px;
-  pointer-events: none;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.Menu-cards {
-    background-color: darkslateblue !important;
 }
 
 .App-header {
@@ -51,122 +14,6 @@
   align-items: center;
   justify-content: center;
   color: white;
-}
-
-
-body {
-    background-image: url("../imgs/bg.jpg");
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-attachment: fixed;
-}
-
-.Main {
-    width: 80%;
-    min-height: 100vh;
-    padding: 50px;
-    height: 100%;
-    position: relative;
-    background-color: white;
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
-}
-
-.Filter-element{
-  margin: 10px 0px 10px 0px;
-}
-
-.Filter-button{
-  margin: 15px 0px 10px 0px;
-}
-
-.Filter-panel {
-  padding: 10px 10px 10px 10px;
-  background-color: lightgray;
-  border-radius: 5px 5px 5px 5px;
-}
-
-.Filter-inline-1 {
-  display: inline-block;
-  border-radius: 5px;
-}
-
-.Filter-inline-2 {
-  display: inline-block;
-  border-radius: 5px;
-}
-
-
-.EventReport-division {
-  margin-bottom: 5px;
-}
-
-.EventReport-card {
-  background-color: lightgrey;
-}
-
-
-.ArticleList-division {
-  margin-top: 25px;
-}
-
-.ReportList-division {
-  margin-top: 50px;
-}
-
-.Time-between {
-  margin: 0px 5px 0px 5px;
-  display:inline-block;
-}
-
-.Card-hover {
-  background-color: white;
-}
-
-.Card-hover:hover {
-  background-color: lightgrey;
-}
-
-.Card-title {
-  text-decoration: underline;
-}
-
-.Keyterm-flex {
-  display: flex;
-}
-
-.Keyterm-left {
-  width: 150px
-}
-
-.Keyterm-right {
-  width: 100%;
-}
-
-.link {
-  color: inherit;
-  text-decoration: inherit;
-}
-
-.link:hover {
-  color: inherit;
-  text-decoration: inherit;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-.Badge-division {
-  margin: 0px 3px 0px 3px;
-}
-
-.pagination {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 @keyframes App-logo-spin {
