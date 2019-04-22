@@ -7,7 +7,7 @@ import DiseaseSearch from './DiseaseSearch';
 import { isNull, isNullOrUndefined, isUndefined } from 'util';
 import Header from './Header';
 import { BackendAPI } from '../API';
-<<<<<<< HEAD
+
 import FrequencyGraph, { Frequency } from './FrequencyGraph';
 import HeatMap, { APIHeatmap, GeoPosition, assignWeight } from './Heatmap';
 import HistogramGraph, { HistBar, APIEvent, HistogramData } from './HistogramGraph';
@@ -19,11 +19,7 @@ declare var google: any;
 let epiAPI = new BackendAPI();
 const sections = ['frequency', 'heatmap', 'event'];
 let geoCoder = new google.maps.Geocoder();
-=======
 
-let newsAPI = new GoogleAPI();
-let backendAPI = new BackendAPI();
->>>>>>> master
 
 export default class Analytics extends React.Component<IAnalyticsProps, IAnalyticsState> {
     constructor(props: IAnalyticsProps) {
