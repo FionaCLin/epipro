@@ -191,21 +191,18 @@ def log_file():
 class twitter_api_search(Resource):
 
     def post(self):
-        # return json.dumps(json.load(open('./twitter.json', 'r'))), 200
 
         headers = {'authorization': 'Bearer {}'.format(TWITTER['API_TOKEN'])}
-        # to be discuss
         payload = {
-            "query": "from:TwitterDev lang:en",
+            "query": request.get_json()['query'],
             "maxResults": "100",
-            "fromDate": "201903150000",
-            "toDate": "201904040000"
+            "fromDate": request.get_json()['fromDate'],
+            "toDate": request.get_json()['toDate']
         }
-        # #pass data in
-        print(request.data)
 
         r = requests.post(TWITTER['url'], json=payload, headers=headers)
         results = r.json()
+        return json.dumps(results), 200
 
 
 #############################################################################################
@@ -627,7 +624,6 @@ class data_analytics(Resource):
                             except ValueError:
                                 city = city_state
                             if city != '' and city != 'the' and city != 'same':
-                                print('====================== city is ===' + city)
                                 city_string = city + ', ' + event_country
                             if city == '' and state != '':
                                 city_string = state + ', ' + event_country
