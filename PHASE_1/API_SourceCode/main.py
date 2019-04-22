@@ -1,29 +1,10 @@
-# Copyright 2018 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-#### DON'T KNOW WHAT THIS FOR #####
-# from lib import *
+from lib import *
 
 # [START gae_python37_app]
-from flask import Flask, Blueprint
-from flask import Flask, url_for, redirect, render_template
+from flask import Flask, Blueprint, url_for, redirect, render_template, request, send_file
 from flask_restplus import Resource, Api
-from flask import request, send_file
 from flask_cors import CORS
-from flask_restplus import fields
-from flask_restplus import inputs
-from flask_restplus import reqparse
+from flask_restplus import fields, inputs, reqparse
 # import logging
 import config
 import pymongo
@@ -32,8 +13,8 @@ import enum
 import re
 import sys
 import requests
-import json as json
 import os
+import json as json
 from google.cloud import logging
 from datetime import timedelta, date, datetime, time
 import date_tool as DT
@@ -43,7 +24,11 @@ from pprint import pprint
 # called `app` in `main.py`.
 app = Flask(__name__)
 
-TWITTERAPI_TOKEN='AAAAAAAAAAAAAAAAAAAAAE4u9wAAAAAAFfm2OtiR18Mpkrhod2Qif0oBYWg%3DgQblAjXSIAWNZA38v2g0MqjBolRnn8LC98PnVqe7WLKYExM0Yy'
+
+TWITTER = {
+    "url": 'https://api.twitter.com/1.1/tweets/search/fullarchive/development.json',
+    "API_TOKEN": "AAAAAAAAAAAAAAAAAAAAAE4u9wAAAAAAFfm2OtiR18Mpkrhod2Qif0oBYWg%3DgQblAjXSIAWNZA38v2g0MqjBolRnn8LC98PnVqe7WLKYExM0Yy"
+}
 
 blueprint = Blueprint('api', __name__, url_prefix='/api/v1')
 app.config['RESTPLUS_MASK_SWAGGER'] = False
@@ -76,7 +61,7 @@ try:
     # Also add the handler to Flask's logger for cases
     #  where Werkzeug isn't used as the underlying WSGI server.
     app.logger.addHandler(handler)
-except:
+except BaseException:
     pass
 
 client = MongoClient(config.MONGO_URI, config.MONGO_PORT)
@@ -89,7 +74,7 @@ KEY_TERMS = 'key_terms'
 REPORTS = 'reports'
 DISEASES = 'diseases'
 #############################################################################################
-#   MODEL   #
+#   MODEL
 #####  REPSONSE for /api/reports/locations/<:id> #####
 #     {
 #       county: string,
@@ -181,7 +166,7 @@ def log_file():
     t1 = datetime.today().isoformat(timespec='milliseconds')
     t0 = (datetime.today() - timedelta(hours=1)
           ).isoformat(timespec='milliseconds')
-    PROJECT_IDS = ["epiproapp"]
+    PROJECT_IDS = ['epiproapp']
     FILTER = \
         "resource.type=\"gae_app\"\nresource.labels.module_id=\"default\"\nresource.labels.version_id=\"demo\"\nlogName=\"projects/epiproapp/logs/appengine.googleapis.com%2Frequest_log\"\n\n (timestamp<\"{}Z\" OR (timestamp=\"{}Z\" insertId<\"5ca9ddaf0003ac4a395f805f\")) timestamp<\"{}Z\" timestamp<=\"{}Z\"".format(
             t1, t0, t1, t0)
@@ -192,7 +177,7 @@ def log_file():
     for entry in client.list_entries(projects=PROJECT_IDS, filter_=FILTER, order_by="timestamp desc"):
         content.append(json.dumps(entry.payload_json))
 
-    if isContent == None:
+    if isContent is None:
         return render_template("log.html", content=content)
     else:
         content = '\n'.join(content)
@@ -203,21 +188,21 @@ def log_file():
 class twitter_api_search(Resource):
 
     def post(self):
-        return json.dumps(json.load(open('./twitter.json', 'r'))), 200
-        # url = 'https://api.twitter.com/1.1/tweets/search/fullarchive/development.json'
-        # headers = {'authorization': 'Bearer {}'.format(TWITTERAPI_TOKEN)}
-        # # to be discuss
-        # payload = {
-        #         "query":"from:TwitterDev lang:en",
-        #         "maxResults": "100",
-        #         "fromDate":"201903150000",
-        #         "toDate":"201904040000"
-        #         }
-        # #pass data in
-        # print(request.data)
+        # return json.dumps(json.load(open('./twitter.json', 'r'))), 200
 
-        # r = requests.post(url, json=payload,  headers=headers)
-        # results=r.json()
+        headers = {'authorization': 'Bearer {}'.format(TWITTER['API_TOKEN'])}
+        # to be discuss
+        payload = {
+            "query": "from:TwitterDev lang:en",
+            "maxResults": "100",
+            "fromDate": "201903150000",
+            "toDate": "201904040000"
+        }
+        # #pass data in
+        print(request.data)
+
+        r = requests.post(TWITTER['url'], json=payload, headers=headers)
+        results = r.json()
 
 
 ######################
@@ -415,7 +400,7 @@ class disease_reports_with_filter(Resource):
             limit = 100
 
         try:
-            start = int(start)-1
+            start = int(start) - 1
         except ValueError:
             return {'message': 'START must be positive an integer'}, 400
         try:
@@ -472,7 +457,8 @@ class disease_reports_with_filter(Resource):
                 {"$text": {"$search": location}})
 
             if count <= 0:
-                return {'message': 'LOCATION name is invaild or no related reports in database, please enter a correct location name, or enter another location'}, 400
+                return {
+                    'message': 'LOCATION name is invaild or no related reports in database, please enter a correct location name, or enter another location'}, 400
             search_string += '\"' + location + '\" '
 
         search_string = search_string.strip() + '\''

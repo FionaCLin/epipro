@@ -18,18 +18,6 @@ PROJECT_ID = 'epiproapp'
 # If using mongolab, the connection URI is available from the mongolab control
 # panel. If self-hosting on compute engine, replace the values below.
 
-##################################################################################################################
-#!!!!!!!!Don't delete this file and copy this one as sample only!!!!!!!!!!
-#!!!!!!!!Don't delete this file and copy this one as sample only!!!!!!!!!!
-#!!!!!!!!Don't delete this file and copy this one as sample only!!!!!!!!!!
-#!!!!!!!!Don't delete this file and copy this one as sample only!!!!!!!!!!
-#!!!!!!!!Don't delete this file and copy this one as sample only!!!!!!!!!!
-#!!!!!!!!Don't delete this file and copy this one as sample only!!!!!!!!!!
-#!!!!!!!!Don't delete this file and copy this one as sample only!!!!!!!!!!
-#!!!!!!!!Don't delete this file and copy this one as sample only!!!!!!!!!!
-##################################################################################################################
-
-
 if re.match(r'.*test.*', sys.argv[0]):
     # update this and save as config.py
     MONGO_URI = \
