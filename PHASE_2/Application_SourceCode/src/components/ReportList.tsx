@@ -9,7 +9,6 @@ let api = new BackendAPI();
 export default class ReportList extends React.Component<IReportListProps, IReportListState>{
   constructor(props: IReportListProps) {
     super(props);
-    console.log(this.props.reports);
   }
   
   render() {
@@ -17,14 +16,12 @@ export default class ReportList extends React.Component<IReportListProps, IRepor
     api.getAllReports((error: any, response: any) => {
         if (error) {
             if (error.response) {
-                let message = error.response.data.message
-                console.log(message, 'ppp');
+                console.log('error message', error);
             } else {
-                console.log(error.message, 'ppp');
+                console.log('error message', error.message);
             }
         }
         reports = response;
-        console.log(reports, 'reports in app tsx')
     });
 
     return (

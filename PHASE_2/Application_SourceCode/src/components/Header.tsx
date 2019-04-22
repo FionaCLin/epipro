@@ -20,10 +20,10 @@ export default class Header extends React.Component<IHeaderProps, IHeaderState> 
         api.getAPIdocURL((error: any, response: any) => {
             if (error) {
                 if (error.response) {
-                let message = error.response.data.message
-                console.log(message, 'ppp');
+                    let message = error.response.data.message
+                    console.log('error message', message);
                 } else {
-                console.log(error.message, 'ppp');
+                    console.log('error message', error.message);
                 }
                 return
             }

@@ -70,7 +70,6 @@ export default class Search extends React.Component<ISearchProps, ISearchState> 
                     currentPage: 1,
                     listLength: response.length
                 });
-                console.log(response.length);
                 sessionStorage.setItem('search', JSON.stringify(this.state));
             }
         });
@@ -78,7 +77,6 @@ export default class Search extends React.Component<ISearchProps, ISearchState> 
 
     private handleChange(event: any) {
         this.setState(event);
-        console.log(event);
     }
 
     private paginateArticleList() {

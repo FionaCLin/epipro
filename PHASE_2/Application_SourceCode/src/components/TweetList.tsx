@@ -9,7 +9,6 @@ export default class TweetList extends React.Component<ITweetListProps, ITweetLi
     }
 
     render() {
-        console.log(this.props.data);
         return (
             <div className="Media-list">
                 <Card style={{height:"100%"}}>

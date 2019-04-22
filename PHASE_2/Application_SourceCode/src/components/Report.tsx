@@ -11,7 +11,6 @@ export default class Report extends React.Component<IReportProps, IReportState> 
   }
   
     private listCheck(check: Array<string>, type:string) {
-      console.log(check);
         let listProp = null;
         if (!isNull(check) && check.length != 0) {
             if (!Array.isArray(check)) check = [check];

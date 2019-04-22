@@ -50,7 +50,6 @@ export default class Trends extends React.Component<ITrendsProps, ITrendsState> 
             sessionState.startDate = parseDates(sessionState.startDate);
             sessionState.endDate = parseDates(sessionState.endDate);
             this.state = sessionState;
-            console.log(sessionState);
         }
         this.handleChange = this.handleChange.bind(this);
         this.onTrends = this.onTrends.bind(this);

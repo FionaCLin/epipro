@@ -160,7 +160,7 @@ export class BackendAPI {
             payload['toDate'] = formatTwitterDate(filter.endDate);
         }
 
-        if (Object.keys(payload).length != 0) {
+        if (Object.keys(payload).length !== 0) {
             axios.post('https://production-dot-epiproapp.appspot.com/api/v1/twitter',payload)
                 .then((response: AxiosResponse) => {
                     cb(null, response.data);

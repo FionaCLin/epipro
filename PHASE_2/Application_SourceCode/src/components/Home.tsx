@@ -7,11 +7,6 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
     constructor(props: IHomeProps) {
         super(props);
     }
-
-    static defaultProps = {
-        username: 'admin',
-        password: 'EpiProBreak219'
-    }
   
   render() {
     return (

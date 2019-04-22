@@ -6,6 +6,10 @@ import Article from './components/Article';
 import Analytics from './components/Analytics';
 import Trends from './components/Trends';
 
+interface IAppProps {}
+
+interface IAppState {}
+
 export default class App extends Component<IAppProps, IAppState> {
   constructor(props: IAppProps) {
     super(props);
@@ -27,11 +31,4 @@ export default class App extends Component<IAppProps, IAppState> {
       </main>
     );
   }
-}
-
-interface IAppProps {
-
-}
-
-interface IAppState {
 }

@@ -31,12 +31,11 @@ export default class GoogleAPI {
         }
         q.push('pageSize=100');
 
-        if (q.length != 0) {
+        if (q.length !== 0) {
             q.push(`apiKey=${this.apiKey}`);
             let query = q.join('&');
             let url = `${this.baseURL}v2/everything?${query}`
-            //console.log(url);
-
+    
             axios.get(url)
                 .then((response: AxiosResponse) => {
                     cb(null, response.data)
