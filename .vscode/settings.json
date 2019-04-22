@@ -1,0 +1,11 @@
+{
+    "editor.rulers": [
+        200,200
+    ],
+    "python.formatting.provider": "autopep8",
+    "python.linting.pep8Enabled": true,
+    "python.linting.flake8Enabled": true,
+    "editor.fontSize": 12,
+    "editor.suggestFontSize": 12,
+    "javascript.preferences.quoteStyle": "single"
+}

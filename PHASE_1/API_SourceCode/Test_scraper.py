@@ -81,7 +81,6 @@ def test_format():
             test['reports'][0]['reported_events'][0]['location']['location'], str)
         assert True == isinstance(
             test['reports'][0]['reported_events'][0]['number-affected'], int)
-        # print(test)
 
         counter = counter + 1
     print('Passed test scraper generated format')

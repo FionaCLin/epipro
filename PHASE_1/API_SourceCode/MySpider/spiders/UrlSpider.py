@@ -46,7 +46,6 @@ def searchFunction(browser, url, keyWord, dirPath):
     for page in range(3):
         print('     ' + 'page ' + str(page+1))
         for counter in range(10):
-            #print(counter)
             title = Selector(text = browser.page_source).xpath("//a[@class = 'result-title']/text()").extract()[counter]
             url = Selector(text = browser.page_source).xpath("//span[@class = 'result-url']/text()").extract()[counter]
             print('     '+title + '   ' + url)

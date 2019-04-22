@@ -1,4 +1,4 @@
 runtime: python37
 
 env_variables:
-  GOOGLE_CLOUD_DISABLE_GRPC: true
+    GOOGLE_CLOUD_DISABLE_GRPC: true

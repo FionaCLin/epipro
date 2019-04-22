@@ -675,10 +675,6 @@ class data_analytics(Resource):
                             record[disease_type] += number_affected
 
                     if single_date_format.match(event_date):
-                        # print('==================== single date '+ event_date)
-                        # date_time, _ = event_date.split('T')
-                        # print('==================== date '+ date_time)
-
                         date_group = DT.getDateInfo(event_date)
                         compare_time = date(
                             date_group[0], date_group[1], date_group[2])

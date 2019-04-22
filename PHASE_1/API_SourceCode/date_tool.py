@@ -14,8 +14,6 @@ def check_date(date_line):
     dateTime2 = date_line_format.search(date_line).group(2)
     date1_group = date_format.search(dateTime1)
     date2_group = date_format.search(dateTime2)
-    # print(dateTime1)
-    # print(dateTime2)
 
     #YEAR1 > YEAR2
     year1 = date1_group.group(0)
@@ -148,14 +146,14 @@ def getDateInfo(dateTime):
 
 
 def main():
-    #     # result = check_date('2019-01-01T12:00:00 to 2019-01-01T13:00:00')
-    #     # print(result)
-    #     # date = swap_date('2019-01-01T12:00:00 to 2018-01-01T13:00:00')
-    #     # print(date)
-    #     # result1 = is_before("2020-01-01T12:00:00", "2019-01-02T12:00:00")
-    #     # print(result1)
-    #     # result = align_date('2019-xx-xxTxx:10:xx', '2018-10-13T12:23:15')
-    #     # print(result)
+    # result = check_date('2019-01-01T12:00:00 to 2019-01-01T13:00:00')
+    # print(result)
+    # date = swap_date('2019-01-01T12:00:00 to 2018-01-01T13:00:00')
+    # print(date)
+    # result1 = is_before("2020-01-01T12:00:00", "2019-01-02T12:00:00")
+    # print(result1)
+    # result = align_date('2019-xx-xxTxx:10:xx', '2018-10-13T12:23:15')
+    # print(result)
     time_range()
 
 

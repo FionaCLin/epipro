@@ -57,8 +57,6 @@ if __name__ == '__main__':
     #test format
         if counter == 5:
             break
-        #isinstance(s, str)
-        #print(test)
         assert True == isinstance(test['url'], str)
         assert True == isinstance(test['date_of_publication'], str)
         assert True == isinstance(test['headline'], str)
@@ -73,16 +71,13 @@ if __name__ == '__main__':
         assert True == isinstance(test['reports'][0]['reported_events'][0]['location']['country'], str)
         assert True == isinstance(test['reports'][0]['reported_events'][0]['location']['location'], str)
         assert True == isinstance(test['reports'][0]['reported_events'][0]['number-affected'], str)
-        #print(test)
 
         counter  = counter + 1
     print('pass format')
     counter = 0
     for url in test_list:
-        #print(url)
         test = collection.find({'url': url})
         for x in test:
-            #print(x)
             if counter == 0:
                 assert 'ebola' in x['reports'][0]['disease']
                 assert '2018-05-30Txx:xx:xx' in x['reports'][0]['reported_events'][0]['date']
