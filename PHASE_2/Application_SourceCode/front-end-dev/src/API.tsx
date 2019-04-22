@@ -1,7 +1,6 @@
 import axios, { AxiosResponse, AxiosError } from "axios";
 import UNLOCodes from './dummydata/country-codes.json';
-import Twitter from './dummydata/twitter.json';
-
+import { formatTwitterDate } from "./components/util";
 
 export interface IFilterOptions {
   keyterms?: string;
@@ -146,10 +145,29 @@ export class BackendAPI {
     }
   }
 
-  getTwitterData(disease: string) {
-    console.log(Twitter);
-    let twitterData = Twitter.filter(value => value.disease == disease);
-    if (twitterData.length == 0) return [];
-    return twitterData[0].tweets;
-  }
+    getTwitterData(filter: IFilterOptions, cb:(err: any, res: any) => any) {
+        let payload: any = {};
+        if (filter.disease) {
+            payload['query'] = `is:verified ${filter.disease}`;
+            if (filter.location) {
+                payload['query'] += ` ${filter.location}`;
+            }
+        }
+        if (filter.startDate) {
+            payload['fromDate'] = formatTwitterDate(filter.startDate);
+        }
+        if (filter.endDate) {
+            payload['toDate'] = formatTwitterDate(filter.endDate);
+        }
+
+        if (Object.keys(payload).length != 0) {
+            axios.post('https://production-dot-epiproapp.appspot.com/api/v1/twitter',payload)
+                .then((response: AxiosResponse) => {
+                    cb(null, response.data);
+                })
+                .catch((error: AxiosError) => {
+                    cb(error, null)
+            });
+        }
+    }
 }

@@ -131,16 +131,27 @@ export default class Trends extends React.Component<ITrendsProps, ITrendsState> 
     private getTwitterData(dateArray: Array<Frequency>) {
         this.setState({tweets: [], twitterCheck: 0});
 
-        let diseaseTweets = epiAPI.getTwitterData(this.state.disease);
-        let newTweets: Array<string> = [];
-        let filtered = filterByLocation(diseaseTweets, this.state.locations);
-        for (let i = 0; i < dateArray.length; i++) {
-            let matched = filtered.filter(value => value.date == dateArray[i].date);
-            dateArray[i].Twitter = matched.length;
-            let ids = matched.map(value => (value.id));
-            newTweets = newTweets.concat(ids);
-        }
-        this.setState({tweets: newTweets, frequencyData: dateArray, twitterCheck: dateArray.length});
+        let apiFilterState = createApiFilterState(this.state);
+        epiAPI.getTwitterData(apiFilterState, (error: any, response: any) => {
+            if (error && error.response) {
+                let message = error.response.data.message
+                console.log('error message', message);
+            } else if (error) {
+                console.log('error message', error.message);
+            } else {
+                let newTweets: Array<string> = [];
+                let diseaseTweets = JSON.parse(response).filter((value:any) => value.disease == apiFilterState.disease);
+                diseaseTweets = (diseaseTweets.length == 0) ? [] : diseaseTweets[0].tweets;
+                let filtered = filterByLocation(diseaseTweets, this.state.locations);
+                for (let i = 0; i < dateArray.length; i++) {
+                    let matched = filtered.filter(value => value.date == dateArray[i].date);
+                    dateArray[i].Twitter = matched.length;
+                    let ids = matched.map(value => (value.id));
+                    newTweets = newTweets.concat(ids);
+                }
+                this.setState({tweets: newTweets.reverse(), frequencyData: dateArray, twitterCheck: dateArray.length});
+            }
+        });
     }
 
     private onTrends() {

@@ -53,3 +53,8 @@ export function shortenDate(date: string) {
 export function capitalize(word: string) {
     return word.charAt(0).toUpperCase() + word.slice(1);
 }
+
+export function formatTwitterDate(date: string) {
+    let newDate: string = date.replace(/T|-|:/g, '');
+    return newDate.slice(0, newDate.length - 2);
+}
