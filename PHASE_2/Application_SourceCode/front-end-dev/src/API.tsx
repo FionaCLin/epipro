@@ -1,5 +1,5 @@
 import axios, { AxiosResponse, AxiosError } from "axios";
-import UNLOCodes from './dummydata/country-codes.json';
+import UNLOCodes from './data/country-codes.json';
 import { formatTwitterDate } from "./components/util";
 
 export interface IFilterOptions {
