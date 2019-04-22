@@ -1,7 +1,7 @@
 {
   "main.css": "/static/react/css/main.9acdaaa6.chunk.css",
-  "main.js": "/static/react/js/main.e26d8236.chunk.js",
-  "main.js.map": "/static/react/js/main.e26d8236.chunk.js.map",
+  "main.js": "/static/react/js/main.96fe63b3.chunk.js",
+  "main.js.map": "/static/react/js/main.96fe63b3.chunk.js.map",
   "runtime~main.js": "/static/react/js/runtime~main.53eac5d4.js",
   "runtime~main.js.map": "/static/react/js/runtime~main.53eac5d4.js.map",
   "css/2.7b03ba72.chunk.css": "/static/react/css/2.7b03ba72.chunk.css",
@@ -18,6 +18,6 @@
   "media/logo.png": "/static/react/media/logo.bf63f469.png",
   "media/media.png": "/static/react/media/media.e90e1548.png",
   "media/trends.png": "/static/react/media/trends.c140a701.png",
-  "precache-manifest.d55d70d9141d3e20b63594851b721033.js": "/static/react/precache-manifest.d55d70d9141d3e20b63594851b721033.js",
+  "precache-manifest.1134019b0546bcce26fbcb5d4f849cd8.js": "/static/react/precache-manifest.1134019b0546bcce26fbcb5d4f849cd8.js",
   "service-worker.js": "/static/react/service-worker.js"
 }
