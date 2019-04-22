@@ -156,7 +156,7 @@ export class BackendAPI {
         }
 
         if (Object.keys(payload).length !== 0) {
-            axios.post('https://production-dot-epiproapp.appspot.com/api/v1/twitter',payload)
+          axios.post(`${this.baseURL}/api/v1/twitter`, payload)
                 .then((response: AxiosResponse) => {
                     cb(null, response.data);
                 })

@@ -11,7 +11,7 @@ export interface IFilterOptions {
 }
 
 export class BackendAPI {
-  baseURL: string = 'https://production-dot-epiproapp.appspot.com'
+  baseURL: string = 'https://epiproapp.appspot.com'
   getKeyTerms(type: string, cb: (err: any, res: any) => any) {
     axios.get(`${this.baseURL}/api/v1/reports/key-terms/${type}`)
       .then((response: AxiosResponse) => {
@@ -155,7 +155,7 @@ export class BackendAPI {
         }
 
         if (Object.keys(payload).length !== 0) {
-          axios.post('https://productionv1-dot-epiproapp.appspot.com/api/v1/twitter',payload)
+          axios.post(`${this.baseURL}/api/v1/twitter`,payload)
                 .then((response: AxiosResponse) => {
                     cb(null, response.data);
                 })
