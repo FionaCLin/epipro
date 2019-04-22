@@ -45,8 +45,6 @@ def test_loc_invalid_param():
         'message'] == 'Sorry, there is no data matched, make sure you enter the whole words you want to search'
 
 
-
-   
 if __name__ == "__main__":
     print('##### test API /reports/locations #####')
     print('## test fetch all locations')
@@ -57,8 +55,7 @@ if __name__ == "__main__":
     print('## test_get_location_by_area')
     test_get_location_by_area()
     print('Passed test_get_location_by_area')
-    
+
     print('## test_loc_invalid_param')
     test_loc_invalid_param()
     print('Passed test_loc_invalid_param')
-

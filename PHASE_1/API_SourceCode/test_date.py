@@ -44,6 +44,7 @@ def test_check_swap_date():
         chk_dates = date.split(' to ')
         assert True == date_tool.is_before(chk_dates[0], chk_dates[1])
 
+
 print('test_check_date')
 test_check_date()
 print('test_check_is_before')

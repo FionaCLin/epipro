@@ -66,7 +66,7 @@ def test_format():
         assert True == isinstance(test['main_text'], str)
         assert True == isinstance(test['reports'], list)
         assert True == isinstance(test['reports'][0]['disease'], list)
-        print(type(test['reports'][0]['syndrome']),test['reports'][0]['syndrome'])
+        print(type(test['reports'][0]['syndrome']), test['reports'][0]['syndrome'])
         assert True == isinstance(test['reports'][0]['syndrome'], list)
         assert True == isinstance(test['reports'][0]['reported_events'], list)
         assert True == isinstance(

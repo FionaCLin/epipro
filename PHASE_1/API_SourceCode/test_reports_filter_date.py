@@ -83,13 +83,16 @@ def test_reports_filter_w_correct_time_range():
     assert r.status_code == 200
     assert json.dumps(response[0]) == json.dumps(sample_disease_report[0])
 
-# leading/ trailing whitespace 
+# leading/ trailing whitespace
 # start date
+
+
 def test_reports_filter_w_ws_start_date():
-	r = client.get('/api/v1/reports/filter?Start-date=%20%20%20%202018-01-01T05%3A00%3A00%20%20%20%20')
-	response = json.loads(r.data.decode('utf-8'))
-	assert r.status_code == 200
-	assert json.dumps(response[0]) == json.dumps(sample_disease_report[0])
+    r = client.get('/api/v1/reports/filter?Start-date=%20%20%20%202018-01-01T05%3A00%3A00%20%20%20%20')
+    response = json.loads(r.data.decode('utf-8'))
+    assert r.status_code == 200
+    assert json.dumps(response[0]) == json.dumps(sample_disease_report[0])
+
 
 def test_reports_filter_w_ws_end_date():
     r = client.get(
@@ -98,10 +101,11 @@ def test_reports_filter_w_ws_end_date():
     assert r.status_code == 200
     assert json.dumps(response[0]) == json.dumps(sample_disease_report[0])
 
+
 if __name__ == "__main__":
-    
+
     print('##### test API /reports/filter date #####')
-    
+
     print('## test_reports_filter_w_xx_in_start_date')
     test_reports_filter_w_xx_in_start_date()
 
@@ -116,7 +120,7 @@ if __name__ == "__main__":
 
     print('## test_reports_filter_w_ws_start_date')
     test_reports_filter_w_ws_start_date()
-    
+
     print('## test_reports_filter_w_ws_end_date')
     test_reports_filter_w_ws_end_date()
 

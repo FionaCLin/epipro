@@ -99,7 +99,6 @@ for k in mydict:
     collection.insert_one(disease)
 
 
-
 # with open('report.json') as f:
     # file_data = json.load(f)
 

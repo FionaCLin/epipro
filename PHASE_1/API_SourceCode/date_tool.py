@@ -3,10 +3,10 @@ import re
 from datetime import timedelta, date, datetime, time
 
 
-#input date string of format
-#^(\d{4})-(\d\d|xx)-(\d\d|xx)T(\d\d|xx):(\d\d|xx):(\d\d|xx) to (\d{4})-(\d\d|xx)-(\d\d|xx)T(\d\d|xx):(\d\d|xx):(\d\d|xx)$
-#YYYY-MM-DDTHH:MM:SS
-#check whether the time order is wrong
+# input date string of format
+# ^(\d{4})-(\d\d|xx)-(\d\d|xx)T(\d\d|xx):(\d\d|xx):(\d\d|xx) to (\d{4})-(\d\d|xx)-(\d\d|xx)T(\d\d|xx):(\d\d|xx):(\d\d|xx)$
+# YYYY-MM-DDTHH:MM:SS
+# check whether the time order is wrong
 def check_date(date_line):
     date_line_format = re.compile('^([^ ]*) to (.*)$')
     date_format = re.compile(r'^(\d{4})-(\d\d|xx)-(\d\d|xx)T(\d\d|xx):(\d\d|xx):(\d\d|xx)')
@@ -61,9 +61,11 @@ def check_date(date_line):
         return True
     return True
 
-#swap disordered dates
-#input data of format:
-#^(\d{4})-(\d\d|xx)-(\d\d|xx)T(\d\d|xx):(\d\d|xx):(\d\d|xx) to (\d{4})-(\d\d|xx)-(\d\d|xx)T(\d\d|xx):(\d\d|xx):(\d\d|xx)$
+# swap disordered dates
+# input data of format:
+# ^(\d{4})-(\d\d|xx)-(\d\d|xx)T(\d\d|xx):(\d\d|xx):(\d\d|xx) to (\d{4})-(\d\d|xx)-(\d\d|xx)T(\d\d|xx):(\d\d|xx):(\d\d|xx)$
+
+
 def swap_date(date_line):
     date_line_format = re.compile('^([^ ]*) to (.*)$')
     dateTime1 = date_line_format.search(date_line).group(1)
@@ -76,6 +78,8 @@ def swap_date(date_line):
 # two dates are of format
 # ^(\d{4})-(\d\d|xx)-(\d\d|xx)T(\d\d|xx):(\d\d|xx):(\d\d|xx)
 # check date 1 is before date2
+
+
 def is_before(date1, date2):
     date_line = date1 + " to " + date2
 
@@ -113,6 +117,7 @@ def align_date(pub_date, date_line):
 
     return final_date
 
+
 def time_range():
     d1 = date(2008, 8, 15)  # start date
     d2 = date(2008, 9, 15)  # end date
@@ -121,6 +126,7 @@ def time_range():
 
     for i in range(delta.days + 1):
         print(d1 + timedelta(i))
+
 
 def getDateInfo(dateTime):
     date_format = re.compile(r'^(\d{4})-(\d\d|xx)-(\d\d|xx)T(\d\d|xx):(\d\d|xx):(\d\d|xx)$')
@@ -138,16 +144,20 @@ def getDateInfo(dateTime):
 
     return info
 
-#for testing
+# for testing
+
+
 def main():
-#     # result = check_date('2019-01-01T12:00:00 to 2019-01-01T13:00:00')
-#     # print(result)
-#     # date = swap_date('2019-01-01T12:00:00 to 2018-01-01T13:00:00')
-#     # print(date)
-#     # result1 = is_before("2020-01-01T12:00:00", "2019-01-02T12:00:00")
-#     # print(result1)
-#     # result = align_date('2019-xx-xxTxx:10:xx', '2018-10-13T12:23:15')
-#     # print(result)
+    #     # result = check_date('2019-01-01T12:00:00 to 2019-01-01T13:00:00')
+    #     # print(result)
+    #     # date = swap_date('2019-01-01T12:00:00 to 2018-01-01T13:00:00')
+    #     # print(date)
+    #     # result1 = is_before("2020-01-01T12:00:00", "2019-01-02T12:00:00")
+    #     # print(result1)
+    #     # result = align_date('2019-xx-xxTxx:10:xx', '2018-10-13T12:23:15')
+    #     # print(result)
     time_range()
+
+
 if __name__ == '__main__':
     main()

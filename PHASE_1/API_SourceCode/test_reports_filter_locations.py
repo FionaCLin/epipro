@@ -53,11 +53,11 @@ def test_reports_filter_w_ws_location():
 
 if __name__ == "__main__":
     print('##### test API /reports/filter location #####')
-    
+
     print('## test_reports_filter_w_incomplete_location')
     test_reports_filter_w_incomplete_location()
     print('Passed test_reports_filter_w_incomplete_location')
-    
+
     print('## test_reports_filter_w_nonexisted_location')
     test_reports_filter_w_nonexisted_location()
     print('Passed test_reports_filter_w_nonexisted_location')
@@ -65,6 +65,5 @@ if __name__ == "__main__":
     print('## test_reports_filter_w_complete_location')
     test_reports_filter_w_complete_location()
     print('Passed test_reports_filter_w_complete_location')
-    
-    print('########## all filter location tests paased!  ##########')
 
+    print('########## all filter location tests paased!  ##########')
