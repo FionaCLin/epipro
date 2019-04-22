@@ -14,6 +14,7 @@ class UrlItem(scrapy.Item):
     url = scrapy.Field()
     pass
 
+
 class ContentItem(scrapy.Item):
     url = scrapy.Field()
     date_of_publication = scrapy.Field()

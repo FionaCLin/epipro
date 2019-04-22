@@ -5,7 +5,6 @@ from flask import Flask, Blueprint, url_for, redirect, render_template, request,
 from flask_restplus import Resource, Api
 from flask_cors import CORS
 from flask_restplus import fields, inputs, reqparse
-# import logging
 import config
 import pymongo
 from pymongo import MongoClient
@@ -73,9 +72,12 @@ LOCATION = 'location'
 KEY_TERMS = 'key_terms'
 REPORTS = 'reports'
 DISEASES = 'diseases'
+
 #############################################################################################
-#   MODEL
-#####  REPSONSE for /api/reports/locations/<:id> #####
+#                                           MODEL                                           #
+#############################################################################################
+
+# REPSONSE for /api/reports/locations/<:id>
 #     {
 #       county: string,
 #       state: string,
@@ -138,7 +140,7 @@ disease_report_model = api.model(
     })
 
 
-#####################################################################################################
+####################################################################################################
 
 
 @app.errorhandler(404)
@@ -166,7 +168,7 @@ def log_file():
     t1 = datetime.today().isoformat(timespec='milliseconds')
     t0 = (datetime.today() - timedelta(hours=1)
           ).isoformat(timespec='milliseconds')
-    PROJECT_IDS = ['epiproapp']
+    PRO_IDS = ['epiproapp']
     FILTER = \
         "resource.type=\"gae_app\"\nresource.labels.module_id=\"default\"\nresource.labels.version_id=\"demo\"\nlogName=\"projects/epiproapp/logs/appengine.googleapis.com%2Frequest_log\"\n\n (timestamp<\"{}Z\" OR (timestamp=\"{}Z\" insertId<\"5ca9ddaf0003ac4a395f805f\")) timestamp<\"{}Z\" timestamp<=\"{}Z\"".format(
             t1, t0, t1, t0)
@@ -174,7 +176,8 @@ def log_file():
     client = logging.Client.from_service_account_json('./EpiProApp-log.json')
     # List all projects you have access to
     content = list([])
-    for entry in client.list_entries(projects=PROJECT_IDS, filter_=FILTER, order_by="timestamp desc"):
+    entries = client.list_entries(projects=PRO_IDS, filter_=FILTER, order_by="timestamp desc")
+    for entry in entries:
         content.append(json.dumps(entry.payload_json))
 
     if isContent is None:
@@ -205,10 +208,11 @@ class twitter_api_search(Resource):
         results = r.json()
 
 
-######################
-##      CLOSED      ##
-######################
-# # locations
+#############################################################################################
+#                                            APIs                                           #
+#############################################################################################
+
+# locations
 # GET /api/reports/locations
 # -- Index locations
 #   Response an array of locations
@@ -233,9 +237,6 @@ class locations(Resource):
         return result, 200
 
 
-######################
-##      CLOSED      ##
-######################
 # GET /api/reports/locations/:area
 # -- get a single location by name
 #     Response a single location object:
@@ -273,10 +274,7 @@ class locations_with_area(Resource):
         return result, 200
 
 
-######################
-##      CLOSED      ##
-######################
-# # key_terms
+# key_terms
 # GET /api/reports/key-terms
 # -- Index all current key_terms with given query
 #    Query: [GENERAL]|[SPECIFIC]
@@ -331,9 +329,6 @@ class key_terms(Resource):
         return result, 200
 
 
-######################
-##      CLOSED      ##
-######################
 # GET /api/reports/filter
 # -- Fetch disease reports by start date, end date, location, key_terms
 #    Response an array of disease reports
@@ -457,8 +452,7 @@ class disease_reports_with_filter(Resource):
                 {"$text": {"$search": location}})
 
             if count <= 0:
-                return {
-                    'message': 'LOCATION name is invaild or no related reports in database, please enter a correct location name, or enter another location'}, 400
+                return {'message': 'LOCATION name is invaild or no related reports in database, please enter a correct location name, or enter another location'}, 400
             search_string += '\"' + location + '\" '
 
         search_string = search_string.strip() + '\''
@@ -492,13 +486,12 @@ class disease_reports_with_filter(Resource):
 
         return result, 200
 
-#####################################  INTERNAL USE ##########################################
 
+#############################################################################################
+#                                      INTERNAL USE                                         #
+#############################################################################################
 
-######################
-##      CLOSED      ##
-######################
-# # diseases
+# diseases
 # GET /api/reports/diseases
 # -- Index diseases
 #   Response an array of diseases
@@ -543,10 +536,6 @@ class headline(Resource):
             result.append(e)
 
         return result, 200
-
-######################
-##      CLOSED      ##
-######################
 
 
 @api.route('/analytics', doc=False)
@@ -617,7 +606,7 @@ class data_analytics(Resource):
             e['count'] = record[key]
             result['frequency_graph']['frequency'].append(e)
 
-        # ================================ HEAT MAP ====================================
+        # ================================ HEAT MAP ===========================
         result['heat_map'] = {}
         result['heat_map']['locations'] = []
         record = {}
@@ -725,9 +714,7 @@ class data_analytics(Resource):
         return result, 200
 
 
-#######################################################################################################
 if __name__ == '__main__':
-
     app.run(host='127.0.0.1', port=config.PORT, debug=True)
 
 
