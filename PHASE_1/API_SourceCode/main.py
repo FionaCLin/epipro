@@ -203,20 +203,21 @@ def log_file():
 class twitter_api_search(Resource):
 
     def post(self):
-        url = 'https://api.twitter.com/1.1/tweets/search/fullarchive/development.json'
-        headers = {'authorization': 'Bearer {}'.format(TWITTERAPI_TOKEN)}
-        # to be discuss
-        payload = {
-                "query":"from:TwitterDev lang:en",
-                "maxResults": "100",
-                "fromDate":"201903150000", 
-                "toDate":"201904040000"
-                }
-        #pass data in
-        print(request.data)
 
-        r = requests.post(url, json=payload,  headers=headers)
-        results=r.json()
+        # url = 'https://api.twitter.com/1.1/tweets/search/fullarchive/development.json'
+        # headers = {'authorization': 'Bearer {}'.format(TWITTERAPI_TOKEN)}
+        # # to be discuss
+        # payload = {
+        #         "query":"from:TwitterDev lang:en",
+        #         "maxResults": "100",
+        #         "fromDate":"201903150000",
+        #         "toDate":"201904040000"
+        #         }
+        # #pass data in
+        # print(request.data)
+
+        # r = requests.post(url, json=payload,  headers=headers)
+        # results=r.json()
         return json.dumps(results['results']), 200
 
 
@@ -505,7 +506,7 @@ class disease_reports_with_filter(Resource):
                 result.append(entry)
 
         return result, 200
-        
+
 #####################################  INTERNAL USE ##########################################
 
 
