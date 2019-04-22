@@ -14,6 +14,7 @@ import loading from '../imgs/loading1.gif';
 import { Tooltip } from './Tooltip';
 import { stringifyDates, createApiFilterState, parseDates, shortenDate, capitalize } from './util';
 import { filterByLocation } from './TweetList';
+import PageMenu from './PageMenu';
 
 let newsAPI = new GoogleAPI();
 let epiAPI = new BackendAPI();
@@ -198,7 +199,6 @@ export default class Trends extends React.Component<ITrendsProps, ITrendsState> 
     render() {
         let currentDate = new Date();
         let monthBack = new Date(new Date().setDate(currentDate.getDate() - 30));
-        console.log(this.state.googleCheck, this.state.frequencyData, this.state.twitterCheck);
         let display = (this.checkLoading() == false) ? 'block' : 'none';
         return (
             <div className="bg">
@@ -246,6 +246,9 @@ export default class Trends extends React.Component<ITrendsProps, ITrendsState> 
                                     <div id="gQueries" className="GTrends"/>
                                 </div>
                             </div>
+                        </div>
+                        <div style={(display == 'none') ? {display: 'block'} : {display: 'none'}}>
+                            <PageMenu type="trends" />
                         </div>
                     </div>
                 </body>

@@ -1,7 +1,9 @@
 import React from 'react';
 import '../css/Home.css';
 import Select from 'react-select';
-import DiseaseList from '../dummydata/disease_list.json';
+import { BackendAPI } from '../API';
+
+let api = new BackendAPI();
 
 export default class DiseaseSearch extends React.Component<IDiseaseSearchProps, IDiseaseSearchState> {
     constructor(props: IDiseaseSearchProps) {
@@ -10,8 +12,21 @@ export default class DiseaseSearch extends React.Component<IDiseaseSearchProps, 
         this.state = {
             filterType: 0,
             value: this.props.disease,
-            filterOptions: this.addFilterOptions()
+            filterOptions: []
         }
+    }
+
+    componentWillMount() {
+        api.getDiseases((error: any, response: any) => {
+            if (error && error.response) {
+                let message = error.response.data.message
+                console.log('error message', message);
+            } else if (error) {
+                console.log('error message', error.message);
+            } else {
+                this.setState({filterOptions: this.addFilterOptions(response)});
+            }
+        });
     }
 
     private handleChange(event: any) {
@@ -20,8 +35,8 @@ export default class DiseaseSearch extends React.Component<IDiseaseSearchProps, 
         this.props.updateDisease({ disease: event.label });
     }
 
-    private addFilterOptions() {
-        let diseases: Array<Object> = DiseaseList.map((disease: {name: string}) => {
+    private addFilterOptions(response: Array<{name: string}>) {
+        let diseases: Array<Object> = response.map((disease: {name: string}) => {
             return { label: disease.name, value: disease.name, type: 'disease' }
         });
         return diseases;

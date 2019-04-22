@@ -5,7 +5,6 @@ import { BackendAPI } from '../API'
 
 let api = new BackendAPI();
 
-
 export default class LocationSearch extends React.Component<ILocationSearchProps, ILocationSearchState> {
     constructor(props: ILocationSearchProps) {
         super(props);

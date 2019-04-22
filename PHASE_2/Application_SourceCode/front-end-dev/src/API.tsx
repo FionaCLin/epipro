@@ -12,7 +12,7 @@ export interface IFilterOptions {
 }
 
 export class BackendAPI {
-  baseURL: string = 'https://demo-dot-epiproapp.appspot.com/'
+  baseURL: string = 'https://epiproapp.appspot.com/'
   getKeyTerms(type: string, cb: (err: any, res: any) => any) {
     axios.get(`${this.baseURL}api/v1/reports/key-terms/${type}`)
       .then((response: AxiosResponse) => {
@@ -113,7 +113,7 @@ export class BackendAPI {
     let url = '';
 
     let query = q.join('&')
-    url = `https://productionv1-dot-epiproapp.appspot.com/api/v1/analytics?${query}`
+    url = `${this.baseURL}api/v1/analytics?${query}`
 
     console.log(url);
  
@@ -124,6 +124,16 @@ export class BackendAPI {
       .catch((error: AxiosError) => {
         cb(error, null);
         console.log("CALL ERROR");
+      });
+  }
+
+  getDiseases(cb: (err: any, res: any) => any) {
+    axios.get(`${this.baseURL}api/v1/reports/diseases/all`)
+      .then((response: AxiosResponse) => {
+        cb(null, response.data)
+      })
+      .catch((error: AxiosError) => {
+        cb(error, null)
       });
   }
 
