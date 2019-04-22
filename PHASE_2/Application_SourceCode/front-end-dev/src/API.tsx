@@ -82,15 +82,12 @@ export class BackendAPI {
     let query = q.join('&')
     url = `${this.baseURL}api/v1/reports/filter?${query}`
 
-    console.log(url);
-
     axios.get(url)
       .then((response: AxiosResponse) => {
         cb(null, response.data);
       })
       .catch((error: AxiosError) => {
         cb(error, null);
-        console.log("CALL ERROR");
       });
   }
 
@@ -114,15 +111,12 @@ export class BackendAPI {
     let query = q.join('&')
     url = `${this.baseURL}api/v1/analytics?${query}`
 
-    console.log(url);
-
     axios.get(url)
       .then((response: AxiosResponse) => {
         cb(null, response.data);
       })
       .catch((error: AxiosError) => {
         cb(error, null);
-        console.log("CALL ERROR");
       });
   }
 
