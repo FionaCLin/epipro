@@ -1,7 +1,7 @@
 {
-  "main.css": "/static/react/css/main.15bf7b18.chunk.css",
-  "main.js": "/static/react/js/main.298b0691.chunk.js",
-  "main.js.map": "/static/react/js/main.298b0691.chunk.js.map",
+  "main.css": "/static/react/css/main.9acdaaa6.chunk.css",
+  "main.js": "/static/react/js/main.684e5786.chunk.js",
+  "main.js.map": "/static/react/js/main.684e5786.chunk.js.map",
   "runtime~main.js": "/static/react/js/runtime~main.53eac5d4.js",
   "runtime~main.js.map": "/static/react/js/runtime~main.53eac5d4.js.map",
   "css/2.7b03ba72.chunk.css": "/static/react/css/2.7b03ba72.chunk.css",
@@ -9,7 +9,7 @@
   "js/2.b298d822.chunk.js.map": "/static/react/js/2.b298d822.chunk.js.map",
   "../../templates/index.html": "/static/react/../../templates/index.html",
   "css/2.7b03ba72.chunk.css.map": "/static/react/css/2.7b03ba72.chunk.css.map",
-  "css/main.15bf7b18.chunk.css.map": "/static/react/css/main.15bf7b18.chunk.css.map",
+  "css/main.9acdaaa6.chunk.css.map": "/static/react/css/main.9acdaaa6.chunk.css.map",
   "media/Basic.css": "/static/react/media/bg.867ae83a.jpg",
   "media/event.png": "/static/react/media/event.065f5e3e.png",
   "media/frequency.png": "/static/react/media/frequency.87eaf39a.png",
@@ -18,6 +18,6 @@
   "media/logo.png": "/static/react/media/logo.bf63f469.png",
   "media/media.png": "/static/react/media/media.e90e1548.png",
   "media/trends.png": "/static/react/media/trends.c140a701.png",
-  "precache-manifest.a9c1604da1b8351432406b4fc2bfc44a.js": "/static/react/precache-manifest.a9c1604da1b8351432406b4fc2bfc44a.js",
+  "precache-manifest.4754413b50147e19a0732dd3525d54b0.js": "/static/react/precache-manifest.4754413b50147e19a0732dd3525d54b0.js",
   "service-worker.js": "/static/react/service-worker.js"
 }

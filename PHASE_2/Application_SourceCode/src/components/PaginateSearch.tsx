@@ -75,8 +75,10 @@ export default class PaginateSearch extends React.Component<IPaginateSearchProps
 
     render() {
         return (
-        <div className="pagination">
-            {this.showPagination()}
+        <div>
+            <div className="pagination">
+                {this.showPagination()}
+            </div>
         </div>
         );
     }

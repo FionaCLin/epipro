@@ -203,7 +203,7 @@ def log_file():
 class twitter_api_search(Resource):
 
     def post(self):
-
+        return json.dumps(json.load(open('./twitter.json', 'r'))), 200
         # url = 'https://api.twitter.com/1.1/tweets/search/fullarchive/development.json'
         # headers = {'authorization': 'Bearer {}'.format(TWITTERAPI_TOKEN)}
         # # to be discuss
@@ -218,7 +218,6 @@ class twitter_api_search(Resource):
 
         # r = requests.post(url, json=payload,  headers=headers)
         # results=r.json()
-        return json.dumps(results['results']), 200
 
 
 ######################
