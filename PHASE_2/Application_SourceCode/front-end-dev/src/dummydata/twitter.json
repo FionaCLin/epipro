@@ -3,6 +3,16 @@
         "disease": "botulism",
         "tweets": [
             {
+                "id": "1119741891740782592",
+                "date": "2019-04-20",
+                "text": "It’s a case of botulism "
+            },
+            {
+                "id": "1119486010100989953",
+                "date": "2019-04-19",
+                "text": "I worry about Whoopass botulism."
+            },
+            {
                 "id": "1117810618915000322",
                 "date": "2019-04-15",
                 "text": "After 'Melanie's Marvelous Measles', self-published on Amazon, here are some other great book suggestions including 'Billy's Bodacious Botulism' and 'Dolly's Desirable Death' https://amzn.to/2I7csxe  (in the comment section)"
@@ -47,6 +57,16 @@
     {
         "disease": "brucellosis",
         "tweets": [
+            {
+                "id": "1119609162403594241",
+                "date": "2019-04-20",
+                "text": "Washington County Humane Society back open for adoptions after case of Brucellosis"
+            },
+            {
+                "id": "1119333596278353920",
+                "date": "2019-04-19",
+                "text": "Washington County Humane Society back open for adoptions after case of Brucellosis"
+            },
             {
                 "id": "1116756515942088704",
                 "date": "2019-04-12",
@@ -112,6 +132,21 @@
     {
         "disease": "hantavirus",
         "tweets": [
+            {
+                "id": "1120096283836989441",
+                "date": "2019-04-22",
+                "text": "#Ejército convoca a militares que estaban en #Sanandita a presentarse a ‘centros de aislamiento’ tras brote de #hantavirus"
+            },
+            {
+                "id": "1120091752289964032",
+                "date": "2019-04-22",
+                "text": "Reportan la muerte de dos uniformados por hantavirus en Yacuiba  "
+            },
+            {
+                "id": "1120075581062897664",
+                "date": "2019-04-22",
+                "text": "Confirman dos muertos y 167 evacuados por brote de #Hantavirus en zona militar de #Yacuiba"
+            },
             {
                 "id": "1118469152354775040",
                 "date": "2019-04-17",
@@ -407,6 +442,11 @@
     {
         "disease": "monkeypox",
         "tweets": [
+            {
+                "id": "1119567650554884096",
+                "date": "2019-04-20",
+                "text": "Here is What You Need to Know About MonkeyPox - HTV "
+            },
             {
                 "id": "1118687784456400896",
                 "date": "2019-04-17",
