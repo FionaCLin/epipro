@@ -1,5 +1,6 @@
 import React from 'react';
-import '../css/Home.css';
+import '../css/Basic.css';
+import '../css/Trends.css';
 import { Card } from 'react-bootstrap';
 import { isNull } from 'util';
 
@@ -8,7 +9,7 @@ export default class GoogleCard extends React.Component<IGoogleCardProps, IGoogl
         super(props);
     }
 
-    trimText(main_text: string, minCut: number) {
+    private trimText(main_text: string, minCut: number) {
         if (isNull(main_text)) return 'No description found.';
         let cutCount: number = main_text.length;
     
@@ -26,13 +27,13 @@ export default class GoogleCard extends React.Component<IGoogleCardProps, IGoogl
         return (
             <a href={this.props.url} className="link" target="_blank">
             <Card className="Card-hover">
-            <div style={{height: '200px', display: 'flex', borderColor: 'darkGray', border: '1px'}}>
+            <div className="Google-card">
                 {!isNull(this.props.urlToImage) ? (
                     <div style={{width: '200px'}}>
-                    <img style={{float: 'left', objectFit: 'cover', height: '200px', width: '200px'}} src={this.props.urlToImage}/>
+                    <img className="Google-card-image" src={this.props.urlToImage}/>
                     </div>
                 ) : ( <div></div> )}
-                <div style={{float: 'left', width: '100%', padding: '10px'}}>
+                <div className="Google-card-text">
                     <h5 style={{textDecoration: 'underline'}}>{ this.trimText(this.props.title, 50) }</h5>
                     <div style={{fontSize: 'small'}}>
                         <i>{ this.props.source.name } • { this.props.publishedAt }</i>

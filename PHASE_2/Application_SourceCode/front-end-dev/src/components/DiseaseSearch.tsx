@@ -1,13 +1,9 @@
 import React from 'react';
-import '../css/Home.css';
+import '../css/Basic.css';
 import Select from 'react-select';
-import DiseaseList from '../dummydata/disease_list.json';
-import SyndromeList from '../dummydata/syndrome_list.json';
+import { BackendAPI } from '../API';
 
-const filterTypes: Array<any> = [
-    { label: 'Disease', value: 0, type: 'disease' },
-    { label: 'Syndrome', value: 1, type: 'syndrome' }
-];
+let api = new BackendAPI();
 
 export default class DiseaseSearch extends React.Component<IDiseaseSearchProps, IDiseaseSearchState> {
     constructor(props: IDiseaseSearchProps) {
@@ -16,8 +12,21 @@ export default class DiseaseSearch extends React.Component<IDiseaseSearchProps, 
         this.state = {
             filterType: 0,
             value: this.props.disease,
-            filterOptions: this.addFilterOptions()
+            filterOptions: []
         }
+    }
+
+    componentWillMount() {
+        api.getDiseases((error: any, response: any) => {
+            if (error && error.response) {
+                let message = error.response.data.message
+                console.log('error message', message);
+            } else if (error) {
+                console.log('error message', error.message);
+            } else {
+                this.setState({filterOptions: this.addFilterOptions(response)});
+            }
+        });
     }
 
     private handleChange(event: any) {
@@ -26,8 +35,8 @@ export default class DiseaseSearch extends React.Component<IDiseaseSearchProps, 
         this.props.updateDisease({ disease: event.label });
     }
 
-    private addFilterOptions() {
-        let diseases: Array<Object> = DiseaseList.map((disease: any) => {
+    private addFilterOptions(response: Array<{name: string}>) {
+        let diseases: Array<Object> = response.map((disease: {name: string}) => {
             return { label: disease.name, value: disease.name, type: 'disease' }
         });
         return diseases;
@@ -35,13 +44,13 @@ export default class DiseaseSearch extends React.Component<IDiseaseSearchProps, 
 
     render() {
         return (
-            <div className="search-element">
+            <div className="Search-element">
                 <Select
                     options={this.state.filterOptions.sort((a: any, b: any) => { return a.value.localeCompare(b.value) })}
                     classNamePrefix="select"
                     placeholder="Select disease..."
                     onChange={(e: any) => this.handleChange(e)}
-                    value={{ label: this.state.value, value: this.state.value }}
+                    value={(this.state.value != '') ? { label: this.state.value, value: this.state.value } : null}
                     theme={(theme) => ({
                         ...theme,
                         borderRadius: 3,

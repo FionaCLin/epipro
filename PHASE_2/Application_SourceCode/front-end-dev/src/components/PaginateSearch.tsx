@@ -1,5 +1,5 @@
 import React from 'react';
-import '../css/Home.css';
+import '../css/Search.css';
 import { Pagination } from 'react-bootstrap';
 import { isNull } from 'util';
 import animateScrollTo from 'animated-scroll-to';
@@ -12,7 +12,7 @@ export default class PaginateSearch extends React.Component<IPaginateSearchProps
         super(props);
     }
 
-    calculateTotalPages() {
+    private calculateTotalPages() {
         let totalPages: number = 0;
         if (!isNull(this.props.articleCount) && this.props.articleCount != 0) {
             totalPages = Math.ceil(this.props.articleCount/this.props.showCount);
@@ -20,7 +20,7 @@ export default class PaginateSearch extends React.Component<IPaginateSearchProps
         return totalPages;
     }
 
-    createPageItems(totalPages: number) {
+    private createPageItems(totalPages: number) {
         let count, last;
         if (this.props.currentPage <= pageMargin) {
             count = 1;

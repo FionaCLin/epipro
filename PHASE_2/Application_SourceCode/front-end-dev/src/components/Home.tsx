@@ -6,7 +6,6 @@ import Header from './Header';
 export default class Home extends React.Component<IHomeProps, IHomeState> {
     constructor(props: IHomeProps) {
         super(props);
-        console.log(this.state,'constructor');
     }
 
     static defaultProps = {

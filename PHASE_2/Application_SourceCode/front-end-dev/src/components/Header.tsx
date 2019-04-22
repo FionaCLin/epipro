@@ -1,10 +1,9 @@
 import React from 'react';
-import '../css/Home.css';
-import { Navbar, Nav, Form, Button } from 'react-bootstrap';
+import '../css/Basic.css';
+import { Navbar, Nav } from 'react-bootstrap';
 import logo from '../imgs/logo.png';
 import { Link } from 'react-router-dom';
 import { BackendAPI } from '../API';
-import { isNull } from 'util';
 
 let api = new BackendAPI();
 
@@ -28,9 +27,8 @@ export default class Header extends React.Component<IHeaderProps, IHeaderState> 
                 }
                 return
             }
-          doc_url = response;
-          console.log(doc_url, 'doc url in app tsx to set state')
-          this.setState({api_doc_url: doc_url})
+            doc_url = response;
+            this.setState({api_doc_url: doc_url})
         });
     }
 
@@ -47,7 +45,7 @@ export default class Header extends React.Component<IHeaderProps, IHeaderState> 
                     <Nav.Link><Link to="/search" className="link">Search</Link></Nav.Link>
                     <Nav.Link><Link to="/analyze" className="link">Analyze</Link></Nav.Link>
                     <Nav.Link><Link to="/trends" className="link">Trends</Link></Nav.Link>
-                    <Nav.Link href={this.state.api_doc_url} onClick={() => sessionStorage.removeItem('search')}>API Doc</Nav.Link>
+                    <Nav.Link href={this.state.api_doc_url} onClick={() => sessionStorage.removeItem('search')} target="_blank">API Doc</Nav.Link>
                 </Nav>
             </Navbar>
         );

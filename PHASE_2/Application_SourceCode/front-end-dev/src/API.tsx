@@ -1,21 +1,14 @@
 import axios, { AxiosResponse, AxiosError } from "axios";
 import UNLOCodes from './dummydata/country-codes.json';
 import Twitter from './dummydata/twitter.json';
-import { isUndefined } from "util";
 
 
 export interface IFilterOptions {
-    keyterms: string;
-    locations: string;
+    keyterms?: string;
+    disease?: string;
+    location: string;
     startDate: string;
     endDate: string;
-}
-
-export interface IAnalyticOptions {
-    disease: string,
-    location: string,
-    startDate: string,
-    endDate: string
 }
 
 export class BackendAPI {
@@ -72,8 +65,8 @@ export class BackendAPI {
 
   getFilteredReports(filter: IFilterOptions, cb:(err: any, res: any) => any) {
     let q :string[] = [];
-    if (filter.locations) {
-      q.push(`Location=${filter.locations}`)
+    if (filter.location) {
+      q.push(`Location=${filter.location}`)
     }
     if (filter.keyterms) {
       q.push(`Key-terms=${filter.keyterms}`)
@@ -102,7 +95,7 @@ export class BackendAPI {
       });
   }
 
-  getAnalyticReport(analytic: IAnalyticOptions, cb:(err: any, res: any) => any) {
+  getAnalyticReport(analytic: IFilterOptions, cb:(err: any, res: any) => any) {
     let q :string[] = [];
     if (analytic.location) {
       q.push(`Location=${analytic.location}`)
@@ -120,7 +113,7 @@ export class BackendAPI {
     let url = '';
 
     let query = q.join('&')
-    url = `https://productionv1-dot-epiproapp.appspot.com/api/v1/analytics?${query}`
+    url = `${this.baseURL}api/v1/analytics?${query}`
 
     console.log(url);
  
@@ -131,6 +124,16 @@ export class BackendAPI {
       .catch((error: AxiosError) => {
         cb(error, null);
         console.log("CALL ERROR");
+      });
+  }
+
+  getDiseases(cb: (err: any, res: any) => any) {
+    axios.get(`${this.baseURL}api/v1/reports/diseases/all`)
+      .then((response: AxiosResponse) => {
+        cb(null, response.data)
+      })
+      .catch((error: AxiosError) => {
+        cb(error, null)
       });
   }
 
