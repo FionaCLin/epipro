@@ -1,5 +1,5 @@
 import React from 'react';
-import '../css/Home.css';
+import '../css/Basic.css';
 import Select from 'react-select';
 import { BackendAPI } from '../API';
 
@@ -44,7 +44,7 @@ export default class DiseaseSearch extends React.Component<IDiseaseSearchProps, 
 
     render() {
         return (
-            <div className="search-element">
+            <div className="Search-element">
                 <Select
                     options={this.state.filterOptions.sort((a: any, b: any) => { return a.value.localeCompare(b.value) })}
                     classNamePrefix="select"

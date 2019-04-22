@@ -1,5 +1,5 @@
 import React from 'react';
-import '../css/Home.css';
+import '../css/Search.css';
 import { Pagination } from 'react-bootstrap';
 import { isNull } from 'util';
 import animateScrollTo from 'animated-scroll-to';

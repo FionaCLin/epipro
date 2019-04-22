@@ -1,5 +1,5 @@
 import React from 'react';
-import '../css/Home.css';
+import '../css/Trends.css';
 import { Card, ListGroup } from 'react-bootstrap';
 import TweetEmbed from 'react-tweet-embed';
 
@@ -11,7 +11,7 @@ export default class TweetList extends React.Component<ITweetListProps, ITweetLi
     render() {
         console.log(this.props.data);
         return (
-            <div style={{float: "left", height: '700px', width: '50%'}}>
+            <div className="Media-list">
                 <Card style={{height:"100%"}}>
                     <Card.Header as="h5">Tweets</Card.Header>
                     <Card.Body style={{maxHeight: '725px', overflowY: 'auto'}}>

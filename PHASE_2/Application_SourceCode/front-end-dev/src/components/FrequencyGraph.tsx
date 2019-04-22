@@ -1,5 +1,5 @@
 import React from 'react';
-import '../css/Home.css';
+import '../css/Basic.css';
 import FrequencyFormat from './FrequencyFormat';
 import { isUndefined, isNullOrUndefined } from 'util';
 import { shortenDate, capitalize } from './util';
@@ -101,7 +101,7 @@ export default class FrequencyGraph extends React.Component<IFrequencyGraphProps
                 <br></br>
                 <br></br>
                 <div>
-                    <div style={{float: 'left', marginRight: '10px'}}>Date frequency:</div>
+                    <div className="Date-frequency">Date frequency:</div>
                     <input type="radio" onClick={() => this.convertFrequency(frequencyFilters[0])} name="frequencyFilter" defaultChecked/>Day
                     <input style={{marginLeft: '10px'}} type="radio" onClick={() => this.convertFrequency(frequencyFilters[1])} name="frequencyFilter" />Month
                     <input style={{marginLeft: '10px'}} type="radio" onClick={() => this.convertFrequency(frequencyFilters[2])} name="frequencyFilter" />Year

@@ -1,6 +1,10 @@
 import React from 'react';
-import '../css/Home.css';
-import frequency from '../imgs/loading1.gif';
+import '../css/Basic.css';
+import frequency from '../imgs/frequency.png';
+import heatmap from '../imgs/heatmap.png';
+import event from '../imgs/event.png';
+import media from '../imgs/media.png';
+import trends from '../imgs/trends.png';
 import { CardDeck, Card } from 'react-bootstrap';
 
 export default class PageMenu extends React.Component<IPageMenuProps, IPageMenuState> {
@@ -9,39 +13,62 @@ export default class PageMenu extends React.Component<IPageMenuProps, IPageMenuS
     }
 
     render() {
-        let cardStyle = { width: '300px', backgroundColor: 'darkslateblue', float: "left" as "left", color: 'white', margin: '5px', padding: '5px'};
+        let cardStyle = { width: '300px', maxWidth: '300px', backgroundColor: 'darkslateblue', float: "left" as "left", color: 'white', margin: '5px', height: '370px'};
         return (
         <div style={{textAlign: 'center'}}>
-            <h5>Report Features</h5>
-            <div style={{marginLeft: 'auto', marginRight: 'auto', width: '930px'}}>
+            <h4>Report Features</h4>
+            <div className="Page-menu">
                 <CardDeck>
                     <Card style={cardStyle}>
+                        <Card.Img variant="top" src={frequency} />
                         <Card.Body>
-                            <Card.Img variant="top" src={frequency} />
                             <Card.Title>Frequency Mentions</Card.Title>
                             <Card.Text>
                                 Frequency graph of the number of mentions of the selected disease across the inputted time range.
                             </Card.Text>
                         </Card.Body>
                     </Card>
-                    <Card style={cardStyle}>
-                        <Card.Body>
-                            <Card.Img variant="top" src="../imgs/heatmap.PNG" />
-                            <Card.Title>Heatmap</Card.Title>
-                            <Card.Text>
-                                Shows the occurences of the selected disease within the geographical range.
-                            </Card.Text>
-                        </Card.Body>
-                    </Card>
-                    <Card style={cardStyle}>
-                        <Card.Body>
-                            <Card.Img variant="top" src="../imgs/event.PNG" />
-                            <Card.Title>Event histogram</Card.Title>
-                            <Card.Text>
-                                Histogram graph of the event types of the disease for WHO articles within inputted time range.
-                            </Card.Text>
-                        </Card.Body>
-                    </Card>
+                    {this.props.type == 'trends' ? (
+                    <div>
+                        <Card style={cardStyle}>
+                            <Card.Img variant="top" src={media} />                    
+                            <Card.Body>
+                                <Card.Title>Media Coverage</Card.Title>
+                                <Card.Text>
+                                    Headlines and tweets mentioning the selected disease.
+                                </Card.Text>
+                            </Card.Body>
+                        </Card>
+                        <Card style={cardStyle}>
+                            <Card.Img variant="top" src={trends} />                    
+                            <Card.Body>
+                                <Card.Title>Google Trends</Card.Title>
+                                <Card.Text>
+                                    Google search trends involving the selected disease.
+                                </Card.Text>
+                            </Card.Body>
+                        </Card>
+                    </div> ) : (
+                    <div>
+                        <Card style={cardStyle}>
+                            <Card.Img variant="top" src={heatmap} />                    
+                            <Card.Body>
+                                <Card.Title>Heatmap</Card.Title>
+                                <Card.Text>
+                                    Shows the occurences of the selected disease within the geographical range.
+                                </Card.Text>
+                            </Card.Body>
+                        </Card>
+                        <Card style={cardStyle}>
+                            <Card.Img variant="top" src={event} />
+                            <Card.Body>
+                                <Card.Title>Event histogram</Card.Title>
+                                <Card.Text>
+                                    Histogram graph of the event types of the disease for WHO articles within inputted time range.
+                                </Card.Text>
+                            </Card.Body>
+                        </Card>
+                    </div> )}
                 </CardDeck>
             </div>
         </div>

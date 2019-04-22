@@ -1,5 +1,5 @@
 import React from 'react';
-import '../css/Home.css';
+import '../css/Trends.css';
 
 export default class Marker extends React.Component<IMarkerProps, IMarkerState> {
     constructor(props: IMarkerProps) {

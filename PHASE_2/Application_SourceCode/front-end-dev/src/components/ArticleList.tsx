@@ -1,5 +1,5 @@
 import React from 'react';
-import '../css/Home.css';
+import '../css/Basic.css';
 import ArticleCard from './ArticleCard';
 import { isNullOrUndefined, isNull, isUndefined } from 'util';
 import loading from '../imgs/loading1.gif';
@@ -14,6 +14,7 @@ export default class ArticleList extends React.Component<IArticleListProps, IArt
     private showArticleList() {
         if (!isNullOrUndefined(this.props.articleList)) {
             return this.props.articleList.map((articleData: IArticleState) => {
+                console.log(articleData);
                 articleData.date_of_publication = cleanDate(articleData.date_of_publication);
                 return <ArticleCard {...articleData}/>;
             });

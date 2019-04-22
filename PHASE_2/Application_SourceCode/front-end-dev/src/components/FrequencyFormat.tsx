@@ -1,5 +1,5 @@
 import React from 'react';
-import '../css/Home.css';
+import '../css/Basic.css';
 import { LineChart, ResponsiveContainer, XAxis, YAxis, Line, CartesianGrid, Tooltip, Legend } from 'recharts';
 import { Tooltip as ChartTooltip } from './Tooltip';
 import { Frequency } from './FrequencyGraph';

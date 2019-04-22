@@ -1,5 +1,6 @@
 import React from 'react';
-import '../css/Home.css';
+import '../css/Basic.css';
+import '../css/Trends.css';
 import TimeSearch from './TimeSearch';
 import LocationSearch from './LocationSearch';
 import { Button, ButtonGroup, Form } from 'react-bootstrap';
@@ -247,7 +248,7 @@ export default class Trends extends React.Component<ITrendsProps, ITrendsState> 
                                 </div>
                             </div>
                         </div>
-                        <div style={(display == 'none') ? {display: 'block'} : {display: 'none'}}>
+                        <div style={(display == 'none') && (this.checkLoading() == true) ? {display: 'block'} : {display: 'none'}}>
                             <PageMenu type="trends" />
                         </div>
                     </div>

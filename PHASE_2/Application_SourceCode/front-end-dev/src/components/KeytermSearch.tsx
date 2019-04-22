@@ -1,5 +1,6 @@
 import React from 'react';
-import '../css/Home.css';
+import '../css/Search.css';
+import '../css/Basic.css';
 import CreatableSelect from 'react-select/lib/Creatable';
 import { BackendAPI } from '../API'
 
@@ -50,7 +51,7 @@ export default class KeytermSearch extends React.Component<IKeytermSearchProps, 
 
     render() {
         return (
-            <div className="search-element">
+            <div className="Search-element">
                 <CreatableSelect
                     isMulti
                     isClearable

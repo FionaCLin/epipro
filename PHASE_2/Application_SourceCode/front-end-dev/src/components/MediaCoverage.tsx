@@ -1,9 +1,7 @@
 import React from 'react';
-import '../css/Home.css';
-import { Button, Collapse } from 'react-bootstrap';
+import '../css/Basic.css';
 import GoogleCardList from './GoogleCardList';
 import TweetList from './TweetList';
-import GoogleData from '../dummydata/google_article.json';
 import GoogleCard from './GoogleCard';
 import { Tooltip } from './Tooltip';
 

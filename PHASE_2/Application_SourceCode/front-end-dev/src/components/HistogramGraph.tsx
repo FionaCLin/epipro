@@ -1,5 +1,5 @@
 import React from 'react';
-import '../css/Home.css';
+import '../css/Analytics.css';
 import { Tooltip as ChartTooltip } from './Tooltip';
 import { ResponsiveContainer, BarChart, CartesianGrid, XAxis, YAxis, Legend, Bar, Tooltip } from 'recharts';
 import { isUndefined, isNullOrUndefined } from 'util';

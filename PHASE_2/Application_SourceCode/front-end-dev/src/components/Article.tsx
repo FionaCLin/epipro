@@ -1,5 +1,5 @@
 import React from 'react';
-import '../css/Home.css';
+import '../css/Basic.css';
 import Report from './Report';
 import ReportList from './ReportList';
 import { Link, Redirect } from 'react-router-dom';

@@ -1,5 +1,5 @@
 import React from 'react';
-import '../css/Home.css';
+import '../css/Basic.css';
 import Select from 'react-select';
 import { BackendAPI } from '../API'
 
@@ -62,7 +62,7 @@ export default class LocationSearch extends React.Component<ILocationSearchProps
 
     render() {
         return (
-        <div className="search-element">
+        <div className="Search-element">
             <Select
             isMulti
             options={this.state.filterOptions.sort((a: any, b: any) => { return a.value.localeCompare(b.value) })}

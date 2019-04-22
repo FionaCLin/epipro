@@ -1,5 +1,5 @@
 import React from 'react';
-import '../css/Home.css';
+import '../css/Basic.css';
 import TimeSearch from './TimeSearch';
 import LocationSearch from './LocationSearch';
 import { Button, ButtonGroup, Form } from 'react-bootstrap';
@@ -12,6 +12,7 @@ import HeatMap, { APIHeatmap, GeoPosition, assignWeight } from './Heatmap';
 import HistogramGraph, { HistBar, APIEvent, HistogramData } from './HistogramGraph';
 import loading from '../imgs/loading1.gif';
 import { parseDates, stringifyDates, createApiFilterState, shortenDate, capitalize } from './util';
+import PageMenu from './PageMenu';
 
 declare var google: any;
 let epiAPI = new BackendAPI();
@@ -211,6 +212,9 @@ export default class Analytics extends React.Component<IAnalyticsProps, IAnalyti
                                     />
                                 </div>
                             </div>
+                        </div>
+                        <div style={(display == 'none') && (this.checkLoading() == true) ? {display: 'block'} : {display: 'none'}}>
+                                <PageMenu type="analyze" />
                         </div>
                     </div>
                 </body>

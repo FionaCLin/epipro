@@ -1,5 +1,5 @@
 import React from 'react';
-import '../css/Home.css';
+import '../css/Basic.css';
 import { Button, Form } from 'react-bootstrap';
 import TimeSearch from './TimeSearch';
 import ArticleList from './ArticleList';

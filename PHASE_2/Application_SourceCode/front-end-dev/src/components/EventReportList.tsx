@@ -1,5 +1,5 @@
 import React from 'react';
-import '../css/Home.css';
+import '../css/Search.css';
 import EventReport from './EventReport';
 import { Card } from 'react-bootstrap';
 
