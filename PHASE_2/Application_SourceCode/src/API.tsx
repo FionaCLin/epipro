@@ -11,9 +11,9 @@ export interface IFilterOptions {
 }
 
 export class BackendAPI {
-  baseURL: string = 'https://productionv1-dot-epiproapp.appspot.com/'
+  baseURL: string = 'https://production-dot-epiproapp.appspot.com'
   getKeyTerms(type: string, cb: (err: any, res: any) => any) {
-    axios.get(`${this.baseURL}api/v1/reports/key-terms/${type}`)
+    axios.get(`${this.baseURL}/api/v1/reports/key-terms/${type}`)
       .then((response: AxiosResponse) => {
         cb(null, response.data)
       })
@@ -33,7 +33,7 @@ export class BackendAPI {
   }
 
   getLocationsByKeyword(keyword: string, cb: (err: any, res: any) => any) {
-    axios.get(`${this.baseURL}api/v1/reports/locations/${keyword}`)
+    axios.get(`${this.baseURL}/api/v1/reports/locations/${keyword}`)
       .then((response: AxiosResponse) => {
         cb(null, response.data)
       })
@@ -43,7 +43,7 @@ export class BackendAPI {
   }
 
   getAllReports(cb: (err: any, res: any) => any) {
-    axios.get(`${this.baseURL}api/v1/reports/filter`)
+    axios.get(`${this.baseURL}/api/v1/reports/filter`)
       .then((response: AxiosResponse) => {
         cb(null, response.data)
       })
@@ -53,7 +53,7 @@ export class BackendAPI {
   }
 
   getAPIdocURL(cb: (err: any, res: any) => any) {
-    axios.get(`${this.baseURL}api/v1/doc-url`)
+    axios.get(`${this.baseURL}/api/v1/doc-url`)
       .then((response: AxiosResponse) => {
         cb(null, response.data);
       })
@@ -80,9 +80,7 @@ export class BackendAPI {
     let url = '';
 
     let query = q.join('&')
-    url = `${this.baseURL}api/v1/reports/filter?${query}`
-
-    console.log(url);
+    url = `${this.baseURL}/api/v1/reports/filter?${query}`
 
     axios.get(url)
       .then((response: AxiosResponse) => {
@@ -90,7 +88,6 @@ export class BackendAPI {
       })
       .catch((error: AxiosError) => {
         cb(error, null);
-        console.log("CALL ERROR");
       });
   }
 
@@ -112,9 +109,7 @@ export class BackendAPI {
     let url = '';
 
     let query = q.join('&')
-    url = `${this.baseURL}api/v1/analytics?${query}`
-
-    console.log(url);
+    url = `${this.baseURL}/api/v1/analytics?${query}`
 
     axios.get(url)
       .then((response: AxiosResponse) => {
@@ -122,12 +117,11 @@ export class BackendAPI {
       })
       .catch((error: AxiosError) => {
         cb(error, null);
-        console.log("CALL ERROR");
       });
   }
 
   getDiseases(cb: (err: any, res: any) => any) {
-    axios.get(`${this.baseURL}api/v1/reports/diseases/all`)
+    axios.get(`${this.baseURL}/api/v1/reports/diseases/all`)
       .then((response: AxiosResponse) => {
         cb(null, response.data)
       })
@@ -161,7 +155,7 @@ export class BackendAPI {
         }
 
         if (Object.keys(payload).length !== 0) {
-            axios.post('https://production-dot-epiproapp.appspot.com/api/v1/twitter',payload)
+          axios.post('https://productionv1-dot-epiproapp.appspot.com/api/v1/twitter',payload)
                 .then((response: AxiosResponse) => {
                     cb(null, response.data);
                 })

@@ -35,16 +35,17 @@ export default class KeytermSearch extends React.Component<IKeytermSearchProps, 
                 console.log('error message', message);
             } else if (error) {
                 console.log('error message', error.message);
+            } else {
+                let newKeyterms: Array<any> = response.map((keyterm: any) => ({
+                    label: keyterm.name,
+                    value: keyterm.name
+                }));
+
+                this.setState({
+                    filterOptions: this.state.filterOptions.concat(newKeyterms)
+                });
             }
 
-            let newKeyterms: Array<any> = response.map((keyterm: any) => ({
-                label: keyterm.name,
-                value: keyterm.name
-            }));
-
-            this.setState({
-                filterOptions: this.state.filterOptions.concat(newKeyterms)
-            });
         });
     }
 
