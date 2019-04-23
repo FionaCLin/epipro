@@ -32,15 +32,6 @@
         <tr>
             <td>A2</td>
             <td>Ability to give different forms of visualization of extracted data</td>
-        </tr>
-        <tr>
-            <td>A3</td>
-            <td>Ability to examine social media related posts on disease outbreaks over a period of time/geographically</td>
-        </tr>
-        <tr>
-            <td>A4</td>
-            <td>Ability to identify particular trends related to a disease outbreak across different sources</td>
-        </tr>
     </tbody>
 </table>
 
@@ -59,11 +50,19 @@
             <td>A2</td>
             <td>Ability to browse news related to a disease outbreak over a period of time/geographically and through keyterms</td>
         </tr>
+        <tr>
+            <td>A3</td>
+            <td>Ability to examine social media related posts on disease outbreaks over a period of time/geographically</td>
+        </tr>
+        <tr>
+            <td>A4</td>
+            <td>Ability to identify particular trends related to a disease outbreak across different sources</td>
+        </tr>
     </tbody>
 </table>
 
 ## Use Cases
-### API
+### Search
 **API Use Case 1:** Search with keyterms
 <table>
     <tbody>
@@ -144,6 +143,34 @@
             <td>System generates default start and end dates.
             User inputs start date and/or end date, activates search.
             System accepts inputted dates and generates disease reports using the specified time range or default time range.
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+**API Use Case 3:** Show details of one report
+<table>
+    <tbody>
+        <tr>
+            <th>Actors</th>
+            <td>User</td>
+        </tr>
+            <th>Triggers</th>
+            <td>User wants to check details of a report</td>
+        <tr>
+            <th>Preconditions</th>
+            <td>Reports related with search terms have been illustrated in page
+            User select one of them they interested in</td>
+        </tr>
+        <tr>
+            <th>Postconditions</th>
+            <td>System show details of selected report</td>
+        </tr>
+        <tr>
+            <th>Normal flow</th>
+            <td>System display reports related to search term
+            User click one of thme
+            System show the report with its detail
             </td>
         </tr>
     </tbody>
