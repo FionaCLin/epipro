@@ -1,6 +1,6 @@
 # Final Report
 ## Requirements
-### API
+### Search
 <table>
     <tbody>
         <tr>
@@ -10,6 +10,10 @@
         <tr>
             <td>P1</td>
             <td>Ability to find and access all the disease reports related to given search terms including keyterms, period of interest and location</td>
+        </tr>
+        <tr>
+            <td>P2</td>
+            <td>Ability to display found report in user-friendly way</td>
         </tr>
     </tbody>
 </table>
@@ -23,11 +27,11 @@
         </tr>
         <tr>
             <td>A1</td>
-            <td>Ability to integrate data from different sources and present in a user-friendly way</td>
+            <td>Ability to extract useful data from all disease reports that realted to given search terms</td>
         </tr>
         <tr>
             <td>A2</td>
-            <td>Ability to browse news related to a disease outbreak over a period of time/geographically and through keyterms</td>
+            <td>Ability to give different forms of visualization of extracted data</td>
         </tr>
         <tr>
             <td>A3</td>
@@ -36,6 +40,24 @@
         <tr>
             <td>A4</td>
             <td>Ability to identify particular trends related to a disease outbreak across different sources</td>
+        </tr>
+    </tbody>
+</table>
+
+### Trends Platform
+<table>
+    <tbody>
+        <tr>
+            <th>ID</th>
+            <th>Function Requirement</th>
+        </tr>
+        <tr>
+            <td>A1</td>
+            <td>Ability to integrate data from different sources and present in a user-friendly way</td>
+        </tr>
+        <tr>
+            <td>A2</td>
+            <td>Ability to browse news related to a disease outbreak over a period of time/geographically and through keyterms</td>
         </tr>
     </tbody>
 </table>
