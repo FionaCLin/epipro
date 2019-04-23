@@ -14,7 +14,9 @@ export default class ArticleList extends React.Component<IArticleListProps, IArt
     private showArticleList() {
         if (!isNullOrUndefined(this.props.articleList)) {
             return this.props.articleList.map((articleData: IArticleState) => {
-                articleData.date_of_publication = cleanDate(articleData.date_of_publication);
+                if (articleData.date_of_publication.indexOf('T') != -1) {
+                    articleData.date_of_publication = cleanDate(articleData.date_of_publication);
+                }
                 return <ArticleCard {...articleData}/>;
             });
         }
