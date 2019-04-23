@@ -148,7 +148,7 @@
     </tbody>
 </table>
 
-**API Use Case 3:** Show details of one report
+**API Use Case 4:** Show details of one report
 <table>
     <tbody>
         <tr>
@@ -168,15 +168,47 @@
         </tr>
         <tr>
             <th>Normal flow</th>
-            <td>System display reports related to search term
-            User click one of thme
-            System show the report with its detail
+            <td>System display reports related to search term.
+            User click one of the reports.
+            System show the report with its detail.
             </td>
         </tr>
     </tbody>
 </table>
 
 ### Analytics Platform
+**Analytics Use Case 1:** Generate line graph basing on input
+<table>
+    <tbody>
+        <tr>
+            <th>Actors</th>
+            <td>User</td>
+        </tr>
+            <th>Triggers</th>
+            <td>User wants to see frequency mentions of a key-word in specific time and location</td>
+        <tr>
+            <th>Preconditions</th>
+            <td>System generates disease list for user to choose from.
+            System generated default start and end dates.
+            User inputs disease, location and time range.
+            </td>
+        </tr>
+        <tr>
+            <th>Postconditions</th>
+            <td>System generates an line graph basing on number of appearance of given key-word in period of time .</td>
+        </tr>
+        <tr>
+            <th>Normal flow</th>
+            <td>System generates disease list for user and defaults start and end dates.
+            User inputs their criteria, activates analyze.
+            System accepts criteria inputs and generates analytic line graph based on criteria.
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+
+### Trends Platform
 **Analytics Use Case 1:** Produce analytics report
 <table>
     <tbody>
