@@ -10,9 +10,7 @@ export interface IFilterOptions {
 
 export default class GoogleAPI {
     baseURL: string = 'https://newsapi.org/';
-    apiKey: string = '112874d7eb274abf8417934c83a1ba07';
-    // apiKey: string = '93ab589956f84076963dac0eb76d6a41';
-    // apiKey: string = 'eda37975a50a479cb28a43249df18ae2';
+    apiKey: string = 'GOOGLE_NEWS_API_KEY_HIDDEN';
 
     getFilteredMedia(filter: IFilterOptions, cb:(err: any, res: any) => any) {
         let q :string[] = [];

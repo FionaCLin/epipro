@@ -8,7 +8,7 @@ import { isUndefined, isNullOrUndefined } from 'util';
 import { Tooltip } from './Tooltip';
 
 declare var google: any;
-let mapsAPIkey = { key: 'AIzaSyAWAexUwY_tKggKe5GoqUmdCLV3h8si3Co' };
+let mapsAPIkey = { key: 'GOOGLE_MAPS_API_KEY_HIDDEN' };
 
 export default class HeatMap extends React.Component<IHeatMapProps, IHeatMapState> {
     constructor(props: IHeatMapProps) {
