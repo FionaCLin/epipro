@@ -9,11 +9,19 @@
         </tr>
         <tr>
             <td>P1</td>
-            <td>Ability to find and access all the disease reports related to given search terms including keyterms, period of interest and location</td>
+            <td>Ability to find and access all the disease reports related to several keyterms</td>
         </tr>
         <tr>
             <td>P2</td>
-            <td>Ability to display found report in user-friendly way</td>
+            <td>Ability to find and access all the disease reports within a given time range</td>
+        </tr>
+        <tr>
+            <td>P3</td>
+            <td>Ability to find and access all the disease reports related to a specific location</td>
+        </tr>
+        <tr>
+            <td>P2</td>
+            <td>Ability to browse through the details of a specific disease report</td>
         </tr>
     </tbody>
 </table>
@@ -27,11 +35,19 @@
         </tr>
         <tr>
             <td>A1</td>
-            <td>Ability to extract useful data from all disease reports that realted to given search terms</td>
+            <td>Ability to produce an analytic report related to a specific disease</td>
         </tr>
         <tr>
             <td>A2</td>
-            <td>Ability to give different forms of visualization of extracted data</td>
+            <td>Ability to produce an analytic report within a period of interest</td>
+        </tr>
+        <tr>
+            <td>A3</td>
+            <td>Ability to produce an analytic report related to a specific location</td>
+        </tr>
+        <tr>
+            <td>A4</td>
+            <td>Ability to give a visual summary of the statistics from disease articles</td>
     </tbody>
 </table>
 
@@ -43,20 +59,20 @@
             <th>Function Requirement</th>
         </tr>
         <tr>
-            <td>A1</td>
-            <td>Ability to integrate data from different sources and present in a user-friendly way</td>
+            <td>T1</td>
+            <td>Ability to display statistics collated from several social media data sources</td>
         </tr>
         <tr>
-            <td>A2</td>
-            <td>Ability to browse news related to a disease outbreak over a period of time/geographically and through keyterms</td>
+            <td>T2</td>
+            <td>Ability to browse a trends report related to a specific disease</td>
         </tr>
         <tr>
-            <td>A3</td>
-            <td>Ability to examine social media related posts on disease outbreaks over a period of time/geographically</td>
+            <td>T3</td>
+            <td>Ability to browse a trends report within a period of interest</td>
         </tr>
         <tr>
-            <td>A4</td>
-            <td>Ability to identify particular trends related to a disease outbreak across different sources</td>
+            <td>T4</td>
+            <td>Ability to browse news related to a specific location</td>
         </tr>
     </tbody>
 </table>
@@ -148,7 +164,7 @@
     </tbody>
 </table>
 
-**API Use Case 4:** Show details of one report
+**API Use Case 4:** Show details of a disease report
 <table>
     <tbody>
         <tr>
@@ -275,9 +291,10 @@
 
 Our API and analytics platform architecture perform on the same structures. If these two were to be separate, the analytics platform alone would have very few processes going on in the backend. Therefore, we made the decision to combine the two together, so we did not have to setup another backend for the analytics platform.
 
-Our frontend is controlled using React with Typescript. At the frontend, it is responsible for calling upon the EpiPro API at the backend alongside the other APIs responsible for giving the application statistics for the analytics platform. It performs the call to the APIs with the inputs that are given by the user from the view. Additionally, the frontend processes any data received from the external APIs.
+Our frontend is controlled using React with Typescript. At the frontend, it is responsible for calling upon the EpiPro API at the backend alongside the other APIs responsible for giving the application statistics for the analytics platform. It performs the call to the APIs with the inputs that are given by the user from the view. Additionally, the frontend processes any data received from the external APIs, excluding Twitter. Data from the Twitter API is cached in our cloud and the related data is called upon through the EpiPro API.
 
 The backend server uses Python3 and Flask on the REST framework. The backend server is mainly responsible for servicing our EpiPro API and its modules. When the frontend calls the EpiPro API using one of its endpoints, it is the backend that processes the inputs and returns the associated results from pulling from our database. The API on the backend has two different types of endpoints – public and private. The public endpoints are available through the access of the API online doc and is used for our search functionality. The private endpoints are not publicly available and is used for our analytics platform functionality.
+
 The scraper uses Selenium and Scrapy in order to do webscraping. It performs on a monthly basis to search and filter through the WHO website as its source. When the scraper finishes accessing and extracting the data, the cleaned data is then stored in our database.
 
 Lastly, the data storage uses MongoDB to operate for our API. This is where our disease report data is updated and cached. It interacts with the backend server in order to handle calls from the frontend and stores the results of the scrapper.
@@ -287,12 +304,14 @@ For more information on the details on the API endpoints and the justification o
 ### Other External APIs used in Analytics Platform
 
 Apart from our own EpiPro API, we have used four other external APIs which can be categorized as the following:
-* Data and statistics APIs – this refers to the APIs that are responsible for providing our application data to perform analytic processes e.g. frequency graphs. This includes the Twitter and Google News APIs. Unfortunately, both of these APIs have pricing and request restriction. Therefore, the time range for the data received will on refer to the last month’s worth of tweets or headlines, when these APIs are called.
+* Data and statistics APIs – this refers to the APIs that are responsible for providing our application data to perform analytic processes e.g. frequency graphs. This includes the Twitter and Google News APIs. Unfortunately, both of these APIs have pricing and request restriction. Therefore, the time range for the data received will on refer to the last month’s worth of tweets or headlines, when these APIs are called. Whilst the Google News API is called directly by the front end, the Twitter API had its data cached into the cloud. This data is accessed through our EpiPro API via a front end call.
 * Heatmap APIs – this refers to the external APIs that are required in order to process our heatmap on the analytics platform. This involves both the Google Maps and Geocoding APIs. The Geocoding API is responsible for retrieving the global coordinates of a location by name, and Google Maps API is used to show the map of the associated location.
+
+Alongside our APIs we also used the Google Trends widget. This widget is not fully acknowledged as an API, and therefore wasn't included in the architecture diagram as one of our APIs. We used Google Trends within the trends page, and used it to show the amount of interest in a specific disease over a selected time period. We also used it to show the related searches to the chosen disease.
 
 ### Summary of Achievements
 
-Our application was able to achieve the requirements that we outlined for ourselves. We were able to develop a scraper that returned processed disease reports in a reasonably coherent form. This was accomplished for the use of Selenium and Scrapy, which, when paired together, allowed us to quickly crawl through both HTML and Javascript driven web pages on the WHO website. We also managed to create a visually appealing UI for our application, which used data from several data sources including WHO, Twitter and Google News. This was made possible by the integration of additional private endpoints to our original EpiPro API and calling upon the other external APIs through the frontend.
+Our application was able to achieve the requirements that we outlined for ourselves. We were able to develop a scraper that returned processed disease reports in a reasonably coherent form. This was accomplished for the use of Selenium and Scrapy, which, when paired together, allowed us to quickly crawl through both HTML and Javascript driven web pages on the WHO website. We also managed to create a visually appealing UI for our application, which used data from several data sources including WHO, Twitter and Google News. The statistics collated from these data sources are split into two statistic reports - trends and analytics. This was made possible by the integration of additional private endpoints to our original EpiPro API and calling upon the other external APIs through the frontend.
 
 ## Responsibilities & Organization of team
 
