@@ -1,11 +1,11 @@
 self.__precacheManifest = [
   {
-    "revision": "f9e5b7c9a904d0abdda7",
-    "url": "/static/react/css/main.0f1e0187.chunk.css"
+    "revision": "31cd62cb8ccb49812492",
+    "url": "/static/react/css/main.fbac9a8f.chunk.css"
   },
   {
-    "revision": "f9e5b7c9a904d0abdda7",
-    "url": "/static/react/js/main.f9e5b7c9.chunk.js"
+    "revision": "31cd62cb8ccb49812492",
+    "url": "/static/react/js/main.31cd62cb.chunk.js"
   },
   {
     "revision": "53eac5d40d2daff628d2",
@@ -52,7 +52,7 @@ self.__precacheManifest = [
     "url": "/static/react/media/trends.c140a701.png"
   },
   {
-    "revision": "2c30f1634937bdd73f74b477a46f1f69",
+    "revision": "f2ba2bde1d71e59c46947c0bec0d2ee3",
     "url": "/static/react/../../templates/index.html"
   }
 ];
