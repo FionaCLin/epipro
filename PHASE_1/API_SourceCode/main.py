@@ -1,4 +1,4 @@
-from lib import *
+#from lib import *
 
 # [START gae_python37_app]
 from flask import Flask, Blueprint, url_for, redirect, render_template, request, send_file
@@ -420,7 +420,7 @@ class disease_reports_with_filter(Resource):
         }
 
         date_format = re.compile(
-            r'^(201[7-9])-((0[1-9]|1[012]))-((0[1-9]|[12][0-9]|3[01]))T([01]?[0-9]|2[0-3]|xx):([0-5][0-9]|xx):([0-5][0-9]|xx)$')
+            r'^(20(1[7-9]|2[0-9]))-((0[1-9]|1[012]))-((0[1-9]|[12][0-9]|3[01]))T([01]?[0-9]|2[0-3]|xx):([0-5][0-9]|xx):([0-5][0-9]|xx)$')
         # make sure the format is right(both dates)
         for k in list(dates.keys()):
             if not date_format.match(dates[k]):
