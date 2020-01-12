@@ -107,7 +107,7 @@ export default class Search extends React.Component<ISearchProps, ISearchState> 
                                 <KeytermSearch keyterms={this.state.keyterms} updateKeyterm={this.handleChange}/>
                                 <LocationSearch locations={this.state.locations} updateLocation={this.handleChange}/>
                                 <TimeSearch startDate={this.state.startDate} endDate={this.state.endDate} updateTime={this.handleChange}/>
-                                <Button onClick={this.onSearch}>Search Articles</Button>
+                                <Button style={{margin:'8px', height: '38px'}}onClick={this.onSearch}>Search Articles</Button>
                             </div>
                             <Form.Text className="text-muted">
                                 * All filters are optional.
