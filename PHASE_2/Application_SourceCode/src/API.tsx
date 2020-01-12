@@ -11,7 +11,8 @@ export interface IFilterOptions {
 }
 
 export class BackendAPI {
-  baseURL: string = 'https://epiproapp.appspot.com'
+  baseURL: string = 'https://epiproapp.appspot.com/'
+
   getKeyTerms(type: string, cb: (err: any, res: any) => any) {
     axios.get(`${this.baseURL}/api/v1/reports/key-terms/${type}`)
       .then((response: AxiosResponse) => {
