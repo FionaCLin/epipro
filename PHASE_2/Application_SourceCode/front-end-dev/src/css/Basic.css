@@ -97,15 +97,21 @@ body {
 
 .Search-element {
     float: left;
-    width: calc((100% - 591.19px)/2);
-    margin-right: 10px;
+    min-width: 220px;
+    width:350px;
     max-height: 38px;
 }
 
 .Filter-panel {
     padding: 10px 0px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
 }
-
+.Filter-panel > div {
+    margin: 8px;
+}
 .Card-hover {
     background-color: white;
 }
